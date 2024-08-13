@@ -9,129 +9,79 @@
             "key": "",
             "parameters": [
                 {
-                    "name": "onSelect",
-                    "type": "(isSelected: boolean) -> ()",
-                    "default": "function(isSelected: boolean) end"
-                },
-                {
-                    "name": "initialSelection",
+                    "name": "Value",
                     "type": "boolean",
                     "default": "false"
                 },
                 {
-                    "name": "isEnabled",
+                    "name": "IsEnabled",
                     "type": "boolean",
                     "default": "true"
                 },
                 {
-                    "name": "includeIconOnSelected",
+                    "name": "IncludeIconOnSelected",
                     "type": "boolean",
                     "default": "true"
                 },
                 {
-                    "name": "includeIconOnDeselected",
+                    "name": "IncludeIconOnDeselected",
                     "type": "boolean",
                     "default": "true"
                 },
                 {
-                    "name": "backgroundColor",
+                    "name": "BackgroundColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "onBackgroundColor",
+                    "name": "OnBackgroundColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "fillColor",
+                    "name": "FillColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "buttonColor",
+                    "name": "ButtonColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "onButtonColor",
+                    "name": "OnButtonColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "disabledColor",
+                    "name": "DisabledColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "onDisabledColor",
+                    "name": "OnDisabledColor3",
                     "type": "Color3",
                     "default": "Color3.new()"
                 },
                 {
-                    "name": "elevation",
+                    "name": "Elevation",
                     "type": "number",
                     "default": "0"
                 },
                 {
-                    "name": "schemeType",
+                    "name": "SchemeType",
                     "type": "Enums.SchemeType",
                     "default": "Enums.SchemeType.Light"
                 },
                 {
-                    "name": "fontData",
+                    "name": "FontData",
                     "type": "FontData",
                     "default": "Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14)"
                 },
                 {
-                    "name": "scale",
+                    "name": "Scale",
                     "type": "number",
                     "default": "1"
-                }
-            ]
-        },
-        {
-            "names": [
-                "primary",
-                "secondary",
-                "tertiary"
-            ],
-            "key": "styled",
-            "parameters": [
-                {
-                    "name": "style",
-                    "type": "Style",
-                    "default": "Style.new(1, Enum.Font.SourceSans, \"Light\", Color3.new(0, 0.4, 0.7))"
-                },
-                {
-                    "name": "onSelect",
-                    "type": "(isSelected: boolean) -> ()",
-                    "default": "function(isSelected: boolean) end"
-                },
-                {
-                    "name": "initialSelection",
-                    "type": "boolean",
-                    "default": "false"
-                },
-                {
-                    "name": "includeIconOnSelected",
-                    "type": "boolean?",
-                    "default": "true"
-                },
-                {
-                    "name": "includeIconOnDeselected",
-                    "type": "boolean?",
-                    "default": "true"
-                },
-                {
-                    "name": "elevation",
-                    "type": "number?",
-                    "default": "0"
-                },
-                {
-                    "name": "isEnabled",
-                    "type": "boolean?",
-                    "default": "true"
                 }
             ]
         }

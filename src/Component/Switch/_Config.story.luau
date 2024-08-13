@@ -3,11 +3,13 @@ local _Package = script.Parent.Parent.Parent
 local _Packages = _Package.Parent
 -- Services
 -- Packages
-local Maid = require(_Packages:WaitForChild("Maid"))
-
+local React = require(_Packages:WaitForChild("React"))
+local ReactRoblox = require(_Packages:WaitForChild("ReactRoblox"))
 -- Modules
 local Style = require(_Package:WaitForChild("Style"))
 local Enums = require(_Package:WaitForChild("Enums"))
+local RobloxTypes = require(_Package:WaitForChild("RobloxTypes"))
+local Types = require(_Package:WaitForChild("Types"))
 
 -- Types
 -- Constants
@@ -15,10 +17,17 @@ local Enums = require(_Package:WaitForChild("Enums"))
 -- References
 
 -- Class
-return function(frame: Frame)
-	local maid = Maid.new()
+return function(target: Frame)
+	local folder = Instance.new("Folder")
+	local root = ReactRoblox.createRoot(folder)
+
 	task.spawn(function()
-		local function makeHalfFrame(isDarkMode: boolean, color: Color3): Frame
+		local function makeHalfFrame(
+			isDarkMode: boolean,
+			color: Color3,
+			size: UDim2,
+			position: UDim2
+		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 			local style = Style.new(
 				1.5,
 				Enum.Font.SourceSans,
@@ -26,149 +35,49 @@ return function(frame: Frame)
 				color
 			)
 
-			local halfFrame = maid:GiveTask(Instance.new("Frame"))
-			halfFrame.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-			halfFrame.BorderSizePixel = 0
-			local listLayout = maid:GiveTask(Instance.new("UIListLayout"))
-			listLayout.FillDirection = Enum.FillDirection.Vertical
-			listLayout.Padding = UDim.new(0, 10)
-			listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-			listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-			listLayout.Parent = halfFrame
+			local Interface = require(script.Parent:WaitForChild("React"))
 
-			local Module = require(script.Parent:WaitForChild("ColdFusion"))
+			return React.createElement(
+				"Frame",
+				{
+					Name = "HalfFrame",
+					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+					BorderSizePixel = 0,
+					Size = size,
+					Position = position,
+				} :: RobloxTypes.FrameProperties,
+				{
+					UIListLayout = React.createElement(
+						"UIListLayout",
+						{
+							FillDirection = Enum.FillDirection.Vertical,
+							Padding = UDim.new(0, 10),
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						} :: RobloxTypes.UIListLayoutProperties
+					),
 
-			do
-				local button = maid:GiveTask(
-					Module.new(
-						function(isSelected: boolean?)
-							print("is selected", isSelected)
-						end,
-						true,
-						true,
-						true,
-						true,
-						style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
-						style:GetColor(Enums.ColorRoleType.Outline),
-						style:GetColor(Enums.ColorRoleType.Primary),
-						style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.Surface),
-						style:GetColor(Enums.ColorRoleType.OnSurface),
-						1,
-						style.SchemeType,
-						style:GetFontData(Enums.FontType.LabelLarge),
-						style.Scale
-					)
-				)
-				button.Parent = halfFrame
-			end
+					First = Interface.new({
+						LayoutOrder = 1,
 
-			do
-				local button = maid:GiveTask(
-					Module.new(
-						function(isSelected: boolean?)
-							print("is selected", isSelected)
-						end,
-						true,
-						false,
-						true,
-						true,
-						style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
-						style:GetColor(Enums.ColorRoleType.Outline),
-						style:GetColor(Enums.ColorRoleType.Primary),
-						style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.Surface),
-						style:GetColor(Enums.ColorRoleType.OnSurface),
-						1,
-						style.SchemeType,
-						style:GetFontData(Enums.FontType.LabelLarge),
-						style.Scale
-					)
-				)
-				button.Parent = halfFrame
-			end
-
-			do
-				local button = maid:GiveTask(
-					Module.new(
-						function(isSelected: boolean?)
-							print("is selected", isSelected)
-						end,
-						false,
-						false,
-						true,
-						true,
-						style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
-						style:GetColor(Enums.ColorRoleType.Outline),
-						style:GetColor(Enums.ColorRoleType.Primary),
-						style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.Surface),
-						style:GetColor(Enums.ColorRoleType.OnSurface),
-						1,
-						style.SchemeType,
-						style:GetFontData(Enums.FontType.LabelLarge),
-						style.Scale
-					)
-				)
-				button.Parent = halfFrame
-			end
-
-			do
-				local button = maid:GiveTask(
-					Module.new(
-						function(isSelected: boolean?)
-							print("is selected", isSelected)
-						end,
-						false,
-						false,
-						false,
-						false,
-						style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
-						style:GetColor(Enums.ColorRoleType.Outline),
-						style:GetColor(Enums.ColorRoleType.Primary),
-						style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.Surface),
-						style:GetColor(Enums.ColorRoleType.OnSurface),
-						1,
-						style.SchemeType,
-						style:GetFontData(Enums.FontType.LabelLarge),
-						style.Scale
-					)
-				)
-				button.Parent = halfFrame
-			end
-
-			do
-				local button = maid:GiveTask(
-					Module.new(
-						function(isSelected: boolean?)
-							print("is selected", isSelected)
-						end,
-						false,
-						true,
-						false,
-						false,
-						style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
-						style:GetColor(Enums.ColorRoleType.Outline),
-						style:GetColor(Enums.ColorRoleType.Primary),
-						style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						style:GetColor(Enums.ColorRoleType.Surface),
-						style:GetColor(Enums.ColorRoleType.OnSurface),
-						1,
-						style.SchemeType,
-						style:GetFontData(Enums.FontType.LabelLarge),
-						style.Scale
-					)
-				)
-				button.Parent = halfFrame
-			end
-
-			return halfFrame
+						Value = false,
+						IsEnabled = true,
+						IncludeIconOnSelected = true,
+						IncludeIconOnDeselected = true,
+						BackgroundColor3 = Color3.new(),
+						OnBackgroundColor3 = Color3.new(),
+						FillColor3 = Color3.new(),
+						ButtonColor3 = Color3.new(),
+						OnButtonColor3 = Color3.new(),
+						DisabledColor3 = Color3.new(),
+						OnDisabledColor3 = Color3.new(),
+						Elevation = 0,
+						SchemeType = Enums.SchemeType.Light,
+						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
+						Scale = 1,
+					}),
+				}
+			)
 		end
 
 		local COLORS: { [number]: Color3 } = {
@@ -180,22 +89,34 @@ return function(frame: Frame)
 			-- Color3.fromHSV(0.1, 0.9, 0.7),
 		}
 
-		for i, color in ipairs(COLORS) do
-			local x = (i - 1) / #COLORS
-			local width = 1 / #COLORS
-			local dark = makeHalfFrame(true, color)
+		local element = React.createElement(
+			"Frame",
+			{
+				Size = UDim2.fromScale(1, 1),
+				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+				BorderSizePixel = 0,
+				BackgroundTransparency = 1,
+			} :: RobloxTypes.FrameProperties,
+			(function(): { [string]: any }
+				local children: { [string]: any } = {}
+				for i, color in ipairs(COLORS) do
+					local x = (i - 1) / #COLORS
+					local width = 1 / #COLORS
+					children[`Dark{i}`] =
+						makeHalfFrame(true, color, UDim2.fromScale(width, 0.5), UDim2.fromScale(x, 0.5))
 
-			dark.Size = UDim2.fromScale(width, 0.5)
-			dark.Position = UDim2.fromScale(x, 0.5)
-			dark.Parent = frame
-
-			local bright = makeHalfFrame(false, color)
-			bright.Size = UDim2.fromScale(width, 0.5)
-			bright.Position = UDim2.fromScale(x, 0)
-			bright.Parent = frame
-		end
+					children[`Light{i}`] =
+						makeHalfFrame(false, color, UDim2.fromScale(width, 0.5), UDim2.fromScale(x, 0))
+				end
+				return children
+			end)()
+		)
+		local portal = ReactRoblox.createPortal(element, target)
+		root:render(portal)
 	end)
+
 	return function()
-		maid:Destroy()
+		root:unmount()
+		folder:Destroy()
 	end
 end
