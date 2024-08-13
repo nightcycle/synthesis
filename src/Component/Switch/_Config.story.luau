@@ -22,20 +22,18 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local function makeHalfFrame(
-			isDarkMode: boolean,
-			color: Color3,
-			size: UDim2,
-			position: UDim2
-		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+		local Interface = require(script.Parent:WaitForChild("React"))
+
+		local function halfFrame(props: RobloxTypes.FrameProperties & {
+			Color3: Color3,
+			IsDarkMode: boolean,
+		}): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 			local style = Style.new(
 				1.5,
 				Enum.Font.SourceSans,
-				if isDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
-				color
+				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
+				props.Color3
 			)
-
-			local Interface = require(script.Parent:WaitForChild("React"))
 
 			return React.createElement(
 				"Frame",
@@ -43,8 +41,8 @@ return function(target: Frame)
 					Name = "HalfFrame",
 					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 					BorderSizePixel = 0,
-					Size = size,
-					Position = position,
+					Size = props.Size,
+					Position = props.Position,
 				} :: RobloxTypes.FrameProperties,
 				{
 					UIListLayout = React.createElement(
@@ -102,11 +100,20 @@ return function(target: Frame)
 				for i, color in ipairs(COLORS) do
 					local x = (i - 1) / #COLORS
 					local width = 1 / #COLORS
-					children[`Dark{i}`] =
-						makeHalfFrame(true, color, UDim2.fromScale(width, 0.5), UDim2.fromScale(x, 0.5))
 
-					children[`Light{i}`] =
-						makeHalfFrame(false, color, UDim2.fromScale(width, 0.5), UDim2.fromScale(x, 0))
+					children[`Dark{i}`] = React.createElement(halfFrame, {
+						Color3 = color,
+						IsDarkMode = true,
+						Size = UDim2.fromScale(width, 0.5),
+						Position = UDim2.fromScale(x, 0.5),
+					})
+
+					children[`Light{i}`] = React.createElement(halfFrame, {
+						Color3 = color,
+						IsDarkMode = false,
+						Size = UDim2.fromScale(width, 0.5),
+						Position = UDim2.fromScale(x, 0),
+					})
 				end
 				return children
 			end)()
