@@ -1,15 +1,13 @@
 --!strict
-local _Package = script.Parent.Parent
-local _Packages = _Package.Parent
 -- Services
 local RunService = game:GetService("RunService")
 -- Packages
-local Maid = require(_Packages:WaitForChild("Maid"))
-local CurveUtil = require(_Packages:WaitForChild("CurveUtil"))
+local Maid = require("@wally/Maid")
+local CurveUtil = require("@wally/CurveUtil")
 
 -- Modules
-local Style = require(_Package:WaitForChild("Style"))
-local Enums = require(_Package:WaitForChild("Enums"))
+local Style = require("@proj/Style")
+local Enums = require("@proj/Enums")
 
 -- Types
 -- Constants
@@ -17,7 +15,7 @@ local PAD = 10
 local IN_PAD = 2
 local X_COUNT = 3
 local Y_COUNT = 4
-local DURATION = 0.75
+local DURATION = 1.5
 -- Variables
 -- References
 -- Class
@@ -49,35 +47,34 @@ return function(frame: Frame)
 
 		local function graphTransition(name: string, solver: (x: number) -> number)
 			order += 1
-			local xState = _Value(0)
-			local yState = _Computed(function(x: number): number
-				return solver(x)
-			end, xState)
+			local x = 0
+			local y = solver(x)
 
-			local image = Instance.new("EditableImage")
 			local out = maid:GiveTask(Instance.new("Frame"))
 			out.LayoutOrder = order
 			out.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Background)
 
-			local label = _new("ImageLabel")({
-				Size = UDim2.fromScale(0, 0),
-				AutomaticSize = Enum.AutomaticSize.XY,
-				Parent = out,
-				BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-				LayoutOrder = 2,
-				Children = {
-					image :: any,
-					_new("Frame")({
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						BorderSizePixel = 0,
-						Size = UDim2.new(1, 0, 0, 5),
-						AnchorPoint = Vector2.new(0, 0.5),
-						Position = _Computed(function(y: number): UDim2
-							return UDim2.fromScale(0, 1 - y)
-						end, yState),
-					}),
-				},
-			}) :: ImageLabel
+			local label = Instance.new("ImageLabel")
+			label.Size = UDim2.fromScale(0, 0)
+			label.AutomaticSize = Enum.AutomaticSize.XY
+			label.Parent = out
+			label.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+			label.LayoutOrder = 2
+
+			local image = Instance.new("EditableImage")
+			image.Parent = label
+
+			local subFrame = Instance.new("Frame")
+			subFrame.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+			subFrame.BorderSizePixel = 0
+			subFrame.Size = UDim2.new(1, 0, 0, 5)
+			subFrame.AnchorPoint = Vector2.new(0, 0.5)
+			subFrame.Position = UDim2.fromScale(0, 1 - y)
+
+			local function updatePosition()
+				y = solver(x)
+				subFrame.Position = UDim2.fromScale(0, 1 - y)
+			end
 
 			local listLayout = maid:GiveTask(Instance.new("UIListLayout"))
 			listLayout.FillDirection = Enum.FillDirection.Vertical
@@ -120,38 +117,37 @@ return function(frame: Frame)
 			local start = tick()
 			maid:GiveTask(RunService.RenderStepped:Connect(function()
 				image.Size = label.AbsoluteSize
-				local x = math.clamp(((tick() - start) % DURATION) / DURATION, 0, 1)
-				if x < xState:Get() then
-					-- image:DrawRectangle(
-					-- 	Vector2.zero,
-					-- 	label.AbsoluteSize,
-					-- 	Color3.new(1,1,1),
-					-- 	0
-					-- )
+				local clampX = math.clamp(((tick() - start) % DURATION) / DURATION, 0, 1)
+				if clampX <= x then
 					index += 1
 					prevX = 0
+					x = 0
+					return
 				end
-				local y = solver(x)
+				updatePosition()
 
 				local prevY = solver(prevX)
 
 				local function drawSegment(offset: Vector2)
-					pcall(function()
+					local success, msg = pcall(function()
 						image:DrawLine(
 							Vector2.new(prevX, math.clamp(1 - prevY, 0, 1)) * image.Size + offset,
-							Vector2.new(x, math.clamp(1 - y, 0, 1)) * image.Size + offset,
+							Vector2.new(clampX, math.clamp(1 - y, 0, 1)) * image.Size + offset,
 							if index % 2 == 0
 								then style:GetColor(Enums.ColorRoleType.OnPrimary)
 								else style:GetColor(Enums.ColorRoleType.OnTertiary),
 							0,
-							Enum.ImageCombineType.Overwrite
+							Enum.ImageCombineType.BlendSourceOver
 						)
 					end)
+					-- if not success then
+					-- 	warn(msg)
+					-- end
 				end
 				pcall(function()
 					image:DrawRectangle(
 						Vector2.new(prevX, 0) * label.AbsoluteSize,
-						Vector2.new((x - prevX), 1) * label.AbsoluteSize + Vector2.new(1, 0),
+						Vector2.new((clampX - prevX), 1) * label.AbsoluteSize + Vector2.new(1, 0),
 						-- Color3.fromHSV(
 						-- 	if index % 2 == 0 then 0.25 else 0.75,
 						-- 	1,
@@ -161,15 +157,15 @@ return function(frame: Frame)
 							then style:GetColor(Enums.ColorRoleType.Primary)
 							else style:GetColor(Enums.ColorRoleType.Tertiary),
 						0,
-						Enum.ImageCombineType.Overwrite
+						Enum.ImageCombineType.BlendSourceOver
 					)
 				end)
 
 				drawSegment(Vector2.zero)
 				drawSegment(Vector2.new(0, 1))
 				drawSegment(Vector2.new(0, -1))
-				xState:Set(x)
 				prevX = x
+				x = clampX
 			end))
 		end
 		do
