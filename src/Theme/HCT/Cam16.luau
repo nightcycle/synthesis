@@ -1,8 +1,8 @@
 --!strict
 --!native
 -- https://github.com/material-foundation/material-color-utilities/blob/f5d03da60c268b43928f3a24d6bf499e2564d39a/typescript/hct/cam16.ts
-local ColorUtil = require(script.Parent.Parent:WaitForChild("ColorUtil"))
-local ViewingConditions = require(script.Parent.Parent:WaitForChild("ViewingConditions"))
+local ColorUtil = require("../ColorUtil")
+local ViewingConditions = require("../ViewingConditions")
 
 -- Types
 type ViewingConditions = ViewingConditions.ViewingConditions

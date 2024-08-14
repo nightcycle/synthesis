@@ -2,7 +2,7 @@
 --!native
 -- https://github.com/material-foundation/material-color-utilities/blob/f5d03da60c268b43928f3a24d6bf499e2564d39a/typescript/scheme/scheme.ts
 
-local CorePalette = require(script.Parent:WaitForChild("Palettes"):WaitForChild("Core"))
+local CorePalette = require("./Palettes/Core")
 type TonalPalette = CorePalette.TonalPalette
 type CorePalette = CorePalette.CorePalette
 export type SchemeData = {

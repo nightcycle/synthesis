@@ -1,10 +1,10 @@
 --!strict
 --!native
 -- https://github.com/material-foundation/material-color-utilities/blob/f5d03da60c268b43928f3a24d6bf499e2564d39a/typescript/hct/hct_solver.ts
-local ColorUtil = require(script.Parent.Parent:WaitForChild("ColorUtil"))
-local MathUtil = require(script.Parent.Parent:WaitForChild("MathUtil"))
-local Cam16 = require(script.Parent:WaitForChild("Cam16"))
-local ViewingConditions = require(script.Parent.Parent:WaitForChild("ViewingConditions"))
+local ColorUtil = require("../ColorUtil")
+local MathUtil = require("../MathUtil")
+local Cam16 = require("./Cam16")
+local ViewingConditions = require("../ViewingConditions")
 
 -- material_color_utilities is designed to have a consistent API across
 -- platforms and modular components that can be moved around easily. Using a

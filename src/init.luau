@@ -2,9 +2,9 @@
 -- Services
 -- Packages
 -- Modules
-local Types = require("Types")
-local Style = require("Style")
-local Enums = require("Enums")
+local Types = require("./Types")
+local Style = require("./Style")
+local Enums = require("./Enums")
 -- Types
 export type ImageData = Types.ImageData
 export type OptionData = Types.OptionData

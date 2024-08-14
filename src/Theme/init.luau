@@ -4,14 +4,14 @@ local _Package = script.Parent
 local _Packages = _Package.Parent
 -- Services
 -- Packages
-local HashUtil = require(_Packages:WaitForChild("HashUtil"))
-local TableUtil = require(_Packages:WaitForChild("TableUtil"))
+local HashUtil = require("@wally/HashUtil")
+local TableUtil = require("@wally/TableUtil")
 
 -- Modules
-local ThemeUtil = require(script:WaitForChild("ThemeUtil"))
-local HCT = require(script:WaitForChild("HCT"))
-local Enums = require(_Package:WaitForChild("Enums"))
-local Blend = require(script:WaitForChild("Blend"))
+local Enums = require("@proj/Enums")
+local ThemeUtil = require("./ThemeUtil")
+local HCT = require("./HCT")
+local Blend = require("./Blend")
 
 -- Types
 type GoogleHCT = HCT.HCT

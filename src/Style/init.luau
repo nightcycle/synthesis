@@ -1,14 +1,12 @@
 --!strict
-local _Package = script.Parent
-local _Packages = _Package.Parent
 -- Services
 -- Packages
-local HashUtil = require(_Packages:WaitForChild("HashUtil"))
+local HashUtil = require("@wally/HashUtil")
 
 -- Modules
-local Typography = require(_Package:WaitForChild("Typography"))
-local Theme = require(_Package:WaitForChild("Theme"))
-local Enums = require(_Package:WaitForChild("Enums"))
+local Typography = require("@proj/Typography")
+local Theme = require("@proj/Theme")
+local Enums = require("@proj/Enums")
 
 -- Types
 export type Theme = Theme.Theme

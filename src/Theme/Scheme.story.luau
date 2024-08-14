@@ -1,9 +1,9 @@
 --!strict
 -- Services
 -- Packages
-local Enums = require(script.Parent.Parent:WaitForChild("Enums"))
-local Maid = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Maid"))
+local Maid = require("@wally/Maid")
 -- Modules
+local Enums = require("@proj/Enums")
 -- Types
 -- Constants
 

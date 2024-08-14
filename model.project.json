@@ -1,7 +1,13 @@
 {
 	"name": "synthetic",
 	"tree": {
-		"$path": "Packages",
+		"$className": "Folder",
+		"Node": {
+			"$path": "node_modules"
+		},
+		"Wally": {
+			"$path": "Packages"
+		},
 		"Main": {
 			"$path": "src"
 		}

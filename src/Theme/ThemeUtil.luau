@@ -1,10 +1,10 @@
 --!strict
 --!native
 -- https://github.com/material-foundation/material-color-utilities/blob/f5d03da60c268b43928f3a24d6bf499e2564d39a/typescript/utils/theme_utils.ts#L77
-local Blend = require(script.Parent:WaitForChild("Blend"))
-local CorePalette = require(script.Parent:WaitForChild("Palettes"):WaitForChild("Core"))
-local TonalPalette = require(script.Parent:WaitForChild("Palettes"):WaitForChild("Tonal"))
-local Scheme = require(script.Parent:WaitForChild("Scheme"))
+local Blend = require("./Blend")
+local CorePalette = require("./Palettes/Core")
+local TonalPalette = require("./Palettes/Tonal")
+local Scheme = require("./Scheme")
 
 export type Scheme = Scheme.Scheme
 export type TonalPalette = TonalPalette.TonalPalette

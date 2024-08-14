@@ -1,8 +1,8 @@
 --!strict
 --!native
 -- https://github.com/material-foundation/material-color-utilities/blob/f5d03da60c268b43928f3a24d6bf499e2564d39a/typescript/palettes/core_palette.ts
-local HCT = require(script.Parent.Parent:WaitForChild("HCT"))
-local TonalPalette = require(script.Parent:WaitForChild("Tonal"))
+local HCT = require("../HCT")
+local TonalPalette = require("./Tonal")
 
 export type TonalPalette = TonalPalette.TonalPalette
 type HCT = HCT.HCT
