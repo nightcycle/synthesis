@@ -1,21 +1,22 @@
 --!strict
-local _Package = script.Parent.Parent.Parent
-local _Packages = _Package.Parent
 -- Services
 local SoundService = game:GetService("SoundService")
+
 -- Packages
-local Maid = require(_Packages:WaitForChild("Maid"))
-local Icons = require(_Packages:WaitForChild("MaterialIcons"))
-local React = require(_Packages:WaitForChild("React"))
+local Maid = require("Packages/Maid")
+local Icons = require("Packages/MaterialIcons")
+local React = require("Packages/React")
+
 -- Modules
-local Types = require(_Package:WaitForChild("Types"))
-local Style = require(_Package:WaitForChild("Style"))
-local Enums = require(_Package:WaitForChild("Enums"))
-local Sounds = require(_Package:WaitForChild("Sounds"))
-local Theme = require(_Package:WaitForChild("Theme"))
-local RobloxTypes = require(_Package:WaitForChild("RobloxTypes"))
-local PropUtil = require(_Package:WaitForChild("PropUtil"))
-local Defaults = require(script.Parent:WaitForChild("Defaults"))
+local Types = require("Synthetic/Types")
+local Style = require("Synthetic/Style")
+local Enums = require("Synthetic/Enums")
+local Sounds = require("Synthetic/Sounds")
+local Theme = require("Synthetic/Theme")
+local RobloxTypes = require("Synthetic/RobloxTypes")
+local PropUtil = require("Synthetic/PropUtil")
+local Defaults = require("./Defaults")
+
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData

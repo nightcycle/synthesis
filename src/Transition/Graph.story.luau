@@ -5,7 +5,6 @@ local _Packages = _Package.Parent
 local RunService = game:GetService("RunService")
 -- Packages
 local Maid = require(_Packages:WaitForChild("Maid"))
-local ColdFusion = require(_Packages:WaitForChild("ColdFusion"))
 local CurveUtil = require(_Packages:WaitForChild("CurveUtil"))
 
 -- Modules
@@ -13,8 +12,6 @@ local Style = require(_Package:WaitForChild("Style"))
 local Enums = require(_Package:WaitForChild("Enums"))
 
 -- Types
-type State<V> = ColdFusion.State<V>
-type ValueState<V> = ColdFusion.ValueState<V>
 -- Constants
 local PAD = 10
 local IN_PAD = 2
@@ -47,16 +44,6 @@ return function(frame: Frame)
 			uiPadding.PaddingBottom = UDim.new(0, PAD)
 			uiPadding.Parent = frame
 		end
-
-		local _fuse = ColdFusion.fuse(maid)
-
-		local _new = _fuse.new
-		local _bind = _fuse.bind
-		local _clone = _fuse.clone
-		local _import = _fuse.import
-
-		local _Value = _fuse.Value
-		local _Computed = _fuse.Computed
 
 		local order = 0
 

@@ -1,16 +1,14 @@
 --!strict
 --!native
-local _Package = script.Parent.Parent.Parent
-local _Packages = _Package.Parent
 -- Services
 -- Packages
-local React = require(_Packages:WaitForChild("React"))
-local ReactRoblox = require(_Packages:WaitForChild("ReactRoblox"))
+local React = require("Packages/React")
+local ReactRoblox = require("Packages/ReactRoblox")
 -- Modules
-local Style = require(_Package:WaitForChild("Style"))
-local Enums = require(_Package:WaitForChild("Enums"))
-local RobloxTypes = require(_Package:WaitForChild("RobloxTypes"))
-local Types = require(_Package:WaitForChild("Types"))
+local Style = require("Synthetic/Style")
+local Enums = require("Synthetic/Enums")
+local RobloxTypes = require("Synthetic/RobloxTypes")
+local Types = require("Synthetic/Types")
 
 -- Types
 -- Constants

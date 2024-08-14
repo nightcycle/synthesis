@@ -1,0 +1,42 @@
+{
+	"editor.formatOnSave": true,
+	"files.autoSave": "onFocusChange",
+	"luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
+	"luau-lsp.types.robloxSecurityLevel": "LocalUserSecurity",
+	"luau-lsp.require.mode": "relativeToFile",
+	"luau-lsp.require.directoryAliases": {
+		"Synthetic": "src",
+		"Packages": "Packages"
+	},
+	"files.exclude": {
+		"**lints": true,
+		"**types": true,
+		"sourcemap.json": true,
+		"Packages": true,
+	},
+	"emeraldwalk.runonsave": {
+		"shell": "C:\\Program Files\\Git\\bin\\bash.exe",
+		"commands": [
+			{
+				"match": ".lua",
+				"isAsync": false,
+				"cmd": "rojo sourcemap dev.project.json --output sourcemap.json"
+			},
+			{
+				"match": ".luau",
+				"isAsync": false,
+				"cmd": "rojo sourcemap dev.project.json --output sourcemap.json"
+			},
+			{
+				"match": "pseudo-enum.toml",
+				"isAsync": false,
+				"cmd": "pseudo-enum build"
+			},
+			{
+				"match": "wally.toml",
+				"isAsync": false,
+				"cmd": "sh scripts/workspace/wally-install.sh"
+			},
+		]
+	}
+}

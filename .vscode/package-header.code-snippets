@@ -1,0 +1,78 @@
+{
+	"import scripts": {
+		"prefix": "import scripts",
+		"body": [
+			"local $name = require(game:GetService(\"ServerStorage\"):WaitForChild(\"Scripts\"):WaitForChild(\"$name\")$0)"
+		],
+		"description": "Imports a scripts module.",
+		"scope": "lua,luau"
+	},
+	"import sub-scripts": {
+		"prefix": "import sub-scripts",
+		"body": [
+			"local $name${sub} = require(game:GetService(\"ServerStorage\"):WaitForChild(\"Scripts\"):WaitForChild(\"$name\"):WaitForChild(\"$sub\")$0)"
+		],
+		"description": "Imports a scripts sub-module.",
+		"scope": "lua,luau"
+	},
+	"import server": {
+		"prefix": "import server",
+		"body": [
+			"local $name = require(game:GetService(\"ServerScriptService\"):WaitForChild(\"Server\"):WaitForChild(\"$name\")$0)"
+		],
+		"description": "Imports a server module.",
+		"scope": "lua,luau"
+	},
+	"import child": {
+		"prefix": "import child",
+		"body": [
+			"local $name = require(script:WaitForChild(\"$name\")$0)"
+		],
+		"description": "Imports a child module.",
+		"scope": "lua,luau"
+	},
+	"import etype": {
+		"prefix": "import etype",
+		"body": [
+			"export type $name = $name.$name"
+		],
+		"description": "Unpacks and exports a type.",
+		"scope": "lua,luau"
+	},
+	"import ptype": {
+		"prefix": "import ptype",
+		"body": [
+			"type $name = $name.$name"
+		],
+		"description": "Unpacks and a type.",
+		"scope": "lua,luau"
+	},
+	"import packages": {
+		"prefix": "import package",
+		"body": [
+			"local $name = require(_Packages:WaitForChild(\"$name\"))"
+		],
+		"description": "Imports a package module.",
+		"scope": "lua,luau"
+	},
+	"import header": {
+		"prefix": "import header",
+		"body": [
+			"--!strict",
+			"--!native",
+			"local _Package = script",
+			"local _Packages = _Package.Parent",
+			"-- Services",
+			"-- Packages",
+			"-- Modules",
+			"-- Types",
+			"-- Constants",
+			"-- Variables",
+			"-- References",
+			"-- Private Functions",
+			"-- Class",
+		],
+		"description": "A basic header for a file.",
+		"scope": "lua,luau"
+	},
+}

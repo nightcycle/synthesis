@@ -1,0 +1,11 @@
+{
+	"recommendations": [
+		"emeraldwalk.runonsave",
+		"formulahendry.code-runner",
+		"tamasfe.even-better-toml",
+		"johnnymorganz.luau-lsp",
+		"johnnymorganz.stylua",
+		"redhat.vscode-yaml",
+		"ms-toolsai.jupyter"
+	]
+}

@@ -4,7 +4,6 @@ local _Packages = _Package.Parent
 -- Services
 -- Packages
 local CurveUtil = require(_Packages:WaitForChild("CurveUtil"))
-local ReactSpring = require(_Packages:WaitForChild("ReactSpring"))
 
 -- Modules
 local Enums = require(_Package:WaitForChild("Enums"))
@@ -22,9 +21,7 @@ local STD_WEIGHT = 0.2
 -- Types
 -- Class
 local Util = {}
-Util.Spring = {
-	[Enums.TransitionType.Emphasized] = function(): (ReactSpring.AnimationStyle, ReactSpring.ControllerApi) end,
-}
+
 Util.Easing = {
 	[Enums.TransitionType.Emphasized] = function(x: number): number
 		if x < EMP_FLIP_POINT then
