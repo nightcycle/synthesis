@@ -1,0 +1,9 @@
+{
+	"name": "synthetic",
+	"tree": {
+		"$path": "Packages",
+		"Main": {
+			"$path": "src"
+		}
+	}
+ }

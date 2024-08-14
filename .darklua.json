@@ -5,13 +5,13 @@
 		   "current": {
 			  "name": "path",
 			  "sources": {
-				"Synthetic": "src",
-				"Packages": "Packages"
+				"@Project": "./src",
+				"@Packages": "./Packages"
 			}
 		   },
 		   "target": {
 			  "name": "roblox",
-			  "rojo_sourcemap": "./darklua-sourcemap.json",
+			  "rojo_sourcemap": "darklua-sourcemap.json",
 			  "indexing_style": "find_first_child"
 		   }
 	    }

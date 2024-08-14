@@ -3,19 +3,21 @@
 set -e
 
 DARKLUA_CONFIG=.darklua.json
-SOURCEMAP=sourcemap.json
+SOURCEMAP=darklua-sourcemap.json
 SERVE_DIR=serve
 
 rm -f $SOURCEMAP
 rm -rf $SERVE_DIR
 mkdir -p $SERVE_DIR
 
-cp dev.project.json $SERVE_DIR/dev.project.json
+cp model.project.json $SERVE_DIR/model.project.json
+cp serve.project.json $SERVE_DIR/serve.project.json
 cp -r src $SERVE_DIR/src
-cp -rL node_modules $SERVE_DIR/node_modules
+cp -rL Packages $SERVE_DIR/Packages
 
-rojo sourcemap --watch dev.project.json -o $SOURCEMAP &
-darklua process -w --config $DARKLUA_CONFIG src $SERVE_DIR/src &
-darklua process -w --config $DARKLUA_CONFIG node_modules $SERVE_DIR/node_modules &
+rojo sourcemap model.project.json -o $SOURCEMAP
 
-rojo serve $SERVE_DIR/dev.project.json
+rojo sourcemap --watch model.project.json -o $SOURCEMAP &
+darklua process src $SERVE_DIR/src --config $DARKLUA_CONFIG -w & 
+
+rojo serve $SERVE_DIR/serve.project.json

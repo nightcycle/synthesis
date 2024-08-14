@@ -1,0 +1,11 @@
+{
+	"name": "synthetic-dev",
+	"tree": {
+	    "$className": "DataModel",
+	    "ReplicatedStorage": {
+		   "synthetic": {
+			  "$path": "model.project.json"
+		   }
+	    }
+	}
+ }

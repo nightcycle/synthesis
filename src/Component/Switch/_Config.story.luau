@@ -1,14 +1,14 @@
 --!strict
 --!native
 -- Services
--- Packages
-local React = require("Packages/React")
-local ReactRoblox = require("Packages/ReactRoblox")
+-- @Packages
+local React = require("@Packages/React")
+local ReactRoblox = require("@Packages/ReactRoblox")
 -- Modules
-local Style = require("Synthetic/Style")
-local Enums = require("Synthetic/Enums")
-local RobloxTypes = require("Synthetic/RobloxTypes")
-local Types = require("Synthetic/Types")
+local Style = require("@Project/Style")
+local Enums = require("@Project/Enums")
+local RobloxTypes = require("@Project/RobloxTypes")
+local Types = require("@Project/Types")
 
 -- Types
 -- Constants
