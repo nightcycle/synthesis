@@ -280,13 +280,20 @@ function Interface.new(
 		),
 	})
 
-	local state = if props.IsEnabled
-		then if isPressed
-			then Enums.ButtonStateType.Pressed
-			else if isHovered
-				then Enums.ButtonStateType.Hovered
-				else if isFocused then Enums.ButtonStateType.Focused else Enums.ButtonStateType.Enabled
-		else Enums.ButtonStateType.Disabled
+	local state: Enums.ButtonStateType
+	if props.IsEnabled then
+		if isPressed then
+			state = Enums.ButtonStateType.Pressed
+		elseif isHovered then
+			state = Enums.ButtonStateType.Hovered
+		elseif isFocused then
+			state = Enums.ButtonStateType.Focused
+		else
+			state = Enums.ButtonStateType.Enabled
+		end
+	else
+		state = Enums.ButtonStateType.Disabled
+	end
 
 	local renderData: SwitchRenderData = if value
 		then selectedRenderDataSet[state]
