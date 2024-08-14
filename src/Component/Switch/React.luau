@@ -29,7 +29,7 @@ type SwitchRenderData = {
 	Outline: AppearanceData,
 }
 type FontData = Types.FontData
-type SwitchProperties = RobloxTypes.ImageButtonProperties & {
+type SwitchProperties = RobloxTypes.FrameProperties & {
 	Value: boolean?,
 	IsEnabled: boolean?,
 	IncludeIconOnSelected: boolean?,
@@ -74,411 +74,426 @@ end
 -- Class
 local Interface = {}
 
-function Interface.new(
-	input: SwitchProperties
-): React.ReactElement<RobloxTypes.ImageButtonProperties, "ImageButton">
-	local props: typeof(Defaults.New) = table.clone(input) :: any
-	for k, v in pairs(Defaults.New) do
-		if props[k] == nil then
-			props[k] = v
-		end
+do
+	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
+
+	function Component:init()
+		self:setState({
+			Value = false,
+			IsHovered = false,
+			IsPressed = false,
+			IsFocused = false,
+		})
 	end
 
-	local value, setValue = React.useState(props.Value)
-	local isHovered, setIsHovered = React.useState(false)
-	local isPressed, setIsPressed = React.useState(false)
-	local isFocused, setIsFocused = React.useState(false)
+	function Component:render()
+		-- unpack state
+		local value: boolean = self.state.Value
+		local isHovered: boolean = self.state.IsHovered
+		local isPressed: boolean = self.state.IsPressed
+		local isFocused: boolean = self.state.IsFocused
 
-	local icon = if value == true and props.IncludeIconOnSelected
-		then Icons.check
-		elseif value == false and props.IncludeIconOnDeselected then Icons.close
-		else nil
+		-- unpack properties
+		local backgroundColor3: Color3 = self.props.BackgroundColor3 :: Color3?
+			or Defaults.New.BackgroundColor3
+		local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
+			or Defaults.New.OnBackgroundColor3
+		local elevation: number = self.props.Elevation :: number? or Defaults.New.Elevation
+		local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
+			or Defaults.New.SchemeType
+		local buttonColor3: Color3 = self.props.ButtonColor3 :: Color3? or Defaults.New.ButtonColor3
+		local onButtonColor3: Color3 = self.props.OnButtonColor3 :: Color3? or Defaults.New.OnButtonColor3
+		local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3? or Defaults.New.DisabledColor3
+		local onDisabledColor3: Color3 = self.props.OnDisabledColor3 :: Color3?
+			or Defaults.New.OnDisabledColor3
+		local fillColor3: Color3 = (self.props.FillColor3 :: Color3?) or Defaults.New.FillColor3
+		local scale = (self.props.Scale :: number?) or Defaults.New.Scale
 
-	local unselectedRenderDataSet = table.freeze({
-		[Enums.ButtonStateType.Enabled] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Disabled] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				1
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			)
-		),
-		[Enums.ButtonStateType.Hovered] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.08
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Focused] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.1
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Pressed] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.BackgroundColor3, props.Elevation, props.SchemeType),
-				1 - 0.1
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnBackgroundColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-	})
+		-- solve some internal stuff
+		local icon: ImageData?
+		if value == true and self.props.IncludeIconOnSelected then
+			icon = Icons.check
+		elseif value == false and self.props.IncludeIconOnDeselected then
+			icon = Icons.close
+		end
 
-	local selectedRenderDataSet = table.freeze({
-		[Enums.ButtonStateType.Enabled] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.ButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Disabled] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnDisabledColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.DisabledColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnDisabledColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnDisabledColor3, props.Elevation, props.SchemeType),
-				1 - 0.38
-			)
-		),
-		[Enums.ButtonStateType.Hovered] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.ButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0.08
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Focused] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.ButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0.1
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-		[Enums.ButtonStateType.Pressed] = newSwitchRenderData(
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.OnButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.ButtonColor3, props.Elevation, props.SchemeType),
-				0
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0.1
-			),
-			Types._AppearanceData.new(
-				Theme.getElevatedColor(props.FillColor3, props.Elevation, props.SchemeType),
-				0
-			)
-		),
-	})
-
-	local state: Enums.ButtonStateType
-	if props.IsEnabled then
-		if isPressed then
-			state = Enums.ButtonStateType.Pressed
-		elseif isHovered then
-			state = Enums.ButtonStateType.Hovered
-		elseif isFocused then
-			state = Enums.ButtonStateType.Focused
+		local state: Enums.ButtonStateType
+		if self.props.IsEnabled then
+			if isPressed then
+				state = Enums.ButtonStateType.Pressed
+			elseif isHovered then
+				state = Enums.ButtonStateType.Hovered
+			elseif isFocused then
+				state = Enums.ButtonStateType.Focused
+			else
+				state = Enums.ButtonStateType.Enabled
+			end
 		else
-			state = Enums.ButtonStateType.Enabled
+			state = Enums.ButtonStateType.Disabled
 		end
-	else
-		state = Enums.ButtonStateType.Disabled
-	end
 
-	local renderData: SwitchRenderData = if value
-		then selectedRenderDataSet[state]
-		else unselectedRenderDataSet[state]
+		local renderData: SwitchRenderData
 
-	local buttonSize = if icon
-		then KNOB_YES_ICON_SIZE_DP
-		else if value then KNOB_NO_ICON_SELECTED_SIZE_DP else KNOB_NO_ICON_UNSELECTED_SIZE_DP
+		if value then
+			if state == Enums.ButtonStateType.Enabled then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
+				)
+			elseif state == Enums.ButtonStateType.Disabled then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
+						1 - 0.38
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
+						1 - 0.38
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
+						1 - 0.38
+					)
+				)
+			elseif state == Enums.ButtonStateType.Hovered then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.08),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
+				)
+			elseif state == Enums.ButtonStateType.Focused then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.1),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
+				)
+			elseif state == Enums.ButtonStateType.Pressed then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.1),
+					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
+				)
+			else
+				error(`invalid selected render data at {state}`)
+			end
+		else
+			if state == Enums.ButtonStateType.Enabled then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					)
+				)
+			elseif state == Enums.ButtonStateType.Disabled then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						1 - 0.38
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						1 - 0.38
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						1
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						1 - 0.38
+					)
+				)
+			elseif state == Enums.ButtonStateType.Hovered then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						1 - 0.08
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					)
+				)
+			elseif state == Enums.ButtonStateType.Focused then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						1 - 0.1
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					)
+				)
+			elseif state == Enums.ButtonStateType.Pressed then
+				renderData = newSwitchRenderData(
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
+						1 - 0.1
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						0
+					)
+				)
+			else
+				error(`invalid unselected render data at {state}`)
+			end
+		end
 
-	local switchSize = UDim2.fromOffset(
-		math.round(props.Scale * SWITCH_WIDTH_DP - (OUTLINE_THICKNESS_DP * 2)),
-		math.round(props.Scale * SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2))
-	)
+		local buttonSize = if icon
+			then KNOB_YES_ICON_SIZE_DP
+			else if value then KNOB_NO_ICON_SELECTED_SIZE_DP else KNOB_NO_ICON_UNSELECTED_SIZE_DP
 
-	local outlineThickness = math.round(props.Scale * OUTLINE_THICKNESS_DP)
+		local switchSize = UDim2.fromOffset(
+			math.round(scale * SWITCH_WIDTH_DP - (OUTLINE_THICKNESS_DP * 2)),
+			math.round(scale * SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2))
+		)
 
-	local useStroke = renderData.Background.Color3 ~= renderData.Outline.Color3
-		or renderData.Background.Transparency ~= renderData.Background.Transparency
+		local outlineThickness = math.round(scale * OUTLINE_THICKNESS_DP)
 
-	return React.createElement(
-		"ImageButton",
-		{
-			Name = "Switch",
-			Size = UDim2.fromOffset(
-				switchSize.X.Offset + outlineThickness * 2,
-				switchSize.Y.Offset + outlineThickness * 2
-			),
-			BackgroundColor3 = renderData.Background.Color3,
-			BackgroundTransparency = if useStroke then 1 else renderData.Background.Transparency,
-		} :: RobloxTypes.ImageButtonProperties,
-		{
-			UICorner = React.createElement(
-				"UICorner",
-				{
-					CornerRadius = UDim.new(0, math.round(props.Scale * SWITCH_HEIGHT_DP / 2)),
-				} :: RobloxTypes.UICornerProperties
-			),
-			InnerSwitch = React.createElement("ImageButton", {
-				Size = switchSize,
-				Position = UDim2.fromOffset(outlineThickness, outlineThickness),
-				BackgroundColor3 = renderData.Background.Color3,
-				BackgroundTransparency = if useStroke then renderData.Background.Transparency else 1,
-				[React.Event.InputBegan] = function(_, input: InputObject)
-					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						setIsHovered(true)
-					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
-						setIsPressed(true)
-					end
-				end,
-				[React.Event.InputEnded] = function(_, input: InputObject)
-					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						setIsHovered(false)
-					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
-						setIsPressed(false)
-					end
-				end,
-				[React.Event.Activated] = function()
-					if props.IsEnabled then
-						setValue(not value)
+		local useStroke = renderData.Background.Color3 ~= renderData.Outline.Color3
+			or renderData.Background.Transparency ~= renderData.Background.Transparency
 
-						local sound = Instance.new("Sound")
-						sound.Volume = 1
-						if not value then
-							sound.SoundId =
-								Sounds.Library[Enums.SoundType.navigation_forward_selection_minimal]
-						else
-							sound.SoundId =
-								Sounds.Library[Enums.SoundType.navigation_backward_selection_minimal]
-						end
-						SoundService:PlayLocalSound(sound)
-						sound:Destroy()
-					end
-				end,
-				[React.Event.SelectionGained] = function()
-					setIsFocused(true)
-				end,
-				[React.Event.SelectionLost] = function()
-					setIsFocused(false)
-				end,
-			}, {
-				UIStroke = React.createElement(
-					"UIStroke",
-					{
-						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-						Color = renderData.Outline.Color3,
-						LineJoinMode = Enum.LineJoinMode.Round,
-						Thickness = outlineThickness,
-						Enabled = useStroke,
-						Transparency = renderData.Outline.Transparency,
-					} :: RobloxTypes.UIStrokeProperties
+		return React.createElement(
+			"Frame",
+			{
+				Name = "Switch",
+				Size = UDim2.fromOffset(
+					switchSize.X.Offset + outlineThickness * 2,
+					switchSize.Y.Offset + outlineThickness * 2
 				),
+				BackgroundColor3 = renderData.Background.Color3,
+				BackgroundTransparency = if useStroke then 1 else renderData.Background.Transparency,
+			} :: RobloxTypes.ImageButtonProperties,
+			{
 				UICorner = React.createElement(
 					"UICorner",
 					{
-						CornerRadius = UDim.new(
-							0,
-							math.round(props.Scale * (SWITCH_HEIGHT_DP - OUTLINE_THICKNESS_DP * 2) / 2)
-						),
+						CornerRadius = UDim.new(0, math.round(scale * SWITCH_HEIGHT_DP / 2)),
 					} :: RobloxTypes.UICornerProperties
 				),
-				UIPadding = (function()
-					local widthPaddingState: UDim
-					do
-						local size = props.Scale
-							* (SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize)
-						if icon then
-							size += math.max(0, math.round((switchSize.Y.Offset - buttonSize * props.Scale)))
+				InnerSwitch = React.createElement("ImageButton", {
+					Size = switchSize,
+					Position = UDim2.fromOffset(outlineThickness, outlineThickness),
+					BackgroundColor3 = renderData.Background.Color3,
+					BackgroundTransparency = if useStroke then renderData.Background.Transparency else 1,
+					[React.Event.InputBegan] = function(_, input: InputObject)
+						if input.UserInputType == Enum.UserInputType.MouseMovement then
+							self:setState({
+								IsHovered = true,
+							})
+						elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+							self:setState({
+								IsPressed = true,
+							})
 						end
-						widthPaddingState = UDim.new(0, math.round(size / 2))
-					end
-					local heightPaddingState: UDim
-					do
-						local size = SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize
-						heightPaddingState = UDim.new(0, math.round(props.Scale * size / 2))
-					end
-					return React.createElement(
-						"UIPadding",
+					end,
+					[React.Event.InputEnded] = function(_, input: InputObject)
+						if input.UserInputType == Enum.UserInputType.MouseMovement then
+							self:setState({
+								IsHovered = false,
+							})
+						elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+							self:setState({
+								IsPressed = false,
+							})
+						end
+					end,
+					[React.Event.Activated] = function()
+						if self.props.IsEnabled then
+							self:setState({
+								Value = not value,
+							})
+
+							local sound = Instance.new("Sound")
+							sound.Volume = 1
+							if not value then
+								sound.SoundId =
+									Sounds.Library[Enums.SoundType.navigation_forward_selection_minimal]
+							else
+								sound.SoundId =
+									Sounds.Library[Enums.SoundType.navigation_backward_selection_minimal]
+							end
+							SoundService:PlayLocalSound(sound)
+							sound:Destroy()
+						end
+					end,
+					[React.Event.SelectionGained] = function()
+						self:setState({
+							IsFocused = true,
+						})
+					end,
+					[React.Event.SelectionLost] = function()
+						self:setState({
+							IsFocused = false,
+						})
+					end,
+				}, {
+					UIStroke = React.createElement(
+						"UIStroke",
 						{
-							PaddingTop = heightPaddingState,
-							PaddingBottom = heightPaddingState,
-							PaddingLeft = widthPaddingState,
-							PaddingRight = widthPaddingState,
-						} :: RobloxTypes.UIPaddingProperties
-					)
-				end)(),
-				Knob = React.createElement(
-					"Frame",
-					{
-						Size = UDim2.fromOffset(
-							math.round(props.Scale * buttonSize),
-							math.round(props.Scale * buttonSize)
-						),
-						Position = if value then UDim2.fromScale(1, 0.5) else UDim2.fromScale(0, 0.5),
-						AnchorPoint = if value then Vector2.new(1, 0.5) else Vector2.new(0, 0.5),
-						BackgroundTransparency = renderData.Button.Transparency,
-						BorderSizePixel = 0,
-						BackgroundColor3 = renderData.Button.Color3,
-					} :: RobloxTypes.FrameProperties,
-					{
-						UIListLayout = React.createElement(
-							"UIListLayout",
+							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+							Color = renderData.Outline.Color3,
+							LineJoinMode = Enum.LineJoinMode.Round,
+							Thickness = outlineThickness,
+							Enabled = useStroke,
+							Transparency = renderData.Outline.Transparency,
+						} :: RobloxTypes.UIStrokeProperties
+					),
+					UICorner = React.createElement(
+						"UICorner",
+						{
+							CornerRadius = UDim.new(
+								0,
+								math.round(scale * (SWITCH_HEIGHT_DP - OUTLINE_THICKNESS_DP * 2) / 2)
+							),
+						} :: RobloxTypes.UICornerProperties
+					),
+					UIPadding = (function()
+						local widthPaddingState: UDim
+						do
+							local size = scale * (SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize)
+							if icon then
+								size += math.max(0, math.round((switchSize.Y.Offset - buttonSize * scale)))
+							end
+							widthPaddingState = UDim.new(0, math.round(size / 2))
+						end
+						local heightPaddingState: UDim
+						do
+							local size = SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize
+							heightPaddingState = UDim.new(0, math.round(scale * size / 2))
+						end
+						return React.createElement(
+							"UIPadding",
 							{
-								Padding = UDim.new(0, 0),
-								SortOrder = Enum.SortOrder.LayoutOrder,
-								FillDirection = Enum.FillDirection.Horizontal,
-								ItemLineAlignment = Enum.ItemLineAlignment.Center,
-								VerticalAlignment = Enum.VerticalAlignment.Center,
-								HorizontalAlignment = Enum.HorizontalAlignment.Center,
-							} :: RobloxTypes.UIListLayoutProperties
-						),
-						UICorner = React.createElement(
-							"UICorner",
-							{
-								CornerRadius = UDim.new(0, math.round(props.Scale * buttonSize / 2)),
-							} :: RobloxTypes.UICornerProperties
-						),
-						Icon = React.createElement(
-							"ImageLabel",
-							{
-								Size = UDim2.fromOffset(
-									math.round(props.Scale * ICON_SIZE_DP),
-									math.round(props.Scale * ICON_SIZE_DP)
-								),
-								BackgroundTransparency = 1,
-								ImageTransparency = renderData.Text.Transparency,
-								Visible = icon ~= nil,
-								ImageColor3 = renderData.Text.Color3,
-								Image = if icon then icon.Image else "",
-								ImageRectOffset = if icon then icon.ImageRectOffset else Vector2.zero,
-								ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
-							} :: RobloxTypes.ImageLabelProperties,
-							{
-								UICorner = React.createElement(
-									"UICorner",
-									{
-										CornerRadius = UDim.new(0.5, 0),
-									} :: RobloxTypes.UICornerProperties
-								),
-							}
-						),
-					}
-				),
-			}),
-		}
-	)
+								PaddingTop = heightPaddingState,
+								PaddingBottom = heightPaddingState,
+								PaddingLeft = widthPaddingState,
+								PaddingRight = widthPaddingState,
+							} :: RobloxTypes.UIPaddingProperties
+						)
+					end)(),
+					Knob = React.createElement(
+						"Frame",
+						{
+							Size = UDim2.fromOffset(
+								math.round(scale * buttonSize),
+								math.round(scale * buttonSize)
+							),
+							Position = if value then UDim2.fromScale(1, 0.5) else UDim2.fromScale(0, 0.5),
+							AnchorPoint = if value then Vector2.new(1, 0.5) else Vector2.new(0, 0.5),
+							BackgroundTransparency = renderData.Button.Transparency,
+							BorderSizePixel = 0,
+							BackgroundColor3 = renderData.Button.Color3,
+						} :: RobloxTypes.FrameProperties,
+						{
+							UIListLayout = React.createElement(
+								"UIListLayout",
+								{
+									Padding = UDim.new(0, 0),
+									SortOrder = Enum.SortOrder.LayoutOrder,
+									FillDirection = Enum.FillDirection.Horizontal,
+									ItemLineAlignment = Enum.ItemLineAlignment.Center,
+									VerticalAlignment = Enum.VerticalAlignment.Center,
+									HorizontalAlignment = Enum.HorizontalAlignment.Center,
+								} :: RobloxTypes.UIListLayoutProperties
+							),
+							UICorner = React.createElement(
+								"UICorner",
+								{
+									CornerRadius = UDim.new(0, math.round(scale * buttonSize / 2)),
+								} :: RobloxTypes.UICornerProperties
+							),
+							Icon = React.createElement(
+								"ImageLabel",
+								{
+									Size = UDim2.fromOffset(
+										math.round(scale * ICON_SIZE_DP),
+										math.round(scale * ICON_SIZE_DP)
+									),
+									BackgroundTransparency = 1,
+									ImageTransparency = renderData.Text.Transparency,
+									Visible = icon ~= nil,
+									ImageColor3 = renderData.Text.Color3,
+									Image = if icon then icon.Image else "",
+									ImageRectOffset = if icon then icon.ImageRectOffset else Vector2.zero,
+									ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
+								} :: RobloxTypes.ImageLabelProperties,
+								{
+									UICorner = React.createElement(
+										"UICorner",
+										{
+											CornerRadius = UDim.new(0.5, 0),
+										} :: RobloxTypes.UICornerProperties
+									),
+								}
+							),
+						}
+					),
+				}),
+			}
+		)
+	end
+
+	Interface.new = Component
 end
 
 return Interface

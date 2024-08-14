@@ -55,7 +55,7 @@ return function(target: Frame)
 						} :: RobloxTypes.UIListLayoutProperties
 					),
 
-					First = Interface.new({
+					First = React.createElement(Interface.new, {
 						LayoutOrder = 1,
 
 						Value = false,
