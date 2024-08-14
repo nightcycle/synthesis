@@ -15,18 +15,10 @@
 		"description": "Imports a scripts sub-module.",
 		"scope": "lua,luau"
 	},
-	"import server": {
-		"prefix": "import server",
-		"body": [
-			"local $name = require(game:GetService(\"ServerScriptService\"):WaitForChild(\"Server\"):WaitForChild(\"$name\")$0)"
-		],
-		"description": "Imports a server module.",
-		"scope": "lua,luau"
-	},
 	"import child": {
 		"prefix": "import child",
 		"body": [
-			"local $name = require(script:WaitForChild(\"$name\")$0)"
+			"local $name = require(\"$0\")"
 		],
 		"description": "Imports a child module.",
 		"scope": "lua,luau"
@@ -50,7 +42,7 @@
 	"import packages": {
 		"prefix": "import package",
 		"body": [
-			"local $name = require(_Packages:WaitForChild(\"$name\"))"
+			"local $name = require(\"@Package/$name\")"
 		],
 		"description": "Imports a package module.",
 		"scope": "lua,luau"
@@ -60,8 +52,6 @@
 		"body": [
 			"--!strict",
 			"--!native",
-			"local _Package = script",
-			"local _Packages = _Package.Parent",
 			"-- Services",
 			"-- Packages",
 			"-- Modules",

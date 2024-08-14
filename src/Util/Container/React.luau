@@ -1,7 +1,7 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@Packages/React")
+local React = require("@Package/React")
 -- Modules
 local RobloxTypes = require("@Project/RobloxTypes")
 local PropUtil = require("@Project/PropUtil")

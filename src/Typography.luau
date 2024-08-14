@@ -1,12 +1,10 @@
 --!strict
-local _Package = script.Parent
-local _Packages = _Package.Parent
 -- Services
 -- Packages
-local HashUtil = require(_Packages:WaitForChild("HashUtil"))
+local HashUtil = require("@Package/HashUtil")
 -- Modules
-local Enums = require(_Package:WaitForChild("Enums"))
-local Types = require(_Package:WaitForChild("Types"))
+local Enums = require("@Project/Enums")
+local Types = require("@Project/Types")
 
 -- Types
 export type FontData = Types.FontData

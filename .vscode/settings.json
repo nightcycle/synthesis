@@ -6,12 +6,17 @@
 	"luau-lsp.require.mode": "relativeToFile",
 	"luau-lsp.require.directoryAliases": {
 		"@Project": "src",
-		"@Packages": "Packages",
+		"@Package": "Packages",
+		"@Component": "src/Component",
+		"@Util": "src/Util",
 	},
 	"files.exclude": {
 		"**lints": true,
 		"**types": true,
-		// "sourcemap.json": true,
+		"sourcemap.json": true,
+		"darklua-sourcemap.json": true,
+		"synthetic.rbxl": true,
+		"requirements.txt": true,
 		"Packages": true,
 	},
 	"emeraldwalk.runonsave": {

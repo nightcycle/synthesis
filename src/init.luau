@@ -1,12 +1,10 @@
 --!strict
-local _Package = script
-local _Packages = _Package.Parent
 -- Services
 -- Packages
 -- Modules
-local Types = require(_Package:WaitForChild("Types"))
-local Style = require(_Package:WaitForChild("Style"))
-local Enums = require(_Package:WaitForChild("Enums"))
+local Types = require("Types")
+local Style = require("Style")
+local Enums = require("Enums")
 -- Types
 export type ImageData = Types.ImageData
 export type OptionData = Types.OptionData
@@ -28,70 +26,38 @@ export type TransitionType = Enums.TransitionType
 -- Constants
 -- Variables
 -- References
-local Component = _Package:WaitForChild("Component")
 -- Private Functions
 -- Class
 local Synthetic = {}
 
 Synthetic.Enums = Enums
-Synthetic.Sounds = require(_Package:WaitForChild("Sounds"))
+Synthetic.Sounds = require("Sounds")
 Synthetic.Util = {
-	Container = require(_Package:WaitForChild("Util"):WaitForChild("Container")),
-	List = require(_Package:WaitForChild("Util"):WaitForChild("List")),
-	Padding = require(_Package:WaitForChild("Util"):WaitForChild("Padding")),
-	TextLabel = require(_Package:WaitForChild("Util"):WaitForChild("TextLabel")),
-	ImageLabel = require(_Package:WaitForChild("Util"):WaitForChild("ImageLabel")),
-	PopUp = require(_Package:WaitForChild("Util"):WaitForChild("PopUp")),
-	ScrollingContainer = require(_Package:WaitForChild("Util"):WaitForChild("ScrollingContainer")),
+	Container = require("Util/Container"),
+	Padding = require("Util/Padding"),
+	TextLabel = require("Util/TextLabel"),
+	ImageLabel = require("Util/ImageLabel"),
+	PopUp = require("Util/PopUp"),
+	ScrollingContainer = require("Util/ScrollingContainer"),
 }
-Synthetic.Transition = require(_Package:WaitForChild("Transition"))
+Synthetic.Transition = require("Transition")
 Synthetic.Types = Types
 Synthetic.Style = Style
-Synthetic.Theme = require(_Package:WaitForChild("Theme"))
-Synthetic.Typography = require(_Package:WaitForChild("Typography"))
+Synthetic.Theme = require("Theme")
+Synthetic.Typography = require("Typography")
 Synthetic.Component = {
-	Dialog = require(Component:WaitForChild("Dialog")),
+	Dialog = require("Component/Dialog"),
 	Menu = {
 		Row = {
 			Tabs = nil,
-			Segmented = require(Component:WaitForChild("Menu"):WaitForChild("Row"):WaitForChild("Segmented")),
+			Segmented = require("Component/Menu/Row/Segmented"),
 			Bar = {
-				Bottom = require(
-					Component:WaitForChild("Menu")
-						:WaitForChild("Row")
-						:WaitForChild("Bar")
-						:WaitForChild("Bottom")
-				),
-				Navigation = nil,
+				Bottom = require("Menu/Row/Bar/Bottom"),
 				Top = {
-					Center = require(
-						Component:WaitForChild("Menu")
-							:WaitForChild("Row")
-							:WaitForChild("Bar")
-							:WaitForChild("Top")
-							:WaitForChild("Center")
-					),
-					Large = require(
-						Component:WaitForChild("Menu")
-							:WaitForChild("Row")
-							:WaitForChild("Bar")
-							:WaitForChild("Top")
-							:WaitForChild("Large")
-					),
-					Medium = require(
-						Component:WaitForChild("Menu")
-							:WaitForChild("Row")
-							:WaitForChild("Bar")
-							:WaitForChild("Top")
-							:WaitForChild("Medium")
-					),
-					Small = require(
-						Component:WaitForChild("Menu")
-							:WaitForChild("Row")
-							:WaitForChild("Bar")
-							:WaitForChild("Top")
-							:WaitForChild("Small")
-					),
+					Center = require("Component/Menu/Row/Bar/Top/Center"),
+					Large = require("Component/Menu/Row/Bar/Top/Large"),
+					Medium = require("Component/Menu/Row/Bar/Top/Medium"),
+					Small = require("Component/Menu/Row/Bar/Top/Small"),
 				},
 			},
 		},
@@ -102,40 +68,40 @@ Synthetic.Component = {
 		},
 	},
 	ProgressIndicator = {
-		Circular = require(Component:WaitForChild("ProgressIndicator"):WaitForChild("Circular")),
+		Circular = require("Component/ProgressIndicator/Circular"),
 		Linear = nil,
 	},
 	Button = {
-		Badge = require(Component:WaitForChild("Button"):WaitForChild("Badge")),
-		ElevatedButton = require(Component:WaitForChild("Button"):WaitForChild("ElevatedButton")),
-		ExtendedFAB = require(Component:WaitForChild("Button"):WaitForChild("ExtendedFAB")),
-		FAB = require(Component:WaitForChild("Button"):WaitForChild("FAB")),
-		FilledButton = require(Component:WaitForChild("Button"):WaitForChild("FilledButton")),
-		FilledIconButton = require(Component:WaitForChild("Button"):WaitForChild("FilledIconButton")),
-		IconButton = require(Component:WaitForChild("Button"):WaitForChild("IconButton")),
-		Outlined = require(Component:WaitForChild("Button"):WaitForChild("OutlinedButton")),
-		OutlinedIcon = require(Component:WaitForChild("Button"):WaitForChild("OutlinedIconButton")),
-		Text = require(Component:WaitForChild("Button"):WaitForChild("TextButton")),
+		Badge = require("Component/Button/Badge"),
+		ElevatedButton = require("Component/Button/ElevatedButton"),
+		ExtendedFAB = require("Component/Button/ExtendedFAB"),
+		FAB = require("Component/Button/FAB"),
+		FilledButton = require("Component/Button/FilledButton"),
+		FilledIconButton = require("Component/Button/FilledIconButton"),
+		IconButton = require("Component/Button/IconButton"),
+		Outlined = require("Component/Button/Outlined"),
+		OutlinedIcon = require("Component/Button/OutlinedIcon"),
+		Text = require("Component/Button/Text"),
 		Chip = {
-			Filter = require(Component:WaitForChild("Button"):WaitForChild("Chip"):WaitForChild("Filter")),
-			Assist = require(Component:WaitForChild("Button"):WaitForChild("Chip"):WaitForChild("Assist")),
+			Filter = require("Component/Button/Chip/Filter"),
+			Assist = require("Component/Button/Chip/Assist"),
 		},
 	},
 	Snackbar = {
-		Large = require(Component:WaitForChild("Snackbar"):WaitForChild("Large")),
-		Small = require(Component:WaitForChild("Snackbar"):WaitForChild("Small")),
+		Large = require("Component/Snackbar/Large"),
+		Small = require("Component/Snackbar/Small"),
 	},
 	Search = {
-		Filled = require(Component:WaitForChild("Search"):WaitForChild("Filled")),
-		Text = require(Component:WaitForChild("Search"):WaitForChild("Text")),
+		Filled = require("Component/Search/Filled"),
+		Text = require("Component/Search/Text"),
 	},
-	Checkbox = require(Component:WaitForChild("Checkbox")),
-	RadioButton = require(Component:WaitForChild("RadioButton")),
-	Switch = require(Component:WaitForChild("Switch")),
-	Slider = require(Component:WaitForChild("Slider")),
+	Checkbox = require("Component/Checkbox"),
+	RadioButton = require("Component/RadioButton"),
+	Switch = require("Component/Switch"),
+	Slider = require("Component/Slider"),
 	TextField = {
-		Filled = require(Component:WaitForChild("TextField"):WaitForChild("Filled")),
-		Outlined = require(Component:WaitForChild("TextField"):WaitForChild("Outlined")),
+		Filled = require("Component/TextField/Filled"),
+		Outlined = require("Component/TextField/Outlined"),
 	},
 }
 

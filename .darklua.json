@@ -6,7 +6,9 @@
 			  "name": "path",
 			  "sources": {
 				"@Project": "./src",
-				"@Packages": "./Packages"
+				"@Package": "./Packages",
+				"@Component": "./src/Component",
+				"@Util": "./src/Util"
 			}
 		   },
 		   "target": {

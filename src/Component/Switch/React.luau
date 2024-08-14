@@ -3,9 +3,9 @@
 local SoundService = game:GetService("SoundService")
 
 -- @Packages
-local Maid = require("@Packages/Maid")
-local Icons = require("@Packages/MaterialIcons")
-local React = require("@Packages/React")
+local Maid = require("@Package/Maid")
+local Icons = require("@Package/MaterialIcons")
+local React = require("@Package/React")
 
 -- Modules
 local Types = require("@Project/Types")

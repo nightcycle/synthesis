@@ -5,7 +5,6 @@ local _Packages = _Package.Parent
 -- Services
 -- Packages
 local Maid = require(_Packages:WaitForChild("Maid"))
-local ColdFusion = require(_Packages:WaitForChild("ColdFusion"))
 
 -- Modules
 local Types = require(_Package:WaitForChild("Types"))
@@ -19,7 +18,6 @@ type FontData = Types.FontData
 type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
 type ImageData = Types.ImageData
-type CanBeState<V> = ColdFusion.CanBeState<V>
 
 return {
 	NEW = {

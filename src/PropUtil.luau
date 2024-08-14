@@ -1,11 +1,9 @@
 --!strict
 --!native
-local _Package = script
-local _Packages = _Package.Parent
 -- Services
 -- Packages
 -- Modules
-local RobloxTypes = require(script.Parent:WaitForChild("RobloxTypes"))
+local RobloxTypes = require("@Project/RobloxTypes")
 -- Types
 -- Constants
 -- Variables

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rojo sourcemap dev.project.json --output sourcemap.json
+rojo sourcemap serve.project.json --output sourcemap.json

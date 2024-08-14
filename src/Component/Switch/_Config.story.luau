@@ -2,8 +2,8 @@
 --!native
 -- Services
 -- @Packages
-local React = require("@Packages/React")
-local ReactRoblox = require("@Packages/ReactRoblox")
+local React = require("@Package/React")
+local ReactRoblox = require("@Package/ReactRoblox")
 -- Modules
 local Style = require("@Project/Style")
 local Enums = require("@Project/Enums")
