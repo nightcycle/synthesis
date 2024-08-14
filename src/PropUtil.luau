@@ -56,4 +56,44 @@ function Util.mergeFrame(
 	return out
 end
 
+function Util.mergeImageLabel(
+	element: RobloxTypes.ImageLabelProperties,
+	props: RobloxTypes.ImageLabelProperties
+): RobloxTypes.ImageLabelProperties
+	local out = Util.mergeGuiObject(element, props) :: RobloxTypes.ImageLabelProperties
+	out.Image = element.Image or props.Image
+	out.ImageColor3 = element.ImageColor3 or props.ImageColor3
+	out.ImageRectOffset = element.ImageRectOffset or props.ImageRectOffset
+	out.ImageRectSize = element.ImageRectSize or props.ImageRectSize
+	out.ImageTransparency = element.ImageTransparency or props.ImageTransparency
+	out.ResampleMode = element.ResampleMode or props.ResampleMode
+	out.ScaleType = element.ScaleType or props.ScaleType
+	out.SliceCenter = element.SliceCenter or props.SliceCenter
+	out.SliceScale = element.SliceScale or props.SliceScale
+	out.TileSize = element.TileSize or props.TileSize
+	return out
+end
+
+function Util.mergeScrollingFrame(
+	element: RobloxTypes.ScrollingFrameProperties,
+	props: RobloxTypes.ScrollingFrameProperties
+): RobloxTypes.ScrollingFrameProperties
+	local out = Util.mergeGuiObject(element, props) :: RobloxTypes.ScrollingFrameProperties
+	out.AutomaticCanvasSize = element.AutomaticCanvasSize or props.AutomaticCanvasSize
+	out.BottomImage = element.BottomImage or props.BottomImage
+	out.CanvasPosition = element.CanvasPosition or props.CanvasPosition
+	out.CanvasSize = element.CanvasSize or props.CanvasSize
+	out.ElasticBehavior = element.ElasticBehavior or props.ElasticBehavior
+	out.HorizontalScrollBarInset = element.HorizontalScrollBarInset or props.HorizontalScrollBarInset
+	out.MidImage = element.MidImage or props.MidImage
+	out.ScrollBarImageColor3 = element.ScrollBarImageColor3 or props.ScrollBarImageColor3
+	out.ScrollBarImageTransparency = element.ScrollBarImageTransparency or props.ScrollBarImageTransparency
+	out.ScrollBarThickness = element.ScrollBarThickness or props.ScrollBarThickness
+	out.ScrollingDirection = element.ScrollingDirection or props.ScrollingDirection
+	out.ScrollingEnabled = element.ScrollingEnabled or props.ScrollingEnabled
+	out.TopImage = element.TopImage or props.TopImage
+	out.VerticalScrollBarInset = element.VerticalScrollBarInset or props.VerticalScrollBarInset
+	out.VerticalScrollBarPosition = element.VerticalScrollBarPosition or props.VerticalScrollBarPosition
+	return out
+end
 return Util

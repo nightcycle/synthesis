@@ -1,2 +1,1 @@
---!strict
 return require("React")

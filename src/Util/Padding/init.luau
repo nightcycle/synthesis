@@ -1,4 +1,2 @@
 --!strict
-return {
-	ColdFusion = require(script:WaitForChild("ColdFusion")),
-}
+return require("React")
