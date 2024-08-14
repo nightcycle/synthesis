@@ -154,7 +154,7 @@ do
 					),
 					Types._AppearanceData.new(
 						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						0
+						1
 					),
 					Types._AppearanceData.new(
 						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
@@ -311,7 +311,7 @@ do
 		local outlineThickness = math.round(scale * OUTLINE_THICKNESS_DP)
 
 		local useStroke = renderData.Background.Color3 ~= renderData.Outline.Color3
-			or renderData.Background.Transparency ~= renderData.Background.Transparency
+			or renderData.Background.Transparency ~= renderData.Outline.Transparency
 
 		return React.createElement(
 			"Frame",
