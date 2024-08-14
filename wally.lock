@@ -13,11 +13,6 @@ version = "2.0.0"
 dependencies = [["Promise", "evaera/promise@4.0.0"], ["React", "jsdotlua/react@17.1.0"], ["ReactRoblox", "jsdotlua/react-roblox@17.1.0"], ["TestEZ", "roblox/testez@0.4.1"]]
 
 [[package]]
-name = "elttob/fusion"
-version = "0.2.0"
-dependencies = []
-
-[[package]]
 name = "evaera/promise"
 version = "4.0.0"
 dependencies = []
@@ -108,16 +103,6 @@ version = "1.2.7"
 dependencies = [["collections", "jsdotlua/collections@1.2.7"]]
 
 [[package]]
-name = "nightcycle/cold-fusion"
-version = "9.1.1"
-dependencies = [["Maid", "nightcycle/maid@2.0.0"], ["ServiceProxy", "nightcycle/service-proxy@1.0.0"], ["Signal", "nightcycle/signal@1.0.2"], ["TableUtil", "nightcycle/table-util@2.0.0"]]
-
-[[package]]
-name = "nightcycle/curve-util"
-version = "1.0.0"
-dependencies = [["Vector", "nightcycle/vector@1.0.2"]]
-
-[[package]]
 name = "nightcycle/maid"
 version = "2.0.0"
 dependencies = []
@@ -133,38 +118,13 @@ version = "1.0.3"
 dependencies = []
 
 [[package]]
-name = "nightcycle/service-proxy"
-version = "1.0.0"
-dependencies = []
-
-[[package]]
-name = "nightcycle/signal"
-version = "1.0.2"
-dependencies = []
-
-[[package]]
-name = "nightcycle/spring"
-version = "1.0.0"
-dependencies = []
-
-[[package]]
 name = "nightcycle/synthetic"
 version = "5.0.0"
-dependencies = [["ColdFusion", "nightcycle/cold-fusion@9.1.1"], ["CurveUtil", "nightcycle/curve-util@1.0.0"], ["Fusion", "elttob/fusion@0.2.0"], ["HashUtil", "boatbomber/hashlib@1.0.0"], ["Maid", "nightcycle/maid@2.0.0"], ["MaterialIcons", "nightcycle/material-icons-default-dp18-1x@1.0.3"], ["OutlinedMaterialIcons", "nightcycle/material-icons-outlined-dp18-1x@1.0.3"], ["React", "jsdotlua/react@17.1.0"], ["ReactRoblox", "jsdotlua/react-roblox@17.1.0"], ["ReactSpring", "chriscerie/react-spring@2.0.0"], ["Roact", "roblox/roact@1.4.4"], ["Signal", "nightcycle/signal@1.0.2"], ["Spring", "nightcycle/spring@1.0.0"], ["TableUtil", "nightcycle/table-util@2.0.0"]]
+dependencies = [["HashUtil", "boatbomber/hashlib@1.0.0"], ["Maid", "nightcycle/maid@2.0.0"], ["MaterialIcons", "nightcycle/material-icons-default-dp18-1x@1.0.3"], ["OutlinedMaterialIcons", "nightcycle/material-icons-outlined-dp18-1x@1.0.3"], ["React", "jsdotlua/react@17.1.0"], ["ReactRoblox", "jsdotlua/react-roblox@17.1.0"], ["ReactSpring", "chriscerie/react-spring@2.0.0"], ["TableUtil", "nightcycle/table-util@2.0.0"]]
 
 [[package]]
 name = "nightcycle/table-util"
 version = "2.0.0"
-dependencies = []
-
-[[package]]
-name = "nightcycle/vector"
-version = "1.0.2"
-dependencies = []
-
-[[package]]
-name = "roblox/roact"
-version = "1.4.4"
 dependencies = []
 
 [[package]]

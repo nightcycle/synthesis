@@ -281,13 +281,24 @@ def build_tree(class_name: str):
 			content.append(prop.replace(" ", "") +": "+class_properties[class_name][prop]+"?,")
 		
 		content.append("}")
-with open("type-test.json", "w") as file:
-	file.write(json.dumps(final_list, indent=4))
+# with open("type-test.json", "w") as file:
+# 	file.write(json.dumps(final_list, indent=4))
 
-for class_data in final_list:
-	build_tree(class_data["Name"])	
+# for class_data in final_list:
+# 	build_tree(class_data["Name"])	
 
+def plant_tree(root_class_name: str):
+	build_tree(root_class_name)
+	if not root_class_name in dependency_registry:	
+		return
+	
+	for child_class in dependency_registry[root_class_name]:
+		plant_tree(child_class)
 
+plant_tree("UIBase")
+plant_tree("GuiBase")
+
+	
 content.append("return {}")
 
 with open(BUILD_PATH, "w") as out_file:

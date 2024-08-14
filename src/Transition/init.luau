@@ -5,6 +5,7 @@ local _Packages = _Package.Parent
 -- Packages
 local CurveUtil = require(_Packages:WaitForChild("CurveUtil"))
 local ReactSpring = require(_Packages:WaitForChild("ReactSpring"))
+
 -- Modules
 local Enums = require(_Package:WaitForChild("Enums"))
 

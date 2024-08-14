@@ -8,17 +8,11 @@ registry = "https://github.com/upliftgames/wally-index"
 exclude = ["Packages", ".vscode", "media", "*.mp4", "*.gif", "*.png"]
 
 [dependencies]
-ColdFusion = "nightcycle/cold-fusion@9.1.1"
-Signal = "nightcycle/signal@1.0.2"
 Maid = "nightcycle/maid@2.0.0"
-Fusion = "elttob/fusion@0.2.0"
-Roact = "roblox/roact@1.4.4"
 MaterialIcons = "nightcycle/material-icons-default-dp18-1x@1.0.3"
 OutlinedMaterialIcons = "nightcycle/material-icons-outlined-dp18-1x@1.0.3"
-CurveUtil = "nightcycle/curve-util@1.0.0"
 TableUtil = "nightcycle/table-util@2.0.0"
 HashUtil = "boatbomber/hashlib@1.0.0"
-Spring = "nightcycle/spring@1.0.0"
 ReactRoblox = "jsdotlua/react-roblox@17.1.0"
 React = "jsdotlua/react@17.1.0"
 ReactSpring = "chriscerie/react-spring@2.0.0"
