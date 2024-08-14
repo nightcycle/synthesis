@@ -3,7 +3,7 @@
 -- Services
 -- Packages
 -- Modules
-local RobloxTypes = require("@Project/RobloxTypes")
+local RobloxTypes = require("@proj/RobloxTypes")
 -- Types
 -- Constants
 -- Variables

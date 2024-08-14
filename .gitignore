@@ -2,7 +2,7 @@
 *.rbxl
 .gitconfig
 wally.lock
-Package-lock.json
+package-lock.json
 sourcemap.json
 darklua-sourcemap.json
 
@@ -11,3 +11,4 @@ Packages
 serve
 types
 lints
+node_modules

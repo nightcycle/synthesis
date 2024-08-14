@@ -39,12 +39,12 @@
 		"description": "Unpacks and a type.",
 		"scope": "lua,luau"
 	},
-	"import packages": {
-		"prefix": "import package",
+	"import wally package": {
+		"prefix": "import wally",
 		"body": [
-			"local $name = require(\"@Package/$name\")"
+			"local $name = require(\"@wally/$name\")"
 		],
-		"description": "Imports a package module.",
+		"description": "Imports a wally package module.",
 		"scope": "lua,luau"
 	},
 	"import header": {

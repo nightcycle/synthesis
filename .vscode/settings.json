@@ -5,16 +5,19 @@
 	"luau-lsp.types.robloxSecurityLevel": "LocalUserSecurity",
 	"luau-lsp.require.mode": "relativeToFile",
 	"luau-lsp.require.directoryAliases": {
-		"@Project": "src",
-		"@Package": "Packages",
-		"@Component": "src/Component",
-		"@Util": "src/Util",
+		"@proj": "src",
+		"@wally": "Packages",
+		"@comp": "src/Component",
+		"@util": "src/Util",
+		"@node": "node_modules/.luau-aliases"
 	},
 	"files.exclude": {
 		"**lints": true,
 		"**types": true,
 		"sourcemap.json": true,
+		"package-lock.json": true,
 		"darklua-sourcemap.json": true,
+		"node_modules": true,
 		"synthetic.rbxl": true,
 		"requirements.txt": true,
 		"Packages": true,
@@ -25,12 +28,12 @@
 			{
 				"match": ".lua",
 				"isAsync": false,
-				"cmd": "rojo sourcemap dev.project.json --output sourcemap.json"
+				"cmd": "rojo sourcemap serve.project.json --output sourcemap.json"
 			},
 			{
 				"match": ".luau",
 				"isAsync": false,
-				"cmd": "rojo sourcemap dev.project.json --output sourcemap.json"
+				"cmd": "rojo sourcemap serve.project.json --output sourcemap.json"
 			},
 			{
 				"match": "pseudo-enum.toml",
@@ -40,7 +43,12 @@
 			{
 				"match": "wally.toml",
 				"isAsync": false,
-				"cmd": "sh scripts/workspace/wally-install.sh"
+				"cmd": "sh scripts/wally-install.sh"
+			},
+			{
+				"match": "project.json",
+				"isAsync": false,
+				"cmd": "sh scripts/npm-install.sh"
 			},
 		]
 	}

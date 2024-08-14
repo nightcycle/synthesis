@@ -3,18 +3,18 @@
 local SoundService = game:GetService("SoundService")
 
 -- @Packages
-local Maid = require("@Package/Maid")
-local Icons = require("@Package/MaterialIcons")
-local React = require("@Package/React")
+local Maid = require("@wally/Maid")
+local Icons = require("@wally/MaterialIcons")
+local React = require("@node/@jsdotlua/react")
 
 -- Modules
-local Types = require("@Project/Types")
-local Style = require("@Project/Style")
-local Enums = require("@Project/Enums")
-local Sounds = require("@Project/Sounds")
-local Theme = require("@Project/Theme")
-local RobloxTypes = require("@Project/RobloxTypes")
-local PropUtil = require("@Project/PropUtil")
+local Types = require("@proj/Types")
+local Style = require("@proj/Style")
+local Enums = require("@proj/Enums")
+local Sounds = require("@proj/Sounds")
+local Theme = require("@proj/Theme")
+local RobloxTypes = require("@proj/RobloxTypes")
+local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 
 -- Types

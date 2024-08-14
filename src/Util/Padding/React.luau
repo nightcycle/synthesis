@@ -1,11 +1,11 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@Package/React")
+local React = require("@node/@jsdotlua/react")
 -- Modules
-local RobloxTypes = require("@Project/RobloxTypes")
-local Types = require("@Project/Types")
-local Style = require("@Project/Style")
+local RobloxTypes = require("@proj/RobloxTypes")
+local Types = require("@proj/Types")
+local Style = require("@proj/Style")
 -- Types
 type ImageData = Types.ImageData
 type Style = Style.Style

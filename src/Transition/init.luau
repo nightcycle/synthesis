@@ -3,10 +3,10 @@ local _Package = script.Parent
 local _Packages = _Package.Parent
 -- Services
 -- Packages
-local CurveUtil = require(_Packages:WaitForChild("CurveUtil"))
+local CurveUtil = require("@wally/CurveUtil")
 
 -- Modules
-local Enums = require(_Package:WaitForChild("Enums"))
+local Enums = require("@proj/Enums")
 
 -- Types
 -- Constants

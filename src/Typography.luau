@@ -1,10 +1,10 @@
 --!strict
 -- Services
 -- Packages
-local HashUtil = require("@Package/HashUtil")
+local HashUtil = require("@wally/HashUtil")
 -- Modules
-local Enums = require("@Project/Enums")
-local Types = require("@Project/Types")
+local Enums = require("@proj/Enums")
+local Types = require("@proj/Types")
 
 -- Types
 export type FontData = Types.FontData

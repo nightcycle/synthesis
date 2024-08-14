@@ -1,10 +1,10 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@Package/React")
+local React = require("@node/@jsdotlua/react")
 -- Modules
-local RobloxTypes = require("@Project/RobloxTypes")
-local PropUtil = require("@Project/PropUtil")
+local RobloxTypes = require("@proj/RobloxTypes")
+local PropUtil = require("@proj/PropUtil")
 -- Types
 -- Constants
 local MID_IMAGE = "http://www.roblox.com/asset/?id=16331943650"

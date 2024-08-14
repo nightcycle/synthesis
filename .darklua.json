@@ -5,10 +5,10 @@
 		   "current": {
 			  "name": "path",
 			  "sources": {
-				"@Project": "./src",
-				"@Package": "./Packages",
-				"@Component": "./src/Component",
-				"@Util": "./src/Util"
+				"@proj": "./src",
+				"@wally": "./Packages",
+				"@comp": "./src/Component",
+				"@util": "./src/Util"
 			}
 		   },
 		   "target": {
