@@ -14,6 +14,7 @@ local Enums = require(_Package:WaitForChild("Enums"))
 local Sounds = require(_Package:WaitForChild("Sounds"))
 local Theme = require(_Package:WaitForChild("Theme"))
 local RobloxTypes = require(_Package:WaitForChild("RobloxTypes"))
+local PropUtil = require(_Package:WaitForChild("PropUtil"))
 local Defaults = require(script.Parent:WaitForChild("Defaults"))
 -- Types
 type Maid = Maid.Maid
@@ -314,15 +315,17 @@ do
 
 		return React.createElement(
 			"Frame",
-			{
-				Name = "Switch",
-				Size = UDim2.fromOffset(
-					switchSize.X.Offset + outlineThickness * 2,
-					switchSize.Y.Offset + outlineThickness * 2
-				),
-				BackgroundColor3 = renderData.Background.Color3,
-				BackgroundTransparency = if useStroke then 1 else renderData.Background.Transparency,
-			} :: RobloxTypes.ImageButtonProperties,
+			PropUtil.mergeFrame(
+				{
+					Size = UDim2.fromOffset(
+						switchSize.X.Offset + outlineThickness * 2,
+						switchSize.Y.Offset + outlineThickness * 2
+					),
+					BackgroundColor3 = renderData.Background.Color3,
+					BackgroundTransparency = if useStroke then 1 else renderData.Background.Transparency,
+				} :: RobloxTypes.FrameProperties,
+				self.props
+			),
 			{
 				UICorner = React.createElement(
 					"UICorner",
