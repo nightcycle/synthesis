@@ -2,6 +2,7 @@ export type InstanceProperties = {
 	Archivable: boolean?,
 	Name: string?,
 	Parent: Instance?,
+	children: { [string]: any }?,
 }
 export type UIBaseProperties = InstanceProperties
 export type UIComponentProperties = UIBaseProperties

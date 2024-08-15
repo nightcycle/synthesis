@@ -1,7 +1,7 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@node/@jsdotlua/react")
+local React = require("@wally/React")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local Types = require("@proj/Types")
@@ -16,11 +16,13 @@ type Style = Style.Style
 -- Class
 local Util = {}
 
-function Util.fromStyle(props: {
-	LeftRightDp: number,
-	TopBottomDp: number,
-	Style: Style,
-}): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
+function Util.fromStyle(
+	props: {
+		LeftRightDp: number,
+		TopBottomDp: number,
+		Style: Style,
+	}
+): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
 	local leftRight = UDim.new(0, math.round(props.LeftRightDp * props.Style.Scale))
 	local topBottom = UDim.new(0, math.round(props.TopBottomDp * props.Style.Scale))
 
@@ -38,7 +40,10 @@ end
 function Util.fromStyleSimple(props: {
 	PaddingDp: number,
 	Style: Style,
-}): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
+}): React.ReactElement<
+	RobloxTypes.UIPaddingProperties,
+	"UIPadding"
+>
 	local padding = UDim.new(0, math.round(props.PaddingDp * props.Style.Scale))
 
 	return React.createElement(

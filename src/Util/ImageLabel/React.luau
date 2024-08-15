@@ -1,7 +1,7 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@node/@jsdotlua/react")
+local React = require("@wally/React")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
@@ -15,11 +15,13 @@ type ImageData = Types.ImageData
 -- Class
 local Util = {}
 
-function Util.new(props: RobloxTypes.ImageLabelProperties & {
-	Icon: ImageData?,
-	Color: Color3?,
-	Transparency: number?,
-}): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
+function Util.new(
+	props: RobloxTypes.ImageLabelProperties & {
+		Icon: ImageData?,
+		Color: Color3?,
+		Transparency: number?,
+	}
+): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
 	local i = props.Icon
 	return React.createElement(
 		"ImageLabel",

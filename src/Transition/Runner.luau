@@ -3,7 +3,7 @@
 -- Services
 local RunService = game:GetService("RunService")
 -- Packages
-local React = require("@node/@jsdotlua/react")
+local React = require("@wally/React")
 
 -- Modules
 local Enums = require("@proj/Enums")

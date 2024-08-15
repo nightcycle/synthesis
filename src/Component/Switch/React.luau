@@ -4,7 +4,7 @@ local SoundService = game:GetService("SoundService")
 -- @Packages
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
-local React = require("@node/@jsdotlua/react")
+local React = require("@wally/React")
 local CurveUtil = require("@wally/CurveUtil")
 -- Modules
 local Types = require("@proj/Types")

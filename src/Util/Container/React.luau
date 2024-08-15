@@ -1,7 +1,7 @@
 --!strict
 -- Services
 -- Packages
-local React = require("@node/@jsdotlua/react")
+local React = require("@wally/React")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")

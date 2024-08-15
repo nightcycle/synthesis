@@ -21,107 +21,6 @@ class_list = []
 for class_data in classes:
 	class_list.append(class_data)
 
-class_allow_registry = {
-	"Instance": True,
-	"Lighting": True,
-	"Players": True,
-	"SoundService": True,
-	"MaterialService": True,
-	"StarterGui": True,
-	"StarterPack": True,
-	"RocketPropulsion": False,
-	"BlockMesh": False,
-	"Breakpoint": False,
-	"HumanoidController": False,
-	"VehicleController": False,
-	"SkateboardController": False,
-	"AirController": False,
-	"ClimbController": False,
-	"GroundController": False,
-	"SwimController": False,
-	"ControllerManager": False,
-	"DataStoreIncrementOptions": False,
-	"DataStoreOptions": False,
-	"DataStoreSetOptions": False,
-	"DebuggerWatch": False,
-	"EulerRotationCurve": False,
-	"GetTextBoundsParams": False,
-	"Keyframe": False,
-	"KeyframeMarker": False,
-	"LocalizationTable": False,
-	"Script": False,
-	"LocalScript": False,
-	"ModuleScript": False,
-	"MarkerCurve": False,
-	"HapticEffect": False,
-	"PartOperationAsset": False,
-	"ReflectionMetadata": False,
-	"ReflectionMetadataCallbacks": False,
-	"ReflectionMetadataClasses": False,
-	"ReflectionMetadataEnums": False,
-	"ReflectionMetadataEvents": False,
-	"ReflectionMetadataFunctions": False,
-	"ReflectionMetadataClass": False,
-	"ReflectionMetadataEnum": False,
-	"ReflectionMetadataEnumItem": False,
-	"ReflectionMetadataMember": False,
-	"ReflectionMetadataProperties": False,
-	"ReflectionMetadataYieldFunctions": False,
-	"TerrainDetail": False,
-	"TerrainRegion": False,
-	"StandalonePluginScripts": False,
-	"BinaryStringValue": False,
-	"TextChatMessageProperties": False,
-	"TextChatCommand": False,
-	"TeleportOptions": False,
-	"RayValue": False,
-	"FloatCurve": False,
-	"CharacterMesh": False,
-	"RenderingTest": False,
-	"Pose": False,
-	"NumberPose": False,
-	"PluginAction": False,
-	"Tween": False,
-	"ServerStorage": False,
-	"ServerScriptService": False,
-	"ServerScriptService": False,
-	"PartOperation": False,
-	"Motor": False,
-	"Accoutrement": False,
-	"Plane": False,
-	"Skin": False,
-	"RocketPropulsion": False,
-	"HopperBin": False,
-	"Flag": False,
-	"Hat": False,
-	"CustomEvent": False,
-	"CustomEventReceiver": False,
-	"BlockMesh": False,
-	"CylinderMesh": False,
-	"Hole": False,
-	"MotorFeature": False,
-	"FunctionalTest": False,
-	"GuiMain": False,
-	"FloorWire": False,
-	"SelectionPartLasso": False,
-	"SelectionPointLasso": False,
-	"RotateP": False,
-	"RotateV": False,
-	"Glue": False,
-	"ManualGlue": False,
-	"Rotate": False,
-	"Snap": False,
-	"Message": False,
-	"Hint": False,
-	"FlagStand": False,
-	"SkateboardPlatform": False,
-	"DoubleConstrainedValue": False,
-	"IntConstrainedValue": False,
-	"Speaker": False,
-	"ManualWeld": False,
-	"Studio": False,
-}
-
 final_list = []
 
 class_properties = {}
@@ -175,19 +74,19 @@ def set_class_properties(class_data):
 				elif tag == "Deprecated" and not super_class == "BodyMover":
 					is_class_deprecated = True
 
-		if (
-			class_name in class_allow_registry
-			and class_allow_registry[class_name] == True
-		):
-			is_service = False
-			final_list.append(class_data)
+		# if (
+		# 	class_name in class_allow_registry
+		# 	and class_allow_registry[class_name] == True
+		# ):
+		# 	is_service = False
+		# 	final_list.append(class_data)
 
 		if is_creatable and not is_service:
-			if (
-				not class_name in class_allow_registry
-				or class_allow_registry[class_name] != False
-			):
-				final_list.append(class_data)
+			# if (
+			# 	not class_name in class_allow_registry
+			# 	or class_allow_registry[class_name] != False
+			# ):
+			final_list.append(class_data)
 
 		if prop_count > 0:
 			for member in class_data["Members"]:
@@ -280,6 +179,9 @@ def build_tree(class_name: str):
 		for prop in class_properties[class_name]:
 			content.append(prop.replace(" ", "") +": "+class_properties[class_name][prop]+"?,")
 		
+		if class_name == "Instance":
+			content.append("children: {[string]: any}?,")
+
 		content.append("}")
 # with open("type-test.json", "w") as file:
 # 	file.write(json.dumps(final_list, indent=4))
@@ -297,7 +199,6 @@ def plant_tree(root_class_name: str):
 
 plant_tree("UIBase")
 plant_tree("GuiBase")
-
 	
 content.append("return {}")
 

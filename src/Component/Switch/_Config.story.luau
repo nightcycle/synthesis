@@ -2,8 +2,8 @@
 --!native
 -- Services
 -- @Packages
-local React = require("@node/@jsdotlua/react")
-local ReactRoblox = require("@node/@jsdotlua/react-roblox")
+local React = require("@wally/React")
+local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
 local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
@@ -21,12 +21,14 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require(script.Parent:WaitForChild("React"))
+		local Interface = require("./React")
 
-		local function halfFrame(props: RobloxTypes.FrameProperties & {
-			Color3: Color3,
-			IsDarkMode: boolean,
-		}): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+		local function halfFrame(
+			props: RobloxTypes.FrameProperties & {
+				Color3: Color3,
+				IsDarkMode: boolean,
+			}
+		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 			local style = Style.new(
 				1.5,
 				Enum.Font.SourceSans,
@@ -35,7 +37,8 @@ return function(target: Frame)
 			)
 			local defaultSelection, setdefaultSelection = React.useState(false)
 			local noIconSelection, setNoIconSelection = React.useState(true)
-			local disabledSelection, setDisabledSelection = React.useState(math.random() > 0.5)
+			local disabledSelection, setDisabledSelection =
+				React.useState(math.random() > 0.5)
 			return React.createElement(
 				"Frame",
 				{
@@ -83,16 +86,25 @@ return function(target: Frame)
 						IsEnabled = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
+						BackgroundColor3 = style:GetColor(
+							Enums.ColorRoleType.SurfaceContainerHighest
+						),
 						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+						ButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.PrimaryContainer
+						),
+						OnButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.OnPrimaryContainer
+						),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
+						FontData = Types.FontData.new(
+							Font.fromEnum(Enum.Font.SourceSans),
+							14
+						),
 						Scale = 1,
 					}),
 
@@ -106,16 +118,25 @@ return function(target: Frame)
 						IsEnabled = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
+						BackgroundColor3 = style:GetColor(
+							Enums.ColorRoleType.SurfaceContainerHighest
+						),
 						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+						ButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.PrimaryContainer
+						),
+						OnButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.OnPrimaryContainer
+						),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
+						FontData = Types.FontData.new(
+							Font.fromEnum(Enum.Font.SourceSans),
+							14
+						),
 						Scale = 1,
 					}),
 
@@ -129,16 +150,25 @@ return function(target: Frame)
 						IsEnabled = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
+						BackgroundColor3 = style:GetColor(
+							Enums.ColorRoleType.SurfaceContainerHighest
+						),
 						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+						ButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.PrimaryContainer
+						),
+						OnButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.OnPrimaryContainer
+						),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
+						FontData = Types.FontData.new(
+							Font.fromEnum(Enum.Font.SourceSans),
+							14
+						),
 						Scale = 1,
 					}),
 				}

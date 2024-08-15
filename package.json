@@ -21,8 +21,6 @@
     "verify-pack": "npm pack --dry-run"
   },
   "dependencies": {
-    "@jsdotlua/react": "^17.1.0",
-    "@jsdotlua/react-roblox": "^17.1.0"
   },
   "devDependencies": {
     "npmluau": "^0.1.1"
