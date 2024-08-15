@@ -15,7 +15,6 @@ local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 local Transition = require("@proj/Transition")
-local TransitionRunner = require("@proj/TransitionRunner")
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
@@ -76,7 +75,7 @@ function newSwitchRenderData(
 		Outline = outline,
 	})
 end
-function getAlphaRunner(self: React.ComponentClass<SwitchProperties>): TransitionRunner.TransitionRunner
+function getAlphaRunner(self: React.ComponentClass<SwitchProperties>): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
 

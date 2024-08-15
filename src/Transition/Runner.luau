@@ -4,12 +4,11 @@
 local RunService = game:GetService("RunService")
 -- Packages
 local React = require("@node/@jsdotlua/react")
-local CurveUtil = require("@wally/CurveUtil")
 
 -- Modules
 local Enums = require("@proj/Enums")
-local Transition = require("@proj/Transition")
--- Types
+local Duration = require("./Duration")
+local Easing = require("./Easing")
 -- Constants
 -- Variables
 -- References
@@ -35,8 +34,8 @@ return function(
 	local goalAlpha = initialAlpha
 	local currentAlpha = initialAlpha
 
-	local duration = Transition.Duration[transitionDuration]
-	local transitionSolver = Transition.Easing[transitionType]
+	local duration = Duration[transitionDuration]
+	local transitionSolver = Easing[transitionType]
 
 	local isDisconnected = false
 	local connection: RBXScriptConnection? = nil
