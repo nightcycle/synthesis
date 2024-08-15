@@ -1,6 +1,7 @@
 --!strict
 -- Services
 -- Packages
+local CurveUtil = require("@wally/CurveUtil")
 -- Modules
 -- Types
 export type AppearanceData = {
@@ -67,7 +68,12 @@ export type FontData = {
 local Types = {}
 
 Types.FontData = {}
-function Types.FontData.new(font: Font, size: number, lineHeight: number?, tracking: number?): FontData
+function Types.FontData.new(
+	font: Font,
+	size: number,
+	lineHeight: number?,
+	tracking: number?
+): FontData
 	return table.freeze({
 		Font = font,
 		Size = size,
@@ -135,9 +141,23 @@ function Types._AppearanceData.new(color3: Color3, transparency: number?): Appea
 		Transparency = transparency or 0,
 	})
 end
+function Types._AppearanceData.lerp(
+	a: AppearanceData,
+	b: AppearanceData,
+	alpha: number
+): AppearanceData
+	return Types._AppearanceData.new(
+		CurveUtil.lerp(a.Color3, b.Color3, alpha),
+		CurveUtil.lerp(a.Transparency, b.Transparency, alpha)
+	)
+end
 
 Types.ImageData = {}
-function Types.ImageData.new(image: string, rectOffset: Vector2?, rectSize: Vector2?): ImageData
+function Types.ImageData.new(
+	image: string,
+	rectOffset: Vector2?,
+	rectSize: Vector2?
+): ImageData
 	return table.freeze({
 		Image = image,
 		ImageRectOffset = rectOffset or Vector2.zero,

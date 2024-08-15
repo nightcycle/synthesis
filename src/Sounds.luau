@@ -56,7 +56,9 @@ local LIBRARY: { [Enums.SoundType]: string } = table.freeze({
 -- Class
 
 return {
-	play = function(soundType: Enums.SoundType, volume: number)
+	play = function(soundType: Enums.SoundType, volume: number?)
+		volume = volume or 0.5
+		assert(volume)
 		local sound = Instance.new("Sound")
 		sound.SoundId = LIBRARY[soundType]
 		sound.Volume = volume

@@ -5,6 +5,7 @@ local SoundService = game:GetService("SoundService")
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
 local React = require("@node/@jsdotlua/react")
+local CurveUtil = require("@wally/CurveUtil")
 -- Modules
 local Types = require("@proj/Types")
 local Style = require("@proj/Style")
@@ -75,7 +76,9 @@ function newSwitchRenderData(
 		Outline = outline,
 	})
 end
-function getAlphaRunner(self: React.ComponentClass<SwitchProperties>): Transition.TransitionRunner
+function getAlphaRunner(
+	self: React.ComponentClass<SwitchProperties>
+): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
 
@@ -83,7 +86,8 @@ end
 local Interface = {}
 
 do
-	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
+	local Component: React.ComponentClass<SwitchProperties> =
+		React.Component:extend("Switch")
 
 	function Component:init(initialProps: SwitchProperties): ()
 		self[ALPHA_RUNNER_KEY] = Transition.Runner(
@@ -115,28 +119,44 @@ do
 			or Defaults.New.BackgroundColor3
 		local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
 			or Defaults.New.OnBackgroundColor3
-		local elevation: number = self.props.Elevation :: number? or Defaults.New.Elevation
+		local elevation: number = self.props.Elevation :: number?
+			or Defaults.New.Elevation
 		local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
 			or Defaults.New.SchemeType
-		local buttonColor3: Color3 = self.props.ButtonColor3 :: Color3? or Defaults.New.ButtonColor3
-		local onButtonColor3: Color3 = self.props.OnButtonColor3 :: Color3? or Defaults.New.OnButtonColor3
-		local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3? or Defaults.New.DisabledColor3
+		local buttonColor3: Color3 = self.props.ButtonColor3 :: Color3?
+			or Defaults.New.ButtonColor3
+		local onButtonColor3: Color3 = self.props.OnButtonColor3 :: Color3?
+			or Defaults.New.OnButtonColor3
+		local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3?
+			or Defaults.New.DisabledColor3
 		local onDisabledColor3: Color3 = self.props.OnDisabledColor3 :: Color3?
 			or Defaults.New.OnDisabledColor3
-		local fillColor3: Color3 = (self.props.FillColor3 :: Color3?) or Defaults.New.FillColor3
+		local fillColor3: Color3 = self.props.FillColor3 :: Color3?
+			or Defaults.New.FillColor3
 		local scale = (self.props.Scale :: number?) or Defaults.New.Scale
-		local isAnimated = (self.props.IsAnimated :: boolean?) or Defaults.New.IsAnimated
+		local isAnimated = if self.props.IsAnimated ~= nil
+			then self.props.IsAnimated
+			else Defaults.New.IsAnimated
+		local isEnabled = if self.props.IsEnabled ~= nil
+			then self.props.IsEnabled
+			else Defaults.New.IsEnabled
+		local includeIconOnSelected = if self.props.IncludeIconOnSelected ~= nil
+			then self.props.IncludeIconOnSelected
+			else Defaults.New.IncludeIconOnSelected
+		local includeIconOnDeselected = if self.props.IncludeIconOnDeselected ~= nil
+			then self.props.IncludeIconOnDeselected
+			else Defaults.New.IncludeIconOnDeselected
 
 		-- solve some internal stuff
 		local icon: ImageData?
-		if value == true and self.props.IncludeIconOnSelected then
+		if value == true and includeIconOnSelected then
 			icon = Icons.check
-		elseif value == false and self.props.IncludeIconOnDeselected then
+		elseif value == false and includeIconOnDeselected then
 			icon = Icons.close
 		end
 
 		local state: Enums.ButtonStateType
-		if self.props.IsEnabled then
+		if isEnabled then
 			if isPressed then
 				state = Enums.ButtonStateType.Pressed
 			elseif isHovered then
@@ -150,7 +170,282 @@ do
 			state = Enums.ButtonStateType.Disabled
 		end
 
-		local renderData: SwitchRenderData
+		local function getRenderData(focusValue: boolean): SwitchRenderData
+			if focusValue then
+				if state == Enums.ButtonStateType.Enabled then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(buttonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Disabled then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.38
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onDisabledColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.12
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.12
+						)
+					)
+				elseif state == Enums.ButtonStateType.Hovered then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(buttonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0.08
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Focused then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(buttonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0.1
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Pressed then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(buttonColor3, elevation, schemeType),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0.1
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(fillColor3, elevation, schemeType),
+							0
+						)
+					)
+				else
+					error(`invalid selected render data at {state}`)
+				end
+			else
+				if state == Enums.ButtonStateType.Enabled then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Disabled then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onDisabledColor3,
+								elevation,
+								schemeType
+							),
+							1 - 0.38
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.38
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.12
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+							1 - 0.38
+						)
+					)
+				elseif state == Enums.ButtonStateType.Hovered then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							1 - 0.08
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Focused then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							1 - 0.1
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						)
+					)
+				elseif state == Enums.ButtonStateType.Pressed then
+					return newSwitchRenderData(
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								backgroundColor3,
+								elevation,
+								schemeType
+							),
+							1 - 0.1
+						),
+						Types._AppearanceData.new(
+							Theme.getElevatedColor(
+								onBackgroundColor3,
+								elevation,
+								schemeType
+							),
+							0
+						)
+					)
+				else
+					error(`invalid unselected render data at {state}`)
+				end
+			end
+		end
+
+		local selectedRenderData: SwitchRenderData = getRenderData(true)
+		local unselectedRenderData: SwitchRenderData = getRenderData(false)
 
 		if not isAnimated then
 			getAlphaRunner(self):Stop()
@@ -158,171 +453,33 @@ do
 			getAlphaRunner(self):Update(value)
 		end
 
-		if value then
-			if state == Enums.ButtonStateType.Enabled then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
-				)
-			elseif state == Enums.ButtonStateType.Disabled then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.38
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.12
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.12
-					)
-				)
-			elseif state == Enums.ButtonStateType.Hovered then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.08),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
-				)
-			elseif state == Enums.ButtonStateType.Focused then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.1),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
-				)
-			elseif state == Enums.ButtonStateType.Pressed then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onButtonColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(Theme.getElevatedColor(buttonColor3, elevation, schemeType), 0),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0.1),
-					Types._AppearanceData.new(Theme.getElevatedColor(fillColor3, elevation, schemeType), 0)
-				)
-			else
-				error(`invalid selected render data at {state}`)
-			end
-		else
-			if state == Enums.ButtonStateType.Enabled then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					)
-				)
-			elseif state == Enums.ButtonStateType.Disabled then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
-						1 - 0.38
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.38
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.12
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1 - 0.38
-					)
-				)
-			elseif state == Enums.ButtonStateType.Hovered then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						1 - 0.08
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					)
-				)
-			elseif state == Enums.ButtonStateType.Focused then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						1 - 0.1
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					)
-				)
-			elseif state == Enums.ButtonStateType.Pressed then
-				renderData = newSwitchRenderData(
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(backgroundColor3, elevation, schemeType),
-						1 - 0.1
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						0
-					)
-				)
-			else
-				error(`invalid unselected render data at {state}`)
-			end
-		end
+		local alpha = if isAnimated
+			then getAlphaRunner(self):Get()
+			elseif value then 1
+			else 0
 
-		local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
+		local renderData: SwitchRenderData = newSwitchRenderData(
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Text,
+				selectedRenderData.Text,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Button,
+				selectedRenderData.Button,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Background,
+				selectedRenderData.Background,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Outline,
+				selectedRenderData.Outline,
+				alpha
+			)
+		)
 
 		local buttonSize: number
 		if icon then
@@ -362,7 +519,9 @@ do
 						switchSize.Y.Offset + outlineThickness * 2
 					),
 					BackgroundColor3 = renderData.Background.Color3,
-					BackgroundTransparency = if useStroke then 1 else renderData.Background.Transparency,
+					BackgroundTransparency = if useStroke
+						then 1
+						else renderData.Background.Transparency,
 				} :: RobloxTypes.FrameProperties,
 				self.props
 			),
@@ -370,14 +529,19 @@ do
 				UICorner = React.createElement(
 					"UICorner",
 					{
-						CornerRadius = UDim.new(0, math.round(scale * SWITCH_HEIGHT_DP / 2)),
+						CornerRadius = UDim.new(
+							0,
+							math.round(scale * SWITCH_HEIGHT_DP / 2)
+						),
 					} :: RobloxTypes.UICornerProperties
 				),
 				InnerSwitch = React.createElement("ImageButton", {
 					Size = switchSize,
 					Position = UDim2.fromOffset(outlineThickness, outlineThickness),
 					BackgroundColor3 = renderData.Background.Color3,
-					BackgroundTransparency = if useStroke then renderData.Background.Transparency else 1,
+					BackgroundTransparency = if useStroke
+						then renderData.Background.Transparency
+						else 1,
 					[React.Event.InputBegan] = function(_, input: InputObject)
 						if input.UserInputType == Enum.UserInputType.MouseMovement then
 							self:setState({
@@ -404,17 +568,12 @@ do
 						if self.props.IsEnabled then
 							onChanged(not value)
 							getAlphaRunner(self):Set(not value, function()
-								local sound = Instance.new("Sound")
-								sound.Volume = 1
-								if not value then
-									sound.SoundId =
-										Sounds.Library[Enums.SoundType.navigation_forward_selection_minimal]
-								else
-									sound.SoundId =
-										Sounds.Library[Enums.SoundType.navigation_backward_selection_minimal]
+								local soundType = Enums.SoundType.navigation_forward_selection_minimal
+								if value then
+									soundType = Enums.SoundType.navigation_backward_selection_minimal
 								end
-								SoundService:PlayLocalSound(sound)
-								sound:Destroy()
+								Sounds.play(soundType)
+				
 							end)
 						end
 					end,
@@ -449,22 +608,39 @@ do
 						{
 							CornerRadius = UDim.new(
 								0,
-								math.round(scale * (SWITCH_HEIGHT_DP - OUTLINE_THICKNESS_DP * 2) / 2)
+								math.round(
+									scale
+										* (SWITCH_HEIGHT_DP - OUTLINE_THICKNESS_DP * 2)
+										/ 2
+								)
 							),
 						} :: RobloxTypes.UICornerProperties
 					),
-					UIPadding = (function(): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
+					UIPadding = (function(): React.ReactElement<
+						RobloxTypes.UIPaddingProperties,
+						"UIPadding"
+					>
 						local widthPaddingState: UDim
 						do
-							local size = scale * (SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize)
+							local size = scale
+								* (
+									SWITCH_HEIGHT_DP
+									- (OUTLINE_THICKNESS_DP * 2)
+									- buttonSize
+								)
 							if icon then
-								size += math.max(0, math.round((switchSize.Y.Offset - buttonSize * scale)))
+								size += math.max(
+									0,
+									math.round((switchSize.Y.Offset - buttonSize * scale))
+								)
 							end
 							widthPaddingState = UDim.new(0, math.round(size / 2))
 						end
 						local heightPaddingState: UDim
 						do
-							local size = SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize
+							local size = SWITCH_HEIGHT_DP
+								- (OUTLINE_THICKNESS_DP * 2)
+								- buttonSize
 							heightPaddingState = UDim.new(0, math.round(scale * size / 2))
 						end
 						return React.createElement(
@@ -505,7 +681,10 @@ do
 							UICorner = React.createElement(
 								"UICorner",
 								{
-									CornerRadius = UDim.new(0, math.round(scale * buttonSize / 2)),
+									CornerRadius = UDim.new(
+										0,
+										math.round(scale * buttonSize / 2)
+									),
 								} :: RobloxTypes.UICornerProperties
 							),
 							Icon = React.createElement(
@@ -520,8 +699,12 @@ do
 									Visible = icon ~= nil,
 									ImageColor3 = renderData.Text.Color3,
 									Image = if icon then icon.Image else "",
-									ImageRectOffset = if icon then icon.ImageRectOffset else Vector2.zero,
-									ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
+									ImageRectOffset = if icon
+										then icon.ImageRectOffset
+										else Vector2.zero,
+									ImageRectSize = if icon
+										then icon.ImageRectSize
+										else Vector2.zero,
 								} :: RobloxTypes.ImageLabelProperties,
 								{
 									UICorner = React.createElement(
