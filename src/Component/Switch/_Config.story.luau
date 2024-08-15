@@ -35,7 +35,7 @@ return function(target: Frame)
 			)
 			local defaultSelection, setdefaultSelection = React.useState(false)
 			local noIconSelection, setNoIconSelection = React.useState(true)
-			local disabledSelection, setDisabledSelection = React.useState(true)
+			local disabledSelection, setDisabledSelection = React.useState(math.random() > 0.5)
 			return React.createElement(
 				"Frame",
 				{
@@ -88,8 +88,8 @@ return function(target: Frame)
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
 						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
@@ -106,13 +106,13 @@ return function(target: Frame)
 						IsEnabled = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
+						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
 						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.InversePrimary),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.InverseOnSurface),
+						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),
@@ -129,13 +129,13 @@ return function(target: Frame)
 						IsEnabled = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+						BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest),
+						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 						ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
 						OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.InversePrimary),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.InverseOnSurface),
+						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						FontData = Types.FontData.new(Font.fromEnum(Enum.Font.SourceSans), 14),

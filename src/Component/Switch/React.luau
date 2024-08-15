@@ -173,20 +173,20 @@ do
 			elseif state == Enums.ButtonStateType.Disabled then
 				renderData = newSwitchRenderData(
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
 						1 - 0.38
+					),
+					Types._AppearanceData.new(
+						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
+						0
 					),
 					Types._AppearanceData.new(
 						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
-						1
+						1 - 0.12
 					),
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
-						1 - 0.38
-					),
-					Types._AppearanceData.new(
-						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
-						1 - 0.38
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+						1 - 0.12
 					)
 				)
 			elseif state == Enums.ButtonStateType.Hovered then
@@ -245,19 +245,19 @@ do
 			elseif state == Enums.ButtonStateType.Disabled then
 				renderData = newSwitchRenderData(
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
 						1 - 0.38
 					),
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
 						1 - 0.38
 					),
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
-						1
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+						1 - 0.12
 					),
 					Types._AppearanceData.new(
-						Theme.getElevatedColor(onBackgroundColor3, elevation, schemeType),
+						Theme.getElevatedColor(disabledColor3, elevation, schemeType),
 						1 - 0.38
 					)
 				)
@@ -420,14 +420,18 @@ do
 						end
 					end,
 					[React.Event.SelectionGained] = function()
-						self:setState({
-							IsFocused = true,
-						})
+						if self.props.IsEnabled then
+							self:setState({
+								IsFocused = true,
+							})
+						end
 					end,
 					[React.Event.SelectionLost] = function()
-						self:setState({
-							IsFocused = false,
-						})
+						if self.props.IsEnabled then
+							self:setState({
+								IsFocused = false,
+							})
+						end
 					end,
 				}, {
 					UIStroke = React.createElement(
