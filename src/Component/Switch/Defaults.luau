@@ -21,6 +21,7 @@ return {
 	New = {
 		Value = false,
 		IsEnabled = true,
+		IsAnimated = true,
 		IncludeIconOnSelected = true,
 		IncludeIconOnDeselected = true,
 		BackgroundColor3 = Color3.new(),

@@ -1,12 +1,13 @@
 --!strict
 -- Services
 local SoundService = game:GetService("SoundService")
-
+local RunService = game:GetService("RunService")
 -- @Packages
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
 local React = require("@node/@jsdotlua/react")
-
+local Chroma = require("@node/chroma-luau")
+local ReactSpring = require("@wally/ReactSpring")
 -- Modules
 local Types = require("@proj/Types")
 local Style = require("@proj/Style")
@@ -34,6 +35,7 @@ type FontData = Types.FontData
 type SwitchProperties = RobloxTypes.FrameProperties & {
 	Value: boolean?,
 	IsEnabled: boolean?,
+	IsAnimated: boolean?,
 	IncludeIconOnSelected: boolean?,
 	IncludeIconOnDeselected: boolean?,
 	BackgroundColor3: Color3?,
@@ -48,6 +50,9 @@ type SwitchProperties = RobloxTypes.FrameProperties & {
 	FontData: FontData?,
 	Scale: number?,
 }
+type SwitchSpringState = {
+	Alpha: React.Binding<number>,
+}
 -- Constants
 local SWITCH_HEIGHT_DP = 32
 local SWITCH_WIDTH_DP = 52
@@ -56,9 +61,22 @@ local KNOB_NO_ICON_SELECTED_SIZE_DP = 24
 local KNOB_NO_ICON_UNSELECTED_SIZE_DP = 16
 local ICON_SIZE_DP = 16
 local OUTLINE_THICKNESS_DP = 2
+local PROGRESS_KEY = "Alpha"
+local SPRING_API_KEY = "SpringApi"
+local SPRING_STATE_KEY = "SpringState"
+local POSITION_KEY = "Position"
 -- Variables
 -- References
 -- Private Functions
+function getSpringApi(self: any): ReactSpring.ControllerApi
+	return self[SPRING_API_KEY]
+end
+function getSpringState(self: any): SwitchSpringState
+	return self[SPRING_STATE_KEY]
+end
+function getGoalAlpha(value: boolean): number
+	return if value then 1 else 0
+end
 function newSwitchRenderData(
 	text: AppearanceData,
 	button: AppearanceData,
@@ -79,12 +97,17 @@ local Interface = {}
 do
 	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
 
-	function Component:init()
+	function Component:init(): ()
+		self[SPRING_STATE_KEY], self[SPRING_API_KEY] = ReactSpring.Controller.new({
+			Alpha = if self.state.Value then 1 else 0,
+		})
+
 		self:setState({
 			Value = false,
 			IsHovered = false,
 			IsPressed = false,
 			IsFocused = false,
+			_Alpha = getSpringState(self).Alpha:getValue(),
 		})
 	end
 
@@ -110,6 +133,7 @@ do
 			or Defaults.New.OnDisabledColor3
 		local fillColor3: Color3 = (self.props.FillColor3 :: Color3?) or Defaults.New.FillColor3
 		local scale = (self.props.Scale :: number?) or Defaults.New.Scale
+		local isAnimated = (self.props.IsAnimated :: boolean?) or Defaults.New.IsAnimated
 
 		-- solve some internal stuff
 		local icon: ImageData?
@@ -314,6 +338,8 @@ do
 		local useStroke = renderData.Background.Color3 ~= renderData.Outline.Color3
 			or renderData.Background.Transparency ~= renderData.Outline.Transparency
 
+		local alpha = getSpringState(self).Alpha:getValue()
+
 		return React.createElement(
 			"Frame",
 			PropUtil.mergeFrame(
@@ -366,6 +392,21 @@ do
 							self:setState({
 								Value = not value,
 							})
+							getSpringApi(self):start({
+								Alpha = getGoalAlpha(not value),
+							})
+							local connection: RBXScriptConnection
+							connection = RunService.RenderStepped:Connect(function()
+								local nxtAlpha = getSpringState(self).Alpha:getValue()
+
+								if nxtAlpha == getGoalAlpha(self.state.value) then
+									connection:Disconnect()
+								else
+									self:setState({
+										_Alpha = getSpringState(self).Alpha:getValue(),
+									})
+								end
+							end)
 
 							local sound = Instance.new("Sound")
 							sound.Volume = 1
@@ -442,8 +483,8 @@ do
 								math.round(scale * buttonSize),
 								math.round(scale * buttonSize)
 							),
-							Position = if value then UDim2.fromScale(1, 0.5) else UDim2.fromScale(0, 0.5),
-							AnchorPoint = if value then Vector2.new(1, 0.5) else Vector2.new(0, 0.5),
+							Position = UDim2.fromScale(alpha, 0.5),
+							AnchorPoint = Vector2.new(alpha, 0.5),
 							BackgroundTransparency = renderData.Button.Transparency,
 							BorderSizePixel = 0,
 							BackgroundColor3 = renderData.Button.Color3,

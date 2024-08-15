@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@jsdotlua/react": "^17.1.0",
-    "@jsdotlua/react-roblox": "^17.1.0"
+    "@jsdotlua/react-roblox": "^17.1.0",
+    "chroma-luau": "^2.4.2"
   },
   "devDependencies": {
     "npmluau": "^0.1.1"

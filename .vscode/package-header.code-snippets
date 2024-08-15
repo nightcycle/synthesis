@@ -1,24 +1,8 @@
 {
-	"import scripts": {
-		"prefix": "import scripts",
-		"body": [
-			"local $name = require(game:GetService(\"ServerStorage\"):WaitForChild(\"Scripts\"):WaitForChild(\"$name\")$0)"
-		],
-		"description": "Imports a scripts module.",
-		"scope": "lua,luau"
-	},
-	"import sub-scripts": {
-		"prefix": "import sub-scripts",
-		"body": [
-			"local $name${sub} = require(game:GetService(\"ServerStorage\"):WaitForChild(\"Scripts\"):WaitForChild(\"$name\"):WaitForChild(\"$sub\")$0)"
-		],
-		"description": "Imports a scripts sub-module.",
-		"scope": "lua,luau"
-	},
 	"import child": {
 		"prefix": "import child",
 		"body": [
-			"local $name = require(\"$0\")"
+			"local $name = require(\"./$0\")"
 		],
 		"description": "Imports a child module.",
 		"scope": "lua,luau"

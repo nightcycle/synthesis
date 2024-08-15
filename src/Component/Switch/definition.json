@@ -82,6 +82,11 @@
                     "name": "Scale",
                     "type": "number",
                     "default": "1"
+                },
+			 {
+                    "name": "IsAnimated",
+                    "type": "boolean",
+                    "default": "true"
                 }
             ]
         }
