@@ -86,7 +86,7 @@ do
 	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
 
 	function Component:init(initialProps: SwitchProperties): ()
-		self[ALPHA_RUNNER_KEY] = TransitionRunner(
+		self[ALPHA_RUNNER_KEY] = Transition.Runner(
 			self,
 			"Alpha",
 			initialProps.Value and 1 or 0,
