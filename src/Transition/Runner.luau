@@ -25,7 +25,7 @@ export type TransitionRunner = {
 
 -- Class
 return function(
-	component: React.ComponentClass<unknown>,
+	component: React.ComponentClass<any>,
 	stateKey: string,
 	initialAlpha: number,
 	transitionType: Enums.TransitionType,

@@ -1,11 +1,9 @@
 --!strict
 -- Services
-local SoundService = game:GetService("SoundService")
 -- @Packages
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
 local React = require("@wally/React")
-local CurveUtil = require("@wally/CurveUtil")
 -- Modules
 local Types = require("@proj/Types")
 local Style = require("@proj/Style")
@@ -105,7 +103,7 @@ do
 		})
 	end
 
-	function Component:render(): React.ReactElement<SwitchProperties, "Switch">
+	function Component:render(): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 		-- unpack state
 
 		local isHovered: boolean = self.state.IsHovered
