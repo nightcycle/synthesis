@@ -1,7 +1,6 @@
 --!strict
 -- Services
 local SoundService = game:GetService("SoundService")
-local RunService = game:GetService("RunService")
 -- @Packages
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
@@ -16,7 +15,7 @@ local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 local Transition = require("@proj/Transition")
-
+local TransitionRunner = require("@proj/TransitionRunner")
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
@@ -57,47 +56,12 @@ local KNOB_NO_ICON_SELECTED_SIZE_DP = 24
 local KNOB_NO_ICON_UNSELECTED_SIZE_DP = 16
 local ICON_SIZE_DP = 16
 local OUTLINE_THICKNESS_DP = 2
-local ANIMATION_CONNECTION_NAME = "TweenConnection"
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Medium2
+local ALPHA_RUNNER_KEY = "AlphaRunner"
 -- Variables
 -- References
 -- Private Functions
-function getGoalAlpha(value: boolean): number
-	return if value then 1 else 0
-end
-function stopAnimation(self: any)
-	local connection = self[ANIMATION_CONNECTION_NAME]
-	if connection then
-		connection:Disconnect()
-		self[ANIMATION_CONNECTION_NAME] = nil
-	end
-end
-function startAnimation(self: React.ComponentClass<SwitchProperties>, value: boolean, onComplete: (() -> ())?)
-	print(`starting animation: {value}`)
-	if self[ANIMATION_CONNECTION_NAME] then
-		stopAnimation(self)
-	end
-	self[ANIMATION_CONNECTION_NAME] = RunService.RenderStepped:Connect(function(dt: number)
-		-- local origin = getGoalAlpha(not self.state.Value)
-		local goal = getGoalAlpha(value)
-		local current = self.state.Alpha
-		if current == goal then
-			stopAnimation(self)
-			if onComplete then
-				onComplete()
-			end
-			return
-		end
-		current += dt * math.sign(goal - current) / Transition.Duration[TRANSITION_DURATION]
-		current = math.clamp(current, 0, 1)
-		self:setState({
-			Alpha = current,
-		})
-		value = self.state.Value
-	end)
-end
-
 function newSwitchRenderData(
 	text: AppearanceData,
 	button: AppearanceData,
@@ -111,6 +75,9 @@ function newSwitchRenderData(
 		Outline = outline,
 	})
 end
+function getAlphaRunner(self: React.ComponentClass<SwitchProperties>): TransitionRunner.TransitionRunner
+	return self[ALPHA_RUNNER_KEY]
+end
 
 -- Class
 local Interface = {}
@@ -120,12 +87,14 @@ do
 
 	function Component:init(initialProps: SwitchProperties): ()
 		local value = initialProps.Value or Defaults.New.Value
+		self[ALPHA_RUNNER_KEY] =
+			TransitionRunner(self, "Alpha", value and 1 or 0, TRANSITION_TYPE, TRANSITION_DURATION)
 		self:setState({
 			Value = value,
 			IsHovered = false,
 			IsPressed = false,
 			IsFocused = false,
-			Alpha = getGoalAlpha(value),
+			Alpha = getAlphaRunner(self):Get(),
 		})
 	end
 
@@ -177,6 +146,12 @@ do
 		end
 
 		local renderData: SwitchRenderData
+
+		if not isAnimated then
+			getAlphaRunner(self):Stop()
+		else
+			getAlphaRunner(self):Update(value)
+		end
 
 		if value then
 			if state == Enums.ButtonStateType.Enabled then
@@ -426,7 +401,7 @@ do
 							self:setState({
 								Value = not value,
 							})
-							startAnimation(self, not value, function()
+							getAlphaRunner(self):Set(not value, function()
 								local sound = Instance.new("Sound")
 								sound.Volume = 1
 								if not value then
@@ -559,7 +534,7 @@ do
 	end
 
 	function Component:willUnmount()
-		stopAnimation(self)
+		getAlphaRunner(self):Disconnect()
 	end
 
 	Interface.new = Component
