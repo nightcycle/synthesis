@@ -12,12 +12,12 @@
 		"@node": "node_modules/.luau-aliases"
 	},
 	"luau-lsp.fflags.override": {
-		// "LuauTypeInferIterationLimit": "0",
-		// "LuauCheckRecursionLimit": "0",
-		// "LuauTypeInferRecursionLimit": "0",
-		// "LuauTarjanChildLimit": "0",
-		// "LuauTypeInferTypePackLoopLimit": "0",
-		// "LuauVisitRecursionLimit": "0",
+		"LuauTypeInferIterationLimit": "0",
+		"LuauCheckRecursionLimit": "0",
+		"LuauTypeInferRecursionLimit": "0",
+		"LuauTarjanChildLimit": "0",
+		"LuauTypeInferTypePackLoopLimit": "0",
+		"LuauVisitRecursionLimit": "0",
 		"LuauParseDeclareClassIndexer": "true"
 	},
 	"files.exclude": {

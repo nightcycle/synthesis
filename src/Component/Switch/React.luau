@@ -6,8 +6,6 @@ local RunService = game:GetService("RunService")
 local Maid = require("@wally/Maid")
 local Icons = require("@wally/MaterialIcons")
 local React = require("@node/@jsdotlua/react")
-local Chroma = require("@node/chroma-luau")
-local ReactSpring = require("@wally/ReactSpring")
 -- Modules
 local Types = require("@proj/Types")
 local Style = require("@proj/Style")
@@ -17,6 +15,7 @@ local Theme = require("@proj/Theme")
 local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
+local Transition = require("@proj/Transition")
 
 -- Types
 type Maid = Maid.Maid
@@ -50,9 +49,6 @@ type SwitchProperties = RobloxTypes.FrameProperties & {
 	FontData: FontData?,
 	Scale: number?,
 }
-type SwitchSpringState = {
-	Alpha: React.Binding<number>,
-}
 -- Constants
 local SWITCH_HEIGHT_DP = 32
 local SWITCH_WIDTH_DP = 52
@@ -61,22 +57,47 @@ local KNOB_NO_ICON_SELECTED_SIZE_DP = 24
 local KNOB_NO_ICON_UNSELECTED_SIZE_DP = 16
 local ICON_SIZE_DP = 16
 local OUTLINE_THICKNESS_DP = 2
-local PROGRESS_KEY = "Alpha"
-local SPRING_API_KEY = "SpringApi"
-local SPRING_STATE_KEY = "SpringState"
-local POSITION_KEY = "Position"
+local ANIMATION_CONNECTION_NAME = "TweenConnection"
+local TRANSITION_TYPE = Enums.TransitionType.Emphasized
+local TRANSITION_DURATION = Enums.TransitionDuration.Medium2
 -- Variables
 -- References
 -- Private Functions
-function getSpringApi(self: any): ReactSpring.ControllerApi
-	return self[SPRING_API_KEY]
-end
-function getSpringState(self: any): SwitchSpringState
-	return self[SPRING_STATE_KEY]
-end
 function getGoalAlpha(value: boolean): number
 	return if value then 1 else 0
 end
+function stopAnimation(self: any)
+	local connection = self[ANIMATION_CONNECTION_NAME]
+	if connection then
+		connection:Disconnect()
+		self[ANIMATION_CONNECTION_NAME] = nil
+	end
+end
+function startAnimation(self: React.ComponentClass<SwitchProperties>, value: boolean, onComplete: (() -> ())?)
+	print(`starting animation: {value}`)
+	if self[ANIMATION_CONNECTION_NAME] then
+		stopAnimation(self)
+	end
+	self[ANIMATION_CONNECTION_NAME] = RunService.RenderStepped:Connect(function(dt: number)
+		-- local origin = getGoalAlpha(not self.state.Value)
+		local goal = getGoalAlpha(value)
+		local current = self.state.Alpha
+		if current == goal then
+			stopAnimation(self)
+			if onComplete then
+				onComplete()
+			end
+			return
+		end
+		current += dt * math.sign(goal - current) / Transition.Duration[TRANSITION_DURATION]
+		current = math.clamp(current, 0, 1)
+		self:setState({
+			Alpha = current,
+		})
+		value = self.state.Value
+	end)
+end
+
 function newSwitchRenderData(
 	text: AppearanceData,
 	button: AppearanceData,
@@ -97,21 +118,18 @@ local Interface = {}
 do
 	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
 
-	function Component:init(): ()
-		self[SPRING_STATE_KEY], self[SPRING_API_KEY] = ReactSpring.Controller.new({
-			Alpha = if self.state.Value then 1 else 0,
-		})
-
+	function Component:init(initialProps: SwitchProperties): ()
+		local value = initialProps.Value or Defaults.New.Value
 		self:setState({
-			Value = false,
+			Value = value,
 			IsHovered = false,
 			IsPressed = false,
 			IsFocused = false,
-			_Alpha = getSpringState(self).Alpha:getValue(),
+			Alpha = getGoalAlpha(value),
 		})
 	end
 
-	function Component:render()
+	function Component:render(): React.ReactElement<SwitchProperties, "Switch">
 		-- unpack state
 		local value: boolean = self.state.Value
 		local isHovered: boolean = self.state.IsHovered
@@ -324,9 +342,27 @@ do
 			end
 		end
 
-		local buttonSize = if icon
-			then KNOB_YES_ICON_SIZE_DP
-			else if value then KNOB_NO_ICON_SELECTED_SIZE_DP else KNOB_NO_ICON_UNSELECTED_SIZE_DP
+		local alpha = self.state.Alpha --getGoalAlpha(value)
+		local transAlpha = Transition.Easing[TRANSITION_TYPE](alpha)
+
+		local buttonSize: number
+		if icon then
+			buttonSize = KNOB_YES_ICON_SIZE_DP
+		else
+			local start: number
+			local goal: number
+			local buttonAlpha: number
+			if value then
+				start = KNOB_NO_ICON_UNSELECTED_SIZE_DP
+				goal = KNOB_NO_ICON_SELECTED_SIZE_DP
+				buttonAlpha = transAlpha
+			else
+				start = KNOB_NO_ICON_SELECTED_SIZE_DP
+				goal = KNOB_NO_ICON_UNSELECTED_SIZE_DP
+				buttonAlpha = 1 - transAlpha
+			end
+			buttonSize = start + (goal - start) * buttonAlpha
+		end
 
 		local switchSize = UDim2.fromOffset(
 			math.round(scale * SWITCH_WIDTH_DP - (OUTLINE_THICKNESS_DP * 2)),
@@ -337,8 +373,6 @@ do
 
 		local useStroke = renderData.Background.Color3 ~= renderData.Outline.Color3
 			or renderData.Background.Transparency ~= renderData.Outline.Transparency
-
-		local alpha = getSpringState(self).Alpha:getValue()
 
 		return React.createElement(
 			"Frame",
@@ -392,33 +426,19 @@ do
 							self:setState({
 								Value = not value,
 							})
-							getSpringApi(self):start({
-								Alpha = getGoalAlpha(not value),
-							})
-							local connection: RBXScriptConnection
-							connection = RunService.RenderStepped:Connect(function()
-								local nxtAlpha = getSpringState(self).Alpha:getValue()
-
-								if nxtAlpha == getGoalAlpha(self.state.value) then
-									connection:Disconnect()
+							startAnimation(self, not value, function()
+								local sound = Instance.new("Sound")
+								sound.Volume = 1
+								if not value then
+									sound.SoundId =
+										Sounds.Library[Enums.SoundType.navigation_forward_selection_minimal]
 								else
-									self:setState({
-										_Alpha = getSpringState(self).Alpha:getValue(),
-									})
+									sound.SoundId =
+										Sounds.Library[Enums.SoundType.navigation_backward_selection_minimal]
 								end
+								SoundService:PlayLocalSound(sound)
+								sound:Destroy()
 							end)
-
-							local sound = Instance.new("Sound")
-							sound.Volume = 1
-							if not value then
-								sound.SoundId =
-									Sounds.Library[Enums.SoundType.navigation_forward_selection_minimal]
-							else
-								sound.SoundId =
-									Sounds.Library[Enums.SoundType.navigation_backward_selection_minimal]
-							end
-							SoundService:PlayLocalSound(sound)
-							sound:Destroy()
 						end
 					end,
 					[React.Event.SelectionGained] = function()
@@ -452,7 +472,7 @@ do
 							),
 						} :: RobloxTypes.UICornerProperties
 					),
-					UIPadding = (function()
+					UIPadding = (function(): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
 						local widthPaddingState: UDim
 						do
 							local size = scale * (SWITCH_HEIGHT_DP - (OUTLINE_THICKNESS_DP * 2) - buttonSize)
@@ -483,8 +503,8 @@ do
 								math.round(scale * buttonSize),
 								math.round(scale * buttonSize)
 							),
-							Position = UDim2.fromScale(alpha, 0.5),
-							AnchorPoint = Vector2.new(alpha, 0.5),
+							Position = UDim2.fromScale(transAlpha, 0.5),
+							AnchorPoint = Vector2.new(transAlpha, 0.5),
 							BackgroundTransparency = renderData.Button.Transparency,
 							BorderSizePixel = 0,
 							BackgroundColor3 = renderData.Button.Color3,
@@ -536,6 +556,10 @@ do
 				}),
 			}
 		)
+	end
+
+	function Component:willUnmount()
+		stopAnimation(self)
 	end
 
 	Interface.new = Component
