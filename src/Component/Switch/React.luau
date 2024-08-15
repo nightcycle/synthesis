@@ -58,7 +58,7 @@ local KNOB_NO_ICON_UNSELECTED_SIZE_DP = 16
 local ICON_SIZE_DP = 16
 local OUTLINE_THICKNESS_DP = 2
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
-local TRANSITION_DURATION = Enums.TransitionDuration.Medium2
+local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
 -- Variables
 -- References
@@ -568,12 +568,13 @@ do
 						if self.props.IsEnabled then
 							onChanged(not value)
 							getAlphaRunner(self):Set(not value, function()
-								local soundType = Enums.SoundType.navigation_forward_selection_minimal
+								local soundType =
+									Enums.SoundType.navigation_forward_selection_minimal
 								if value then
-									soundType = Enums.SoundType.navigation_backward_selection_minimal
+									soundType =
+										Enums.SoundType.navigation_backward_selection_minimal
 								end
 								Sounds.play(soundType)
-				
 							end)
 						end
 					end,
@@ -657,8 +658,8 @@ do
 						"Frame",
 						{
 							Size = UDim2.fromOffset(
-								math.round(scale * buttonSize),
-								math.round(scale * buttonSize)
+								math.ceil(scale * buttonSize),
+								math.ceil(scale * buttonSize)
 							),
 							Position = UDim2.fromScale(alpha, 0.5),
 							AnchorPoint = Vector2.new(alpha, 0.5),
