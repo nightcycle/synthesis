@@ -31,7 +31,8 @@ type SwitchRenderData = {
 }
 type FontData = Types.FontData
 type SwitchProperties = RobloxTypes.FrameProperties & {
-	Value: boolean?,
+	Value: boolean,
+	OnChanged: (newValue: boolean) -> (),
 	IsEnabled: boolean?,
 	IsAnimated: boolean?,
 	IncludeIconOnSelected: boolean?,
@@ -86,11 +87,14 @@ do
 	local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
 
 	function Component:init(initialProps: SwitchProperties): ()
-		local value = initialProps.Value or Defaults.New.Value
-		self[ALPHA_RUNNER_KEY] =
-			TransitionRunner(self, "Alpha", value and 1 or 0, TRANSITION_TYPE, TRANSITION_DURATION)
+		self[ALPHA_RUNNER_KEY] = TransitionRunner(
+			self,
+			"Alpha",
+			initialProps.Value and 1 or 0,
+			TRANSITION_TYPE,
+			TRANSITION_DURATION
+		)
 		self:setState({
-			Value = value,
 			IsHovered = false,
 			IsPressed = false,
 			IsFocused = false,
@@ -100,12 +104,14 @@ do
 
 	function Component:render(): React.ReactElement<SwitchProperties, "Switch">
 		-- unpack state
-		local value: boolean = self.state.Value
+
 		local isHovered: boolean = self.state.IsHovered
 		local isPressed: boolean = self.state.IsPressed
 		local isFocused: boolean = self.state.IsFocused
 
 		-- unpack properties
+		local value: boolean = self.props.Value
+		local onChanged: (newValue: boolean) -> () = self.props.OnChanged
 		local backgroundColor3: Color3 = self.props.BackgroundColor3 :: Color3?
 			or Defaults.New.BackgroundColor3
 		local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
@@ -317,8 +323,7 @@ do
 			end
 		end
 
-		local alpha = self.state.Alpha --getGoalAlpha(value)
-		local transAlpha = Transition.Easing[TRANSITION_TYPE](alpha)
+		local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
 
 		local buttonSize: number
 		if icon then
@@ -330,11 +335,11 @@ do
 			if value then
 				start = KNOB_NO_ICON_UNSELECTED_SIZE_DP
 				goal = KNOB_NO_ICON_SELECTED_SIZE_DP
-				buttonAlpha = transAlpha
+				buttonAlpha = alpha
 			else
 				start = KNOB_NO_ICON_SELECTED_SIZE_DP
 				goal = KNOB_NO_ICON_UNSELECTED_SIZE_DP
-				buttonAlpha = 1 - transAlpha
+				buttonAlpha = 1 - alpha
 			end
 			buttonSize = start + (goal - start) * buttonAlpha
 		end
@@ -398,9 +403,7 @@ do
 					end,
 					[React.Event.Activated] = function()
 						if self.props.IsEnabled then
-							self:setState({
-								Value = not value,
-							})
+							onChanged(not value)
 							getAlphaRunner(self):Set(not value, function()
 								local sound = Instance.new("Sound")
 								sound.Volume = 1
@@ -478,8 +481,8 @@ do
 								math.round(scale * buttonSize),
 								math.round(scale * buttonSize)
 							),
-							Position = UDim2.fromScale(transAlpha, 0.5),
-							AnchorPoint = Vector2.new(transAlpha, 0.5),
+							Position = UDim2.fromScale(alpha, 0.5),
+							AnchorPoint = Vector2.new(alpha, 0.5),
 							BackgroundTransparency = renderData.Button.Transparency,
 							BorderSizePixel = 0,
 							BackgroundColor3 = renderData.Button.Color3,

@@ -33,7 +33,9 @@ return function(target: Frame)
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
 			)
-
+			local defaultSelection, setdefaultSelection = React.useState(false)
+			local noIconSelection, setNoIconSelection = React.useState(true)
+			local disabledSelection, setDisabledSelection = React.useState(true)
 			return React.createElement(
 				"Frame",
 				{
@@ -73,7 +75,11 @@ return function(target: Frame)
 
 					Default = React.createElement(Interface.new, {
 						LayoutOrder = 1,
-						Value = false,
+						Value = defaultSelection,
+						OnChanged = function(value: boolean)
+							print("Default", value)
+							setdefaultSelection(value)
+						end,
 						IsEnabled = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
@@ -92,7 +98,11 @@ return function(target: Frame)
 
 					NoIcons = React.createElement(Interface.new, {
 						LayoutOrder = 2,
-						Value = false,
+						Value = noIconSelection,
+						OnChanged = function(value: boolean)
+							print("NoIcons", value)
+							setNoIconSelection(value)
+						end,
 						IsEnabled = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
@@ -111,7 +121,11 @@ return function(target: Frame)
 
 					Disabled = React.createElement(Interface.new, {
 						LayoutOrder = 3,
-						Value = false,
+						Value = disabledSelection,
+						OnChanged = function(value: boolean)
+							warn("Disabled", value)
+							setDisabledSelection(value)
+						end,
 						IsEnabled = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,

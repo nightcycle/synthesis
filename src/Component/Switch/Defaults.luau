@@ -20,6 +20,7 @@ type ImageData = Types.ImageData
 return {
 	New = {
 		Value = false,
+		OnChanged = function(newValue: boolean) end,
 		IsEnabled = true,
 		IsAnimated = true,
 		IncludeIconOnSelected = true,
