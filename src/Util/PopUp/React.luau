@@ -1,11 +1,7 @@
 --!strict
-local _Package = script.Parent.Parent.Parent
-local _Packages = _Package.Parent
 -- Services
-local Players = game:GetService("Players")
 -- Packages
 local React = require("@wally/React")
-local ReactRoblox = require("@wally/ReactRoblox")
 
 -- Modules
 local Types = require("@proj/Types")

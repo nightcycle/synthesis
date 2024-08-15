@@ -31,49 +31,67 @@ function Util.mergeInstance(
 	}
 end
 
+Util.mergeGuiBaseProperties = Util.mergeInstance
+
+function Util.mergeGuiObject2D(
+	element: RobloxTypes.GuiBase2dProperties,
+	props: RobloxTypes.GuiBase2dProperties
+): RobloxTypes.GuiBase2dProperties
+	local out =
+		Util.mergeGuiBaseProperties(element, props) :: RobloxTypes.GuiBase2dProperties
+	out.AutoLocalize = if element.AutoLocalize ~= nil
+		then element.AutoLocalize
+		else props.AutoLocalize
+	out.RootLocalizationTable = element.RootLocalizationTable
+		or props.RootLocalizationTable
+	out.SelectionBehaviorDown = element.SelectionBehaviorDown
+		or props.SelectionBehaviorDown
+	out.SelectionBehaviorLeft = element.SelectionBehaviorLeft
+		or props.SelectionBehaviorLeft
+	out.SelectionBehaviorRight = element.SelectionBehaviorRight
+		or props.SelectionBehaviorRight
+	out.SelectionBehaviorUp = element.SelectionBehaviorUp or props.SelectionBehaviorUp
+	out.SelectionGroup = element.SelectionGroup or props.SelectionGroup
+	return out
+end
+
 function Util.mergeGuiObject(
 	element: RobloxTypes.GuiObjectProperties,
 	props: RobloxTypes.GuiObjectProperties
 ): RobloxTypes.GuiObjectProperties
-	local out = {
-		Active = if element.Active ~= nil then element.Active else props.Active,
-		AnchorPoint = element.AnchorPoint or props.AnchorPoint,
-		AutomaticSize = element.AutomaticSize or props.AutomaticSize,
-		BackgroundColor3 = element.BackgroundColor3 or props.BackgroundColor3,
-		BackgroundTransparency = element.BackgroundTransparency
-			or props.BackgroundTransparency,
-		BorderColor3 = element.BorderColor3 or props.BorderColor3,
-		BorderMode = element.BorderMode or props.BorderMode,
-		BorderSizePixel = element.BorderSizePixel or props.BorderSizePixel,
-		ClipsDescendants = if element.ClipsDescendants ~= nil
-			then element.ClipsDescendants
-			else props.ClipsDescendants,
-		Interactable = if element.Interactable ~= nil
-			then element.Interactable
-			else props.Interactable,
-		LayoutOrder = element.LayoutOrder or props.LayoutOrder,
-		NextSelectionDown = element.NextSelectionDown or props.NextSelectionDown,
-		NextSelectionLeft = element.NextSelectionLeft or props.NextSelectionLeft,
-		NextSelectionRight = element.NextSelectionRight or props.NextSelectionRight,
-		NextSelectionUp = element.NextSelectionUp or props.NextSelectionUp,
-		Position = element.Position or props.Position,
-		Rotation = element.Rotation or props.Rotation,
-		Selectable = if element.Selectable ~= nil
-			then element.Selectable
-			else props.Selectable,
-		SelectionImageObject = element.SelectionImageObject or props.SelectionImageObject,
-		SelectionOrder = element.SelectionOrder or props.SelectionOrder,
-		Size = element.Size or props.Size,
-		SizeConstraint = element.SizeConstraint or props.SizeConstraint,
-		Transparency = element.Transparency or props.Transparency,
-		Visible = if element.Visible ~= nil then element.Visible else props.Visible,
-		ZIndex = element.ZIndex or props.ZIndex,
-	} :: RobloxTypes.GuiObjectProperties
-
-	local inst = Util.mergeInstance(element, props)
-	out["children"] = inst.children
-	out["Name"] = inst.Name
-	out["Archivable"] = inst.Archivable
+	local out = Util.mergeGuiObject2D(element, props) :: RobloxTypes.GuiObjectProperties
+	out.Active = if element.Active ~= nil then element.Active else props.Active
+	out.AnchorPoint = element.AnchorPoint or props.AnchorPoint
+	out.AutomaticSize = element.AutomaticSize or props.AutomaticSize
+	out.BackgroundColor3 = element.BackgroundColor3 or props.BackgroundColor3
+	out.BackgroundTransparency = element.BackgroundTransparency
+		or props.BackgroundTransparency
+	out.BorderColor3 = element.BorderColor3 or props.BorderColor3
+	out.BorderMode = element.BorderMode or props.BorderMode
+	out.BorderSizePixel = element.BorderSizePixel or props.BorderSizePixel
+	out.ClipsDescendants = if element.ClipsDescendants ~= nil
+		then element.ClipsDescendants
+		else props.ClipsDescendants
+	out.Interactable = if element.Interactable ~= nil
+		then element.Interactable
+		else props.Interactable
+	out.LayoutOrder = element.LayoutOrder or props.LayoutOrder
+	out.NextSelectionDown = element.NextSelectionDown or props.NextSelectionDown
+	out.NextSelectionLeft = element.NextSelectionLeft or props.NextSelectionLeft
+	out.NextSelectionRight = element.NextSelectionRight or props.NextSelectionRight
+	out.NextSelectionUp = element.NextSelectionUp or props.NextSelectionUp
+	out.Position = element.Position or props.Position
+	out.Rotation = element.Rotation or props.Rotation
+	out.Selectable = if element.Selectable ~= nil
+		then element.Selectable
+		else props.Selectable
+	out.SelectionImageObject = element.SelectionImageObject or props.SelectionImageObject
+	out.SelectionOrder = element.SelectionOrder or props.SelectionOrder
+	out.Size = element.Size or props.Size
+	out.SizeConstraint = element.SizeConstraint or props.SizeConstraint
+	out.Transparency = element.Transparency or props.Transparency
+	out.Visible = if element.Visible ~= nil then element.Visible else props.Visible
+	out.ZIndex = element.ZIndex or props.ZIndex
 
 	return out
 end
@@ -98,6 +116,37 @@ function Util.mergeImageLabel(
 	out.ImageRectSize = element.ImageRectSize or props.ImageRectSize
 	out.ImageTransparency = element.ImageTransparency or props.ImageTransparency
 	out.ResampleMode = element.ResampleMode or props.ResampleMode
+	out.ScaleType = element.ScaleType or props.ScaleType
+	out.SliceCenter = element.SliceCenter or props.SliceCenter
+	out.SliceScale = element.SliceScale or props.SliceScale
+	out.TileSize = element.TileSize or props.TileSize
+	return out
+end
+
+function Util.mergeGuiButton(
+	element: RobloxTypes.GuiButtonProperties,
+	props: RobloxTypes.GuiButtonProperties
+): RobloxTypes.GuiButtonProperties
+	local out = Util.mergeGuiObject(element, props) :: RobloxTypes.GuiButtonProperties
+	out.AutoButtonColor = if element.AutoButtonColor ~= nil
+		then element.AutoButtonColor
+		else props.AutoButtonColor
+	out.Modal = if element.Modal ~= nil then element.Modal else props.Modal
+	out.Selected = if element.Selected ~= nil then element.Selected else props.Selected
+	out.Style = element.Style or props.Style
+	return out
+end
+
+function Util.mergeImageButton(
+	element: RobloxTypes.ImageButtonProperties,
+	props: RobloxTypes.ImageButtonProperties
+): RobloxTypes.ImageButtonProperties
+	local out = Util.mergeGuiButton(element, props) :: RobloxTypes.ImageButtonProperties
+	out.Image = element.Image or props.Image
+	out.ImageColor3 = element.ImageColor3 or props.ImageColor3
+	out.ImageRectOffset = element.ImageRectOffset or props.ImageRectOffset
+	out.ImageRectSize = element.ImageRectSize or props.ImageRectSize
+	out.ImageTransparency = element.ImageTransparency or props.ImageTransparency
 	out.ScaleType = element.ScaleType or props.ScaleType
 	out.SliceCenter = element.SliceCenter or props.SliceCenter
 	out.SliceScale = element.SliceScale or props.SliceScale

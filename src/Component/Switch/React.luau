@@ -28,7 +28,7 @@ type SwitchRenderData = {
 	Outline: AppearanceData,
 }
 type FontData = Types.FontData
-type SwitchProperties = RobloxTypes.FrameProperties & {
+type SwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
 	OnChanged: (newValue: boolean) -> (),
 	IsEnabled: boolean?,
@@ -103,7 +103,10 @@ do
 		})
 	end
 
-	function Component:render(): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+	function Component:render(): React.ReactElement<
+		RobloxTypes.GuiObjectProperties,
+		"ImageButton"
+	>
 		-- unpack state
 
 		local isHovered: boolean = self.state.IsHovered
@@ -509,20 +512,21 @@ do
 			or renderData.Background.Transparency ~= renderData.Outline.Transparency
 
 		return React.createElement(
-			"Frame",
-			PropUtil.mergeFrame(
+			"ImageButton",
+			PropUtil.mergeImageButton(
 				{
 					Size = UDim2.fromOffset(
 						switchSize.X.Offset + outlineThickness * 2,
 						switchSize.Y.Offset + outlineThickness * 2
 					),
+					AutoButtonColor = false,
 					BackgroundColor3 = renderData.Background.Color3,
 					BackgroundTransparency = if useStroke
 						then 1
 						else renderData.Background.Transparency,
-				} :: RobloxTypes.FrameProperties,
-				self.props
-			),
+				} :: RobloxTypes.ImageButtonProperties,
+				self.props :: any
+			) :: RobloxTypes.GuiObjectProperties,
 			{
 				UICorner = React.createElement(
 					"UICorner",
@@ -542,24 +546,32 @@ do
 						else 1,
 					[React.Event.InputBegan] = function(_, input: InputObject)
 						if input.UserInputType == Enum.UserInputType.MouseMovement then
-							self:setState({
-								IsHovered = true,
-							})
+							if not isHovered then
+								self:setState({
+									IsHovered = true,
+								})
+							end
 						elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
-							self:setState({
-								IsPressed = true,
-							})
+							if not isPressed then
+								self:setState({
+									IsPressed = true,
+								})
+							end
 						end
 					end,
 					[React.Event.InputEnded] = function(_, input: InputObject)
 						if input.UserInputType == Enum.UserInputType.MouseMovement then
-							self:setState({
-								IsHovered = false,
-							})
+							if isHovered then
+								self:setState({
+									IsHovered = false,
+								})
+							end
 						elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
-							self:setState({
-								IsPressed = false,
-							})
+							if isPressed then
+								self:setState({
+									IsPressed = false,
+								})
+							end
 						end
 					end,
 					[React.Event.Activated] = function()
@@ -578,16 +590,20 @@ do
 					end,
 					[React.Event.SelectionGained] = function()
 						if self.props.IsEnabled then
-							self:setState({
-								IsFocused = true,
-							})
+							if not isFocused then
+								self:setState({
+									IsFocused = true,
+								})
+							end
 						end
 					end,
 					[React.Event.SelectionLost] = function()
 						if self.props.IsEnabled then
-							self:setState({
-								IsFocused = false,
-							})
+							if isFocused then
+								self:setState({
+									IsFocused = false,
+								})
+							end
 						end
 					end,
 				}, {
