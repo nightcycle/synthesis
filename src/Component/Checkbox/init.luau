@@ -44,9 +44,7 @@ export type ThemeCheckboxProperties = BaseCheckboxProperties & {
 	Style: Style,
 }
 -- Constants
-local LAYER_SIZE_DP = 40
 local BUTTON_SIZE_DP = 18
-local UNSELECT_OUTLINE_WIDTH_DP = 2
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
