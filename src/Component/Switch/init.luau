@@ -87,8 +87,6 @@ local PopUp = require("@comp/PopUp")
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
 type ImageData = Types.ImageData
-type OptionData = Types.OptionData
-type ButtonData = Types.ButtonData
 type Style = Style.Style
 type SwitchRenderData = {
 	Text: AppearanceData,
@@ -96,8 +94,6 @@ type SwitchRenderData = {
 	Background: AppearanceData,
 	Outline: AppearanceData,
 }
-type FontData = Types.FontData
-
 type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
 	OnChanged: (newValue: boolean) -> (),
