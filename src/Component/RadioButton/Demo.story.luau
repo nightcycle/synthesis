@@ -20,7 +20,7 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require("../Switch")
+		local Interface = require("../RadioButton")
 
 		local function halfFrame(
 			props: RobloxTypes.FrameProperties & {
@@ -34,7 +34,7 @@ return function(target: Frame)
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
 			)
-			local defaultSelection, setDefaultSelection = React.useState(false)
+			local defaultSelection, setDefaultSelection = React.useState(true)
 			local inanimateSelection, setInanimateSelection = React.useState(false)
 			local noIconSelection, setNoIconSelection = React.useState(true)
 			local disabledSelection, setDisabledSelection =
@@ -76,34 +76,32 @@ return function(target: Frame)
 					-- disabledColor: Enums.ColorRoleType,
 					-- onDisabledColor: Enums.ColorRoleType,
 
-					Default = React.createElement(Interface.Full, {
-						LayoutOrder = 1,
-						Value = defaultSelection,
-						OnChanged = function(value: boolean)
-							print("Default", value)
-							setDefaultSelection(value)
-						end,
-						IsEnabled = true,
-						IsAnimated = true,
-						IncludeIconOnSelected = true,
-						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
-						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						Elevation = 0,
-						SchemeType = style.SchemeType,
-						Scale = 1,
-					}),
+					Default = React.createElement(
+						Interface.Full,
+						{
+							LayoutOrder = 1,
+							Value = defaultSelection,
+							OnChanged = function(value: boolean)
+								print("Default", value)
+								setDefaultSelection(value)
+							end,
+							IsEnabled = true,
+							IsAnimated = true,
+							IncludeIconOnSelected = true,
+							IncludeIconOnDeselected = true,
+							OutlineColor3 = style:GetColor(
+								Enums.ColorRoleType.OnSurfaceVariant
+							),
+							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
+							IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
+							DisabledColor3 = style:GetColor(
+								Enums.ColorRoleType.OnSurface
+							),
+							Elevation = 0,
+							SchemeType = style.SchemeType,
+							Scale = 1,
+						} :: Interface.RadioButtonProperties
+					),
 
 					Inanimate = React.createElement(Interface.Full, {
 						LayoutOrder = 1,
@@ -116,19 +114,12 @@ return function(target: Frame)
 						IsAnimated = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
+						OutlineColor3 = style:GetColor(
+							Enums.ColorRoleType.OnSurfaceVariant
 						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
+						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						Scale = 1,
@@ -145,19 +136,12 @@ return function(target: Frame)
 						IsAnimated = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
+						OutlineColor3 = style:GetColor(
+							Enums.ColorRoleType.OnSurfaceVariant
 						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
+						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						Scale = 1,
@@ -174,19 +158,12 @@ return function(target: Frame)
 						IsAnimated = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
+						OutlineColor3 = style:GetColor(
+							Enums.ColorRoleType.OnSurfaceVariant
 						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
+						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						Scale = 1,

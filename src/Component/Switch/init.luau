@@ -103,7 +103,7 @@ type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	IncludeIconOnDeselected: boolean?,
 }
 
-type SwitchProperties = BaseSwitchProperties & {
+export type SwitchProperties = BaseSwitchProperties & {
 	IsAnimated: boolean?,
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
@@ -116,7 +116,7 @@ type SwitchProperties = BaseSwitchProperties & {
 	OnDisabledColor3: Color3?,
 }
 
-type ThemeSwitchProperties = BaseSwitchProperties & {
+export type ThemeSwitchProperties = BaseSwitchProperties & {
 	Style: Style,
 }
 -- Constants
@@ -472,7 +472,7 @@ function Component:render(): React.ReactElement<
 		Sounds.play(soundType)
 	end
 
-	local isRippleEnabled = (isHovered or isPressed or isFocused)
+	local isRippleEnabled = (isHovered or isPressed or isFocused) and isEnabled
 
 	if isAnimated then
 		getAlphaRunner(self):Set(value, playSound)
@@ -819,7 +819,7 @@ return {
 	Full = Component,
 	OnSurfacePrimary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
-		"OnSurfaceContainerPrimary"
+		"OnSurfacePrimary"
 	>
 		local style = props.Style
 
@@ -841,7 +841,7 @@ return {
 	end,
 	OnSurfaceSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
-		"OnSurfaceContainerSecondary"
+		"OnSurfaceSecondary"
 	>
 		local style = props.Style
 
@@ -863,7 +863,7 @@ return {
 	end,
 	OnSurfaceTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
-		"OnSurfaceContainerTertiary"
+		"OnSurfaceTertiary"
 	>
 		local style = props.Style
 

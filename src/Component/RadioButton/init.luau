@@ -20,13 +20,14 @@ type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
 type ImageData = Types.ImageData
 type Style = Style.Style
+type RenderData = Types.RenderData
 type BaseRadioButtonProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
 	OnChanged: (isSelected: boolean) -> (),
 	IsEnabled: boolean?,
 }
 
-type RadioButtonProperties = BaseRadioButtonProperties & {
+export type RadioButtonProperties = BaseRadioButtonProperties & {
 	IsAnimated: boolean?,
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
@@ -37,7 +38,7 @@ type RadioButtonProperties = BaseRadioButtonProperties & {
 	Elevation: number?,
 }
 
-type ThemeRadioButtonProperties = BaseRadioButtonProperties & {
+export type ThemeRadioButtonProperties = BaseRadioButtonProperties & {
 	Style: Style,
 }
 -- Constants
@@ -151,7 +152,7 @@ function Component:render(): React.ReactElement<
 		Sounds.play(soundType)
 	end
 
-	local isRippleEnabled = (isHovered or isPressed or isFocused)
+	local isRippleEnabled = (isHovered or isPressed or isFocused) and isEnabled
 
 	if isAnimated then
 		getAlphaRunner(self):Set(value, playSound)
@@ -162,6 +163,330 @@ function Component:render(): React.ReactElement<
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
 	local rippleAlpha = if isAnimated then getRippleAlphaRunner(self):Get() else 0
+
+	local renderData: RenderData
+	if state == Enums.ButtonStateType.Enabled then
+		renderData = Types._RenderData.new(
+			scale,
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(outlineColor3, elevation, schemeType),
+				0
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(fillColor3, elevation, schemeType),
+				1
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(iconColor3, elevation, schemeType),
+				0
+			),
+			nil,
+			nil,
+			nil,
+			nil
+		)
+	elseif state == Enums.ButtonStateType.Hovered then
+		renderData = Types._RenderData.new(
+			scale,
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(outlineColor3, elevation + 1, schemeType),
+				0
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(fillColor3, elevation + 1, schemeType),
+				1 - 0.08
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(iconColor3, elevation + 1, schemeType),
+				0
+			),
+			nil,
+			nil,
+			nil,
+			nil
+		)
+	elseif state == Enums.ButtonStateType.Focused then
+		renderData = Types._RenderData.new(
+			scale,
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(outlineColor3, elevation, schemeType),
+				0
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(fillColor3, elevation, schemeType),
+				1 - 0.1
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(iconColor3, elevation, schemeType),
+				0
+			),
+			nil,
+			nil,
+			nil,
+			nil
+		)
+	elseif state == Enums.ButtonStateType.Pressed then
+		renderData = Types._RenderData.new(
+			scale,
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(outlineColor3, elevation - 1, schemeType),
+				0
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(fillColor3, elevation - 1, schemeType),
+				1 - 0.1
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(iconColor3, elevation - 1, schemeType),
+				0
+			),
+			nil,
+			nil,
+			nil,
+			nil
+		)
+	else -- disabled
+		renderData = Types._RenderData.new(
+			scale,
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+				1 - 0.38
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+				1 - 0.38
+			),
+			Types._AppearanceData.new(
+				Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+				1 - 0.38
+			),
+			nil,
+			nil,
+			nil,
+			nil
+		)
+	end
+
+	return React.createElement(
+		"ImageButton",
+		PropUtil.mergeGuiObject(
+			{
+				Size = UDim2.fromOffset(
+					math.round(scale * LAYER_SIZE_DP),
+					math.round(scale * LAYER_SIZE_DP)
+				),
+				BackgroundTransparency = 1,
+				[React.Event.InputBegan] = function(_, input: InputObject)
+					if input.UserInputType == Enum.UserInputType.MouseMovement then
+						if not isHovered then
+							self:setState({
+								IsHovered = true,
+							})
+						end
+					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+						if not isPressed then
+							self:setState({
+								IsPressed = true,
+							})
+						end
+					end
+				end :: any,
+				[React.Event.InputEnded] = function(_, input: InputObject)
+					if input.UserInputType == Enum.UserInputType.MouseMovement then
+						if isHovered then
+							self:setState({
+								IsHovered = false,
+							})
+						end
+					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+						if isPressed then
+							self:setState({
+								IsPressed = false,
+							})
+						end
+					end
+				end,
+				[React.Event.Activated] = function()
+					print("activate")
+					if self.props.IsEnabled then
+						print("click")
+						onChanged(not value)
+						self:setState({
+							TargetValue = not value,
+						})
+						if not isAnimated then
+							playSound()
+						end
+					end
+				end,
+				[React.Event.SelectionGained] = function()
+					if self.props.IsEnabled then
+						if not isFocused then
+							self:setState({
+								IsFocused = true,
+							})
+						end
+					end
+				end,
+				[React.Event.SelectionLost] = function()
+					if self.props.IsEnabled then
+						if isFocused then
+							self:setState({
+								IsFocused = false,
+							})
+						end
+					end
+				end,
+				[React.Change.AbsolutePosition] = function(inst: ImageButton)
+					if self.state.KnobAbsolutePosition ~= inst.AbsolutePosition then
+						self:setState({
+							KnobAbsolutePosition = inst.AbsolutePosition,
+						})
+					end
+				end :: any,
+				[React.Change.AbsoluteSize] = function(inst: ImageButton)
+					if self.state.KnobAbsoluteSize ~= inst.AbsoluteSize then
+						self:setState({
+							KnobAbsoluteSize = inst.AbsoluteSize,
+						})
+					end
+				end :: any,
+			} :: RobloxTypes.GuiObjectProperties,
+			self.props
+		),
+		{
+			UICorner = React.createElement(
+				"UICorner",
+				{
+					CornerRadius = UDim.new(0.5, 0),
+				} :: RobloxTypes.UICornerProperties
+			),
+			UIListLayout = React.createElement(
+				"UIListLayout",
+				{
+					Padding = UDim.new(0, 0),
+					SortOrder = Enum.SortOrder.LayoutOrder,
+					FillDirection = Enum.FillDirection.Horizontal,
+					ItemLineAlignment = Enum.ItemLineAlignment.Center,
+					VerticalAlignment = Enum.VerticalAlignment.Center,
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				} :: RobloxTypes.UIListLayoutProperties
+			),
+			Ripple = if isAnimated
+					and (math.round(rippleAlpha) ~= rippleAlpha or isRippleEnabled)
+				then React.createElement(PopUp, {
+					DisplayAnchorPoint = Vector2.new(0.5, 0.5),
+					TargetAbsolutePosition = self.state.KnobAbsolutePosition
+						+ self.state.KnobAbsoluteSize * Vector2.new(0.5, 0.5),
+					DisplayComponent = function(): React.ReactElement<
+						RobloxTypes.FrameProperties,
+						"Frame"
+					>
+						local rippleSize =
+							math.ceil(2 * scale * BUTTON_SIZE_DP * rippleAlpha)
+						return React.createElement(
+							"Frame",
+							{
+								BackgroundTransparency = 1 - 0.2 * rippleAlpha,
+								BackgroundColor3 = fillColor3,
+								BorderSizePixel = 0,
+								Size = UDim2.fromOffset(rippleSize, rippleSize),
+							} :: RobloxTypes.FrameProperties,
+							{
+								React.createElement(
+									"UICorner",
+									{
+										CornerRadius = UDim.new(0.5, 0),
+									} :: RobloxTypes.UICornerProperties
+								),
+							}
+						)
+					end,
+				})
+				else nil,
+			Ring = React.createElement(
+				"Frame",
+				{
+					Size = (function(): UDim2
+						local dpWidth = BUTTON_SIZE_DP - (UNSELECT_OUTLINE_WIDTH_DP * 2)
+						dpWidth /= 2
+						dpWidth = math.round(dpWidth)
+						dpWidth *= 2
+						return UDim2.fromOffset(
+							math.round(scale * dpWidth),
+							math.round(scale * dpWidth)
+						)
+					end)(),
+					BackgroundTransparency = 1,
+				} :: RobloxTypes.FrameProperties,
+				{
+					UICorner = React.createElement(
+						"UICorner",
+						{
+							CornerRadius = UDim.new(0.5, 0),
+						} :: RobloxTypes.UICornerProperties
+					),
+					UIListLayout = React.createElement(
+						"UIListLayout",
+						{
+							Padding = UDim.new(0, 0),
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							FillDirection = Enum.FillDirection.Horizontal,
+							ItemLineAlignment = Enum.ItemLineAlignment.Center,
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						} :: RobloxTypes.UIListLayoutProperties
+					),
+					UIStroke = React.createElement(
+						"UIStroke",
+						{
+							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+							Color = if value == false
+								then renderData.Border.Color3
+								else renderData.Background.Color3,
+							LineJoinMode = Enum.LineJoinMode.Round,
+							Thickness = math.round(scale * UNSELECT_OUTLINE_WIDTH_DP),
+							Transparency = renderData.Border.Transparency,
+						} :: RobloxTypes.UIStrokeProperties
+					),
+					Dot = React.createElement(
+						"Frame",
+						{
+							-- BackgroundTransparency = if value
+							-- 	then renderData.Border.Transparency
+							-- 	else 1,
+							BackgroundTransparency = 1
+								- (1 - renderData.Border.Transparency) * alpha,
+							AnchorPoint = Vector2.new(0.5, 0.5),
+							Size = (function(): UDim2
+								local dpWidth = 0.5
+									* (BUTTON_SIZE_DP - (UNSELECT_OUTLINE_WIDTH_DP * 2))
+								dpWidth /= 2
+								dpWidth = math.round(dpWidth)
+								dpWidth *= 2
+								return UDim2.fromOffset(
+									math.round(alpha * scale * dpWidth),
+									math.round(alpha * scale * dpWidth)
+								)
+							end)(),
+							BackgroundColor3 = if value == false or not isEnabled
+								then renderData.Border.Color3
+								else renderData.Background.Color3,
+							BorderSizePixel = 0,
+						} :: RobloxTypes.FrameProperties,
+						{
+							UICorner = React.createElement(
+								"UICorner",
+								{
+									CornerRadius = UDim.new(0.5, 0),
+								} :: RobloxTypes.UICornerProperties
+							),
+						}
+					),
+				}
+			),
+		}
+	)
 end
 
 function Component:willUnmount()
@@ -171,4 +496,58 @@ end
 
 return {
 	Full = Component,
+	OnSurfacePrimary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+		RadioButtonProperties,
+		"OnSurfacePrimary"
+	>
+		local style = props.Style
+
+		local newProps = table.clone(props) :: RadioButtonProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
+		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+
+		return React.createElement(Component, newProps)
+	end,
+	OnSurfaceSecondary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+		RadioButtonProperties,
+		"OnSurfaceSecondary"
+	>
+		local style = props.Style
+
+		local newProps = table.clone(props) :: RadioButtonProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
+		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+
+		return React.createElement(Component, newProps)
+	end,
+	OnSurfaceTertiary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+		RadioButtonProperties,
+		"OnSurfaceTertiary"
+	>
+		local style = props.Style
+
+		local newProps = table.clone(props) :: RadioButtonProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
+		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+
+		return React.createElement(Component, newProps)
+	end,
 }

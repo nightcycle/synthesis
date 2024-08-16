@@ -17,7 +17,7 @@ function Util.mergeInstance(
 	element: RobloxTypes.InstanceProperties,
 	props: RobloxTypes.InstanceProperties
 ): RobloxTypes.InstanceProperties
-	return {
+	local out = {
 		Archivable = if element.Archivable ~= nil
 			then element.Archivable
 			else props.Archivable,
@@ -29,6 +29,18 @@ function Util.mergeInstance(
 			props.children or {}
 		),
 	}
+	for k, v in pairs(element) do
+		if typeof(k) ~= "string" then
+			out[k] = v
+		end
+	end
+	for k, v in pairs(props) do
+		if typeof(k) ~= "string" then
+			out[k] = v
+		end
+	end
+
+	return out
 end
 
 Util.mergeGuiBaseProperties = Util.mergeInstance
