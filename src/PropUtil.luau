@@ -181,4 +181,40 @@ function Util.mergeScrollingFrame(
 		or props.VerticalScrollBarPosition
 	return out
 end
+
+Util.mergeGuiLabel = Util.mergeGuiObject
+
+function Util.mergeTextLabel(
+	element: RobloxTypes.TextLabelProperties,
+	props: RobloxTypes.TextLabelProperties
+): RobloxTypes.TextLabelProperties
+	local out = Util.mergeGuiLabel(element, props) :: RobloxTypes.TextLabelProperties
+	out.Font = element.Font or props.Font
+	out.LineHeight = element.LineHeight or props.LineHeight
+	out.RichText = if element.RichText ~= nil then element.RichText else props.RichText
+	out.Text = element.Text or props.Text
+	out.TextColor3 = element.TextColor3 or props.TextColor3
+	out.TextScaled = if element.TextScaled ~= nil
+		then element.TextScaled
+		else props.TextScaled
+	out.TextSize = element.TextSize or props.TextSize
+	out.TextStrokeColor3 = element.TextStrokeColor3 or props.TextStrokeColor3
+	out.TextStrokeTransparency = element.TextStrokeTransparency
+		or props.TextStrokeTransparency
+	out.TextTransparency = element.TextTransparency or props.TextTransparency
+	out.TextWrapped = if element.TextWrapped ~= nil
+		then element.TextWrapped
+		else props.TextWrapped
+	out.TextXAlignment = element.TextXAlignment or props.TextXAlignment
+	out.TextYAlignment = element.TextYAlignment or props.TextYAlignment
+
+	out.FontFace = element.FontFace or props.FontFace
+	out.MaxVisibleGraphemes = element.MaxVisibleGraphemes or props.MaxVisibleGraphemes
+	out.OpenTypeFeatures = element.OpenTypeFeatures or props.OpenTypeFeatures
+	out.TextDirection = element.TextDirection or props.TextDirection
+	out.TextTruncate = element.TextTruncate or props.TextTruncate
+
+	return out
+end
+
 return Util

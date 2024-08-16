@@ -9,7 +9,6 @@ local Types = require("@proj/Types")
 local RobloxTypes = require("@proj/RobloxTypes")
 local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
-local Container = require("@util/Container/React")
 local Typography = require("@proj/Typography")
 local PropUtil = require("@proj/PropUtil")
 -- Types
