@@ -34,7 +34,8 @@ return function(target: Frame)
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
 			)
-			local defaultSelection, setdefaultSelection = React.useState(false)
+			local defaultSelection, setDefaultSelection = React.useState(false)
+			local inanimateSelection, setInanimateSelection = React.useState(false)
 			local noIconSelection, setNoIconSelection = React.useState(true)
 			local disabledSelection, setDisabledSelection =
 				React.useState(math.random() > 0.5)
@@ -80,9 +81,39 @@ return function(target: Frame)
 						Value = defaultSelection,
 						OnChanged = function(value: boolean)
 							print("Default", value)
-							setdefaultSelection(value)
+							setDefaultSelection(value)
 						end,
 						IsEnabled = true,
+						IsAnimated = true,
+						IncludeIconOnSelected = true,
+						IncludeIconOnDeselected = true,
+						BackgroundColor3 = style:GetColor(
+							Enums.ColorRoleType.SurfaceContainerHighest
+						),
+						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
+						ButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.PrimaryContainer
+						),
+						OnButtonColor3 = style:GetColor(
+							Enums.ColorRoleType.OnPrimaryContainer
+						),
+						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						Elevation = 0,
+						SchemeType = style.SchemeType,
+						Scale = 1,
+					}),
+
+					Inanimate = React.createElement(Interface.Full, {
+						LayoutOrder = 1,
+						Value = inanimateSelection,
+						OnChanged = function(value: boolean)
+							print("Inanimate", value)
+							setInanimateSelection(value)
+						end,
+						IsEnabled = true,
+						IsAnimated = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
 						BackgroundColor3 = style:GetColor(
@@ -111,6 +142,7 @@ return function(target: Frame)
 							setNoIconSelection(value)
 						end,
 						IsEnabled = true,
+						IsAnimated = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
 						BackgroundColor3 = style:GetColor(
@@ -139,6 +171,7 @@ return function(target: Frame)
 							setDisabledSelection(value)
 						end,
 						IsEnabled = false,
+						IsAnimated = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
 						BackgroundColor3 = style:GetColor(

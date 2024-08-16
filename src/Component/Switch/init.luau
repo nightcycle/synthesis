@@ -170,6 +170,7 @@ function Component:init(initialProps: SwitchProperties): ()
 		IsHovered = false,
 		IsPressed = false,
 		IsFocused = false,
+		TargetValue = initialProps.Value,
 		Alpha = getAlphaRunner(self):Get(),
 	})
 end
@@ -449,6 +450,19 @@ function Component:render(): React.ReactElement<
 	else
 		getAlphaRunner(self):Update(value)
 	end
+	local function playSound()
+		local soundType = Enums.SoundType.navigation_forward_selection_minimal
+		if value then
+			soundType = Enums.SoundType.navigation_backward_selection_minimal
+		end
+		Sounds.play(soundType)
+	end
+
+	-- if value ~= self.state.TargetValue then
+	if isAnimated then
+		getAlphaRunner(self):Set(value, playSound)
+	end
+	-- end
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
 
@@ -570,15 +584,12 @@ function Component:render(): React.ReactElement<
 				[React.Event.Activated] = function()
 					if self.props.IsEnabled then
 						onChanged(not value)
-						getAlphaRunner(self):Set(not value, function()
-							local soundType =
-								Enums.SoundType.navigation_forward_selection_minimal
-							if value then
-								soundType =
-									Enums.SoundType.navigation_backward_selection_minimal
-							end
-							Sounds.play(soundType)
-						end)
+						self:setState({
+							TargetValue = not value,
+						})
+						if not isAnimated then
+							playSound()
+						end
 					end
 				end,
 				[React.Event.SelectionGained] = function()
