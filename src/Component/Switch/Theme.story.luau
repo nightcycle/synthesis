@@ -41,7 +41,7 @@ return function(target: Frame)
 				name: string,
 				backgroundRole: Enums.ColorRoleType
 			)
-				local comp: typeof(Interface.OnSurfaceContainerPrimary) = Interface[name]
+				local comp: typeof(Interface.OnSurfacePrimary) = Interface[name]
 				local defaultSelection, setSelection = React.useState(false)
 				return React.createElement(Container, {
 					BackgroundTransparency = 0,
@@ -126,17 +126,17 @@ return function(target: Frame)
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					OnSurfaceContainerPrimary = newThemeBlock(
-						"OnSurfaceContainerPrimary",
-						Enums.ColorRoleType.SurfaceContainer
+					OnSurfacePrimary = newThemeBlock(
+						"OnSurfacePrimary",
+						Enums.ColorRoleType.Surface
 					),
-					OnSurfaceContainerSecondary = newThemeBlock(
-						"OnSurfaceContainerSecondary",
-						Enums.ColorRoleType.SurfaceContainer
+					OnSurfaceSecondary = newThemeBlock(
+						"OnSurfaceSecondary",
+						Enums.ColorRoleType.Surface
 					),
-					OnSurfaceContainerTertiary = newThemeBlock(
-						"OnSurfaceContainerTertiary",
-						Enums.ColorRoleType.SurfaceContainer
+					OnSurfaceTertiary = newThemeBlock(
+						"OnSurfaceTertiary",
+						Enums.ColorRoleType.Surface
 					),
 				}
 			)

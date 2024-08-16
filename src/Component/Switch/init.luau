@@ -730,7 +730,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfaceContainerPrimary = function(props: ThemeSwitchProperties): React.ReactElement<
+	OnSurfacePrimary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
 		"OnSurfaceContainerPrimary"
 	>
@@ -752,7 +752,7 @@ return {
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceContainerSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
+	OnSurfaceSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
 		"OnSurfaceContainerSecondary"
 	>
@@ -774,7 +774,7 @@ return {
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceContainerTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
+	OnSurfaceTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
 		SwitchProperties,
 		"OnSurfaceContainerTertiary"
 	>
