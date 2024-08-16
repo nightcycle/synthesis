@@ -9,6 +9,7 @@ local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
 local Container = require("@comp/Container")
+local TextDisplay = require("@comp/TextDisplay")
 
 -- Types
 -- Constants
@@ -35,12 +36,77 @@ return function(target: Frame)
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
 			)
-			local defaultSelection, setSelection = React.useState(false)
+
+			local function newThemeBlock(
+				name: string,
+				backgroundRole: Enums.ColorRoleType
+			)
+				local comp: typeof(Interface.OnSurfaceContainerPrimary) = Interface[name]
+				local defaultSelection, setSelection = React.useState(false)
+				return React.createElement(Container, {
+					BackgroundTransparency = 0,
+					BackgroundColor3 = style:GetColor(backgroundRole),
+					BorderSizePixel = 1,
+					BorderColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+				}, {
+					UIListLayout = React.createElement(
+						"UIListLayout",
+						{
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							FillDirection = Enum.FillDirection.Vertical,
+							Padding = UDim.new(0, math.round(5 * style.Scale)),
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+							-- VerticalFlex = Enum.UIFlexAlignment.SpaceEvenly,
+						} :: RobloxTypes.UIListLayoutProperties
+					),
+					-- Divider1 = React.createElement("Frame", {
+					-- 	BackgroundTransparency = 0,
+					-- 	LayoutOrder = 0,
+					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+					-- 	BorderSizePixel = 0,
+					-- 	Size = UDim2.new(1, 0, 0, 1),
+					-- }),
+					Title = React.createElement(
+						TextDisplay.Simple,
+						{
+							Text = name,
+							AutomaticSize = Enum.AutomaticSize.XY,
+							ColorRoleType = Enums.ColorRoleType.OnSurface,
+							FontType = Enums.FontType.TitleMedium,
+							Style = style,
+							LayoutOrder = 1,
+						} :: TextDisplay.StyleTextDisplayProperties
+					),
+					Switch = React.createElement(comp, {
+						LayoutOrder = 2,
+						Value = defaultSelection,
+						OnChanged = function(value: boolean)
+							print(name, value)
+							setSelection(value)
+						end,
+						IsEnabled = true,
+						IncludeIconOnSelected = true,
+						IncludeIconOnDeselected = true,
+						Elevation = 0,
+						Style = style,
+					}),
+					-- Divider2 = React.createElement("Frame", {
+					-- 	BackgroundTransparency = 0,
+					-- 	LayoutOrder = 3,
+					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+					-- 	BorderSizePixel = 0,
+					-- 	Size = UDim2.new(1, 0, 0, 1),
+					-- }),
+				})
+			end
+
 			return React.createElement(
 				"Frame",
 				{
 					Name = "HalfFrame",
-					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Background),
+					BackgroundTransparency = 1,
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
@@ -49,9 +115,9 @@ return function(target: Frame)
 					UIListLayout = React.createElement(
 						"UIListLayout",
 						{
-							SortOrder = Enum.SortOrder.LayoutOrder,
+							SortOrder = Enum.SortOrder.Name,
 							FillDirection = Enum.FillDirection.Vertical,
-							Padding = UDim.new(0, 10),
+							Padding = UDim.new(0, 0),
 							VerticalAlignment = Enum.VerticalAlignment.Center,
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 							HorizontalFlex = Enum.UIFlexAlignment.Fill,
@@ -60,47 +126,27 @@ return function(target: Frame)
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					DefaultContainer = React.createElement(Container, {
-						BackgroundTransparency = 0,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainer
-						),
-					}, {
-						UIListLayout = React.createElement(
-							"UIListLayout",
-							{
-								SortOrder = Enum.SortOrder.LayoutOrder,
-								FillDirection = Enum.FillDirection.Vertical,
-								Padding = UDim.new(0, 10),
-								VerticalAlignment = Enum.VerticalAlignment.Center,
-								HorizontalAlignment = Enum.HorizontalAlignment.Center,
-							} :: RobloxTypes.UIListLayoutProperties
-						),
-						Default = React.createElement(
-							Interface.OnSurfaceContainerPrimary,
-							{
-								LayoutOrder = 1,
-								Value = defaultSelection,
-								OnChanged = function(value: boolean)
-									print("OnSurfaceContainerPrimary", value)
-									setSelection(value)
-								end,
-								IsEnabled = true,
-								IncludeIconOnSelected = true,
-								IncludeIconOnDeselected = true,
-								Elevation = 0,
-								Style = style,
-							}
-						),
-					}),
+					OnSurfaceContainerPrimary = newThemeBlock(
+						"OnSurfaceContainerPrimary",
+						Enums.ColorRoleType.SurfaceContainer
+					),
+					OnSurfaceContainerSecondary = newThemeBlock(
+						"OnSurfaceContainerSecondary",
+						Enums.ColorRoleType.SurfaceContainer
+					),
+					OnSurfaceContainerTertiary = newThemeBlock(
+						"OnSurfaceContainerTertiary",
+						Enums.ColorRoleType.SurfaceContainer
+					),
 				}
 			)
 		end
 
 		local COLORS: { [number]: Color3 } = {
 			Color3.fromHSV(0, 0.9, 0.8),
+			Color3.fromHSV(0, 0.9, 0.8),
 			Color3.fromHSV(0.6, 0.9, 0.7),
-			Color3.fromHSV(0.35, 0.9, 0.7),
+			Color3.fromHSV(0.6, 0.9, 0.7),
 		}
 
 		local element = React.createElement(
@@ -117,19 +163,21 @@ return function(target: Frame)
 					local x = (i - 1) / #COLORS
 					local width = 1 / #COLORS
 
-					children[`Dark{i}`] = React.createElement(halfFrame, {
-						Color3 = color,
-						IsDarkMode = true,
-						Size = UDim2.fromScale(width, 0.5),
-						Position = UDim2.fromScale(x, 0.5),
-					})
-
-					children[`Light{i}`] = React.createElement(halfFrame, {
-						Color3 = color,
-						IsDarkMode = false,
-						Size = UDim2.fromScale(width, 0.5),
-						Position = UDim2.fromScale(x, 0),
-					})
+					if i % 2 == 0 then
+						children[`Dark{i}`] = React.createElement(halfFrame, {
+							Color3 = color,
+							IsDarkMode = true,
+							Size = UDim2.fromScale(width, 1),
+							Position = UDim2.fromScale(x, 0),
+						})
+					else
+						children[`Light{i}`] = React.createElement(halfFrame, {
+							Color3 = color,
+							IsDarkMode = false,
+							Size = UDim2.fromScale(width, 1),
+							Position = UDim2.fromScale(x, 0),
+						})
+					end
 				end
 				return children
 			end)()

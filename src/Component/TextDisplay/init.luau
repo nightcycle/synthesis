@@ -15,7 +15,7 @@ local PropUtil = require("@proj/PropUtil")
 type Style = Style.Style
 type ImageData = Types.ImageData
 type FontData = Types.FontData
-type TextDisplayProperties = RobloxTypes.FrameProperties & {
+export type TextDisplayProperties = RobloxTypes.FrameProperties & {
 	Text: string?,
 	TextColor3: Color3?,
 	TextTransparency: number?,
@@ -27,7 +27,7 @@ type TextDisplayProperties = RobloxTypes.FrameProperties & {
 	IgnoreLineHeight: boolean?,
 	TextXAlignment: Enum.TextXAlignment?,
 }
-type StyleTextDisplayProperties = RobloxTypes.TextLabelProperties & {
+export type StyleTextDisplayProperties = RobloxTypes.TextLabelProperties & {
 	Text: string?,
 	ColorRoleType: Enums.ColorRoleType,
 	FontType: Enums.FontType,

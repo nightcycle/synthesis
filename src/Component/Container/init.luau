@@ -14,13 +14,23 @@ local PropUtil = require("@proj/PropUtil")
 return function(
 	props: RobloxTypes.FrameProperties
 ): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
-	return React.createElement(
-		"Frame",
-		PropUtil.mergeFrame({
-			AutomaticSize = Enum.AutomaticSize.XY,
-			Size = UDim2.fromScale(0, 0),
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-		}, props)
-	)
+	local newProps = PropUtil.mergeFrame({
+		AutomaticSize = Enum.AutomaticSize.XY,
+		Size = UDim2.fromScale(0, 0),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+	}, props)
+	if props.BackgroundTransparency then
+		newProps.BackgroundTransparency = props.BackgroundTransparency
+	end
+	if props.BorderSizePixel then
+		newProps.BorderSizePixel = props.BorderSizePixel
+	end
+	if props.Size then
+		newProps.Size = props.Size
+	end
+	if props.AutomaticSize then
+		newProps.AutomaticSize = props.AutomaticSize
+	end
+	return React.createElement("Frame", newProps)
 end

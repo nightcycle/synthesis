@@ -752,4 +752,48 @@ return {
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 		return React.createElement(Component, newProps)
 	end,
+	OnSurfaceContainerSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
+		SwitchProperties,
+		"OnSurfaceContainerSecondary"
+	>
+		local style = props.Style
+
+		local newProps = table.clone(props) :: SwitchProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
+
+		newProps.BackgroundColor3 =
+			style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+		newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+		newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+		return React.createElement(Component, newProps)
+	end,
+	OnSurfaceContainerTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
+		SwitchProperties,
+		"OnSurfaceContainerTertiary"
+	>
+		local style = props.Style
+
+		local newProps = table.clone(props) :: SwitchProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
+
+		newProps.BackgroundColor3 =
+			style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+		newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+		newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+		return React.createElement(Component, newProps)
+	end,
 }
