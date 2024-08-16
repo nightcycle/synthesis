@@ -3,6 +3,7 @@
 -- @Packages
 local Maid = require("@wally/Maid")
 local React = require("@wally/React")
+local Icons = require("@wally/MaterialIcons")
 -- Modules
 local Types = require("@proj/Types")
 local Style = require("@proj/Style")
@@ -14,19 +15,20 @@ local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 local Transition = require("@proj/Transition")
 local PopUp = require("@comp/PopUp")
+
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
 type ImageData = Types.ImageData
 type Style = Style.Style
 type RenderData = Types.RenderData
-type BaseRadioButtonProperties = RobloxTypes.GuiObjectProperties & {
+type BaseCheckboxProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
 	OnChanged: (isSelected: boolean) -> (),
 	IsEnabled: boolean?,
 }
 
-export type RadioButtonProperties = BaseRadioButtonProperties & {
+export type CheckboxProperties = BaseCheckboxProperties & {
 	IsAnimated: boolean?,
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
@@ -34,10 +36,11 @@ export type RadioButtonProperties = BaseRadioButtonProperties & {
 	FillColor3: Color3?,
 	IconColor3: Color3?,
 	DisabledColor3: Color3?,
+	OnDisabledColor3: Color3?,
 	Elevation: number?,
 }
 
-export type ThemeRadioButtonProperties = BaseRadioButtonProperties & {
+export type ThemeCheckboxProperties = BaseCheckboxProperties & {
 	Style: Style,
 }
 -- Constants
@@ -48,24 +51,30 @@ local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
 local RIPPLE_ALPHA_RUNNER_KEY = "RippleAlphaRunner"
+local CHECK_ICON = Icons.check
+local DASH_ICON = Icons.remove
+local LAYER_SIZE_DP = 40
+local CHECKBOX_SIZE_DP = 18
+local CHECKBOX_SHAPE_DP = 2
+local UNSELECT_OUTLINE_WIDTH_DP = 2
 -- Variables
 -- References
 -- Private Functions
 function getAlphaRunner(
-	self: React.ComponentClass<RadioButtonProperties>
+	self: React.ComponentClass<CheckboxProperties>
 ): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
 function getRippleAlphaRunner(
-	self: React.ComponentClass<RadioButtonProperties>
+	self: React.ComponentClass<CheckboxProperties>
 ): Transition.TransitionRunner
 	return self[RIPPLE_ALPHA_RUNNER_KEY]
 end
 -- Class
-local Component: React.ComponentClass<RadioButtonProperties> =
-	React.Component:extend("RadioButton")
+local Component: React.ComponentClass<CheckboxProperties> =
+	React.Component:extend("Checkbox")
 
-function Component:init(initialProps: RadioButtonProperties): ()
+function Component:init(initialProps: CheckboxProperties): ()
 	self[ALPHA_RUNNER_KEY] = Transition.Runner(
 		self,
 		"Alpha",
@@ -110,6 +119,8 @@ function Component:render(): React.ReactElement<
 
 	local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3?
 		or Defaults.DisabledColor3
+	local onDisabledColor3: Color3 = self.props.OnDisabledColor3 :: Color3?
+		or Defaults.OnDisabledColor3
 	local fillColor3: Color3 = self.props.FillColor3 :: Color3? or Defaults.FillColor3
 	local iconColor3: Color3 = self.props.IconColor3 :: Color3? or Defaults.IconColor3
 	local outlineColor3: Color3 = self.props.OutlineColor3 :: Color3?
@@ -256,7 +267,7 @@ function Component:render(): React.ReactElement<
 				1 - 0.38
 			),
 			Types._AppearanceData.new(
-				Theme.getElevatedColor(disabledColor3, elevation, schemeType),
+				Theme.getElevatedColor(onDisabledColor3, elevation, schemeType),
 				1 - 0.38
 			),
 			nil,
@@ -265,6 +276,15 @@ function Component:render(): React.ReactElement<
 			nil
 		)
 	end
+
+	local icon: ImageData?
+	if value == nil then
+		icon = DASH_ICON
+	elseif value == true then
+		icon = CHECK_ICON
+	end
+
+	local fillTransparency = 1 - (1 - renderData.Border.Transparency) * alpha
 
 	return React.createElement(
 		"ImageButton",
@@ -397,38 +417,35 @@ function Component:render(): React.ReactElement<
 					end,
 				})
 				else nil,
-			Ring = React.createElement(
-				"Frame",
+			Box = React.createElement(
+				"ImageLabel",
 				{
 					Size = (function(): UDim2
-						local dpWidth = BUTTON_SIZE_DP - (UNSELECT_OUTLINE_WIDTH_DP * 2)
-						dpWidth /= 2
-						dpWidth = math.round(dpWidth)
-						dpWidth *= 2
+						local dpWidth = CHECKBOX_SIZE_DP - (UNSELECT_OUTLINE_WIDTH_DP * 2)
 						return UDim2.fromOffset(
 							math.round(scale * dpWidth),
 							math.round(scale * dpWidth)
 						)
 					end)(),
-					BackgroundTransparency = 1,
-				} :: RobloxTypes.FrameProperties,
+					BackgroundTransparency = fillTransparency,
+					ImageTransparency = fillTransparency,
+					BackgroundColor3 = renderData.Background.Color3,
+					ImageColor3 = if renderData.Text
+						then renderData.Text.Color3
+						else Color3.new(1, 1, 1),
+					Image = if icon then icon.Image else "",
+					ImageRectOffset = if icon then icon.ImageRectOffset else Vector2.zero,
+					ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
+				} :: RobloxTypes.ImageLabelProperties,
 				{
 					UICorner = React.createElement(
 						"UICorner",
 						{
-							CornerRadius = UDim.new(0.5, 0),
+							CornerRadius = UDim.new(
+								0,
+								math.round(scale * CHECKBOX_SHAPE_DP)
+							),
 						} :: RobloxTypes.UICornerProperties
-					),
-					UIListLayout = React.createElement(
-						"UIListLayout",
-						{
-							Padding = UDim.new(0, 0),
-							SortOrder = Enum.SortOrder.LayoutOrder,
-							FillDirection = Enum.FillDirection.Horizontal,
-							ItemLineAlignment = Enum.ItemLineAlignment.Center,
-							VerticalAlignment = Enum.VerticalAlignment.Center,
-							HorizontalAlignment = Enum.HorizontalAlignment.Center,
-						} :: RobloxTypes.UIListLayoutProperties
 					),
 					UIStroke = React.createElement(
 						"UIStroke",
@@ -441,40 +458,6 @@ function Component:render(): React.ReactElement<
 							Thickness = math.round(scale * UNSELECT_OUTLINE_WIDTH_DP),
 							Transparency = renderData.Border.Transparency,
 						} :: RobloxTypes.UIStrokeProperties
-					),
-					Dot = React.createElement(
-						"Frame",
-						{
-							-- BackgroundTransparency = if value
-							-- 	then renderData.Border.Transparency
-							-- 	else 1,
-							BackgroundTransparency = 1
-								- (1 - renderData.Border.Transparency) * alpha,
-							AnchorPoint = Vector2.new(0.5, 0.5),
-							Size = (function(): UDim2
-								local dpWidth = 0.5
-									* (BUTTON_SIZE_DP - (UNSELECT_OUTLINE_WIDTH_DP * 2))
-								dpWidth /= 2
-								dpWidth = math.round(dpWidth)
-								dpWidth *= 2
-								return UDim2.fromOffset(
-									math.round(alpha * scale * dpWidth),
-									math.round(alpha * scale * dpWidth)
-								)
-							end)(),
-							BackgroundColor3 = if value == false or not isEnabled
-								then renderData.Border.Color3
-								else renderData.Background.Color3,
-							BorderSizePixel = 0,
-						} :: RobloxTypes.FrameProperties,
-						{
-							UICorner = React.createElement(
-								"UICorner",
-								{
-									CornerRadius = UDim.new(0.5, 0),
-								} :: RobloxTypes.UICornerProperties
-							),
-						}
 					),
 				}
 			),
@@ -489,13 +472,13 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: ThemeRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
+	OnSurfacePrimary = function(props: ThemeCheckboxProperties): React.ReactElement<
+		CheckboxProperties,
 		"OnSurfacePrimary"
 	>
 		local style = props.Style
 
-		local newProps = table.clone(props) :: RadioButtonProperties;
+		local newProps = table.clone(props) :: CheckboxProperties;
 		(newProps :: any).Style = nil
 		newProps.IsAnimated = style.IsAnimated
 		newProps.SchemeType = style.SchemeType
@@ -504,16 +487,17 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: ThemeRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
+	OnSurfaceSecondary = function(props: ThemeCheckboxProperties): React.ReactElement<
+		CheckboxProperties,
 		"OnSurfaceSecondary"
 	>
 		local style = props.Style
 
-		local newProps = table.clone(props) :: RadioButtonProperties;
+		local newProps = table.clone(props) :: CheckboxProperties;
 		(newProps :: any).Style = nil
 		newProps.IsAnimated = style.IsAnimated
 		newProps.SchemeType = style.SchemeType
@@ -522,16 +506,17 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: ThemeRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
+	OnSurfaceTertiary = function(props: ThemeCheckboxProperties): React.ReactElement<
+		CheckboxProperties,
 		"OnSurfaceTertiary"
 	>
 		local style = props.Style
 
-		local newProps = table.clone(props) :: RadioButtonProperties;
+		local newProps = table.clone(props) :: CheckboxProperties;
 		(newProps :: any).Style = nil
 		newProps.IsAnimated = style.IsAnimated
 		newProps.SchemeType = style.SchemeType
@@ -540,6 +525,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 
 		return React.createElement(Component, newProps)
 	end,
