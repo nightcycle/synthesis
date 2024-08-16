@@ -82,6 +82,7 @@ local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 local Transition = require("@proj/Transition")
+local PopUp = require("@comp/PopUp")
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
@@ -133,6 +134,7 @@ local OUTLINE_THICKNESS_DP = 2
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
+local RIPPLE_ALPHA_RUNNER_KEY = "RippleAlphaRunner"
 -- Variables
 -- References
 -- Private Functions
@@ -154,7 +156,11 @@ function getAlphaRunner(
 ): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
-
+function getRippleAlphaRunner(
+	self: React.ComponentClass<SwitchProperties>
+): Transition.TransitionRunner
+	return self[RIPPLE_ALPHA_RUNNER_KEY]
+end
 -- Class
 local Component: React.ComponentClass<SwitchProperties> = React.Component:extend("Switch")
 
@@ -166,13 +172,25 @@ function Component:init(initialProps: SwitchProperties): ()
 		TRANSITION_TYPE,
 		TRANSITION_DURATION
 	)
+	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(
+		self,
+		"RippleAlpha",
+		0,
+		TRANSITION_TYPE,
+		Enums.TransitionDuration.Medium4
+	)
 	self:setState({
 		IsHovered = false,
 		IsPressed = false,
 		IsFocused = false,
 		TargetValue = initialProps.Value,
+		RippleAlpha = getRippleAlphaRunner(self):Get(),
 		Alpha = getAlphaRunner(self):Get(),
+		KnobAbsolutePosition = Vector2.new(0, 0),
+		KnobAbsoluteSize = Vector2.new(0, 0),
 	})
+	-- local absolutePosition, setAbsolutePosition = React.useState(Vector2.new(0, 0))
+	-- local absoluteSize, setAbsoluteSize = React.useState(Vector2.new(0, 0))
 end
 
 function Component:render(): React.ReactElement<
@@ -458,13 +476,17 @@ function Component:render(): React.ReactElement<
 		Sounds.play(soundType)
 	end
 
-	-- if value ~= self.state.TargetValue then
+	local isRippleEnabled = (isHovered or isPressed or isFocused)
+
 	if isAnimated then
 		getAlphaRunner(self):Set(value, playSound)
+		getRippleAlphaRunner(self):Set(isRippleEnabled)
+	else
+		isRippleEnabled = false
 	end
-	-- end
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
+	local rippleAlpha = if isAnimated then getRippleAlphaRunner(self):Get() else 0
 
 	local renderData: SwitchRenderData = if isAnimated
 		then newSwitchRenderData(
@@ -678,8 +700,65 @@ function Component:render(): React.ReactElement<
 						BackgroundTransparency = renderData.Button.Transparency,
 						BorderSizePixel = 0,
 						BackgroundColor3 = renderData.Button.Color3,
+						[React.Change.AbsolutePosition] = function(inst: ImageButton)
+							if
+								self.state.KnobAbsolutePosition ~= inst.AbsolutePosition
+							then
+								self:setState({
+									KnobAbsolutePosition = inst.AbsolutePosition,
+								})
+							end
+						end :: any,
+						[React.Change.AbsoluteSize] = function(inst: ImageButton)
+							if self.state.KnobAbsoluteSize ~= inst.AbsoluteSize then
+								self:setState({
+									KnobAbsoluteSize = inst.AbsoluteSize,
+								})
+							end
+						end :: any,
 					} :: RobloxTypes.FrameProperties,
 					{
+						Ripple = if isAnimated
+								and (
+									math.round(rippleAlpha) ~= rippleAlpha
+									or isRippleEnabled
+								)
+							then React.createElement(PopUp, {
+								DisplayAnchorPoint = Vector2.new(0.5, 0.5),
+								TargetAbsolutePosition = self.state.KnobAbsolutePosition
+									+ self.state.KnobAbsoluteSize
+										* Vector2.new(0.5, 0.5),
+								DisplayComponent = function(): React.ReactElement<
+									RobloxTypes.FrameProperties,
+									"Frame"
+								>
+									local rippleSize = math.ceil(
+										1.35 * scale * SWITCH_HEIGHT_DP * rippleAlpha
+									)
+									return React.createElement(
+										"Frame",
+										{
+											BackgroundTransparency = 1
+												- 0.2 * rippleAlpha,
+											BackgroundColor3 = fillColor3,
+											BorderSizePixel = 0,
+											Size = UDim2.fromOffset(
+												rippleSize,
+												rippleSize
+											),
+										} :: RobloxTypes.FrameProperties,
+										{
+											React.createElement(
+												"UICorner",
+												{
+													CornerRadius = UDim.new(0.5, 0),
+												} :: RobloxTypes.UICornerProperties
+											),
+										}
+									)
+								end,
+							})
+							else nil,
 						UIListLayout = React.createElement(
 							"UIListLayout",
 							{
@@ -737,6 +816,7 @@ end
 
 function Component:willUnmount()
 	getAlphaRunner(self):Disconnect()
+	getRippleAlphaRunner(self):Disconnect()
 end
 
 return {

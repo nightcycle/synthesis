@@ -59,9 +59,11 @@ return function(
 			end
 			currentAlpha += dt * math.sign(goalAlpha - currentAlpha) / duration
 			currentAlpha = math.clamp(currentAlpha, 0, 1)
-			component:setState({
-				[stateKey] = currentAlpha,
-			})
+			if component.state[stateKey] ~= currentAlpha then
+				component:setState({
+					[stateKey] = currentAlpha,
+				})
+			end
 		end)
 	end
 	return {
