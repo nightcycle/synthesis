@@ -734,21 +734,22 @@ return {
 		SwitchProperties,
 		"OnSurfaceContainerPrimary"
 	>
-		local newProps = table.clone(props) :: SwitchProperties
-		newProps.IsAnimated = props.Style.IsAnimated
-		newProps.SchemeType = props.Style.SchemeType
-		newProps.Scale = props.Style.Scale
+		local style = props.Style
+
+		local newProps = table.clone(props) :: SwitchProperties;
+		(newProps :: any).Style = nil
+		newProps.IsAnimated = style.IsAnimated
+		newProps.SchemeType = style.SchemeType
+		newProps.Scale = style.Scale
 
 		newProps.BackgroundColor3 =
-			props.Style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-		newProps.OnBackgroundColor3 = props.Style:GetColor(Enums.ColorRoleType.Outline)
-		newProps.FillColor3 = props.Style:GetColor(Enums.ColorRoleType.Primary)
-		newProps.ButtonColor3 = props.Style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-		newProps.OnButtonColor3 =
-			props.Style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
-		newProps.DisabledColor3 = props.Style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.OnDisabledColor3 = props.Style:GetColor(Enums.ColorRoleType.Surface)
-
+			style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+		newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+		newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
+		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 		return React.createElement(Component, newProps)
 	end,
 }

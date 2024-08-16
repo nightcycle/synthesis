@@ -29,7 +29,7 @@ return function(target: Frame)
 			}
 		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 			local style = Style.new(
-				1.5,
+				1,
 				Enum.Font.SourceSans,
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
