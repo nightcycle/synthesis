@@ -8,7 +8,6 @@ local ReactRoblox = require("@wally/ReactRoblox")
 local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
-local Types = require("@proj/Types")
 
 -- Types
 -- Constants
@@ -21,7 +20,7 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require("./React")
+		local Interface = require("../Switch")
 
 		local function halfFrame(
 			props: RobloxTypes.FrameProperties & {
@@ -76,7 +75,7 @@ return function(target: Frame)
 					-- disabledColor: Enums.ColorRoleType,
 					-- onDisabledColor: Enums.ColorRoleType,
 
-					Default = React.createElement(Interface.new, {
+					Default = React.createElement(Interface.Full, {
 						LayoutOrder = 1,
 						Value = defaultSelection,
 						OnChanged = function(value: boolean)
@@ -101,14 +100,10 @@ return function(target: Frame)
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(
-							Font.fromEnum(Enum.Font.SourceSans),
-							14
-						),
 						Scale = 1,
 					}),
 
-					NoIcons = React.createElement(Interface.new, {
+					NoIcons = React.createElement(Interface.Full, {
 						LayoutOrder = 2,
 						Value = noIconSelection,
 						OnChanged = function(value: boolean)
@@ -133,14 +128,10 @@ return function(target: Frame)
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(
-							Font.fromEnum(Enum.Font.SourceSans),
-							14
-						),
 						Scale = 1,
 					}),
 
-					Disabled = React.createElement(Interface.new, {
+					Disabled = React.createElement(Interface.Full, {
 						LayoutOrder = 3,
 						Value = disabledSelection,
 						OnChanged = function(value: boolean)
@@ -165,10 +156,6 @@ return function(target: Frame)
 						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
-						FontData = Types.FontData.new(
-							Font.fromEnum(Enum.Font.SourceSans),
-							14
-						),
 						Scale = 1,
 					}),
 				}

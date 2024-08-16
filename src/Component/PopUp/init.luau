@@ -5,7 +5,7 @@ local React = require("@wally/React")
 
 -- Modules
 local Types = require("@proj/Types")
-local Container = require("@util/Container/React")
+local Container = require("@comp/Container")
 local RobloxTypes = require("@proj/RobloxTypes")
 local PropUtil = require("@proj/PropUtil")
 -- Types
@@ -21,9 +21,7 @@ export type PopUpProperties = RobloxTypes.FrameProperties & {
 -- References
 -- Private Functions
 -- Class
-local Util = {}
-
-function Util.new(
+return function(
 	props: PopUpProperties
 ): React.ReactElement<RobloxTypes.ScreenGuiProperties, "ScreenGui">
 	-- local originAnchorPoint: Vector2 = props.OriginAnchorPoint or Vector2.new(0, 0)
@@ -63,7 +61,7 @@ function Util.new(
 		} :: RobloxTypes.ScreenGuiProperties,
 		{
 			Container = React.createElement(
-				Container.new,
+				Container,
 				PropUtil.mergeFrame({
 					Position = UDim2.fromOffset(absolutePosition.X, absolutePosition.Y),
 					AnchorPoint = displayAnchorPoint,
@@ -88,5 +86,3 @@ function Util.new(
 		}
 	)
 end
-
-return Util

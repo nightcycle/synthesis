@@ -16,7 +16,7 @@ type Style = Style.Style
 -- Class
 local Util = {}
 
-function Util.fromStyle(
+function Util.Style(
 	props: {
 		LeftRightDp: number,
 		TopBottomDp: number,
@@ -37,7 +37,7 @@ function Util.fromStyle(
 	)
 end
 
-function Util.fromStyleSimple(props: {
+function Util.StyleSimple(props: {
 	PaddingDp: number,
 	Style: Style,
 }): React.ReactElement<

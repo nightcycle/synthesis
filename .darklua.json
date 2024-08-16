@@ -8,7 +8,6 @@
 				"@proj": "./src",
 				"@wally": "./Packages",
 				"@comp": "./src/Component",
-				"@util": "./src/Util",
 				"@node": "./node_modules/.luau-aliases",
 				"@pkg": "node_modules/.luau-aliases"
 			}

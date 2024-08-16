@@ -14,9 +14,7 @@ local BOTTOM_IMAGE = "http://www.roblox.com/asset/?id=16331988989"
 -- References
 -- Private Functions
 -- Class
-local Util = {}
-
-function Util.new(props: RobloxTypes.ScrollingFrameProperties): React.ReactElement<
+return function(props: RobloxTypes.ScrollingFrameProperties): React.ReactElement<
 	RobloxTypes.ScrollingFrameProperties,
 	"ScrollingFrame"
 >
@@ -34,5 +32,3 @@ function Util.new(props: RobloxTypes.ScrollingFrameProperties): React.ReactEleme
 		)
 	)
 end
-
-return Util

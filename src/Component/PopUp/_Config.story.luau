@@ -16,9 +16,9 @@ return function(target: Frame)
 	local folder = Instance.new("Folder")
 	local root = ReactRoblox.createRoot(folder)
 
-	local PopUp = require("./React")
+	local PopUp = require("../PopUp")
 
-	function newPopUp()
+	local function newPopUp()
 		local absolutePosition, setAbsolutePosition = React.useState(Vector2.new(0, 0))
 		local absoluteSize, setAbsoluteSize = React.useState(Vector2.new(0, 0))
 		local popUpPosition = absolutePosition + absoluteSize * Vector2.new(0.5, 1)
@@ -39,7 +39,7 @@ return function(target: Frame)
 				} :: RobloxTypes.TextButtonProperties,
 				{
 					PopUp = React.createElement(
-						PopUp.new,
+						PopUp,
 						{
 							TargetAbsolutePosition = popUpPosition,
 							DisplayAnchorPoint = Vector2.new(0.5, 0),

@@ -15,6 +15,7 @@ export type FontData = Typography.FontData
 export type Style = {
 	__index: Style,
 	Scale: number,
+	IsAnimated: boolean,
 	SchemeType: Enums.SchemeType,
 	_Theme: Theme,
 	_Typography: Typography,
@@ -34,7 +35,8 @@ export type Style = {
 		scale: number,
 		typographyOrFont: Typography | Enum.Font,
 		schemeType: Enums.SchemeType,
-		themeOrColor: Color3 | Theme
+		themeOrColor: Color3 | Theme,
+		isAnimated: boolean?
 	) -> Style,
 }
 
@@ -57,7 +59,11 @@ function Style:GetElevatedColor(color: Color3, elevation: number): Color3
 	return self._Theme.getElevatedColor(color, elevation, self.SchemeType)
 end
 
-function Style:GetCustomColor(name: string, customType: Enums.CustomColorType, elevation: number?): Color3
+function Style:GetCustomColor(
+	name: string,
+	customType: Enums.CustomColorType,
+	elevation: number?
+): Color3
 	return self._Theme:GetCustom(name, customType, self.SchemeType, elevation)
 end
 
@@ -84,7 +90,8 @@ function Style.new(
 	scale: number,
 	typographyOrFont: Typography | Enum.Font,
 	schemeType: Enums.SchemeType,
-	themeOrColor: Color3 | Theme
+	themeOrColor: Color3 | Theme,
+	isAnimated: boolean?
 ): Style
 	local typography: Typography
 	if typeof(typographyOrFont) == "EnumItem" then
@@ -108,6 +115,7 @@ function Style.new(
 	local self: Style = setmetatable({}, Style) :: any
 	self.Scale = scale
 	self.SchemeType = schemeType
+	self.IsAnimated = if isAnimated ~= nil then isAnimated else true
 	self._Theme = theme
 	self._Typography = typography
 

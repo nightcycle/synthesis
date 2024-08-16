@@ -60,9 +60,9 @@ function newTextIcon(
 	)
 end
 -- Class
-local Util = {}
+local Library = {}
 
-function Util.new(
+function Library.Icon(
 	props: TextDisplayProperties
 ): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 	local scale: number = props.Scale or 1
@@ -151,10 +151,9 @@ function Util.new(
 	)
 end
 
-function Util.fromStyleSimple(props: StyleTextDisplayProperties): React.ReactElement<
-	RobloxTypes.TextLabelProperties,
-	"TextLabel"
->
+function Library.Simple(
+	props: StyleTextDisplayProperties
+): React.ReactElement<RobloxTypes.TextLabelProperties, "TextLabel">
 	local fontType: Enums.FontType = props.FontType
 	local fontData = props.Style:GetFontData(fontType)
 	return React.createElement(
@@ -176,4 +175,4 @@ function Util.fromStyleSimple(props: StyleTextDisplayProperties): React.ReactEle
 	)
 end
 
-return Util
+return Library

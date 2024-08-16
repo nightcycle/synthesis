@@ -11,9 +11,7 @@ local PropUtil = require("@proj/PropUtil")
 -- References
 -- Private Functions
 -- Class
-local Util = {}
-
-function Util.new(
+return function(
 	props: RobloxTypes.FrameProperties
 ): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 	return React.createElement(
@@ -26,5 +24,3 @@ function Util.new(
 		}, props)
 	)
 end
-
-return Util

@@ -1,4 +1,72 @@
 --!strict
+
+--- @class Switch
+--- A true / false input component often used in menus. Read more [here](https://m3.material.io/components/switch/overview).
+
+--- @prop Value boolean
+--- @within Switch
+--- The current value of the switch.
+
+--- @prop OnChanged (newValue: boolean) -> ()
+--- @within Switch
+--- A callback that fires when the switch is toggled.
+
+--- @prop IsEnabled boolean
+--- @within Switch
+--- Whether the switch is enabled. Defaults to `true`.
+
+--- @prop IsAnimated boolean
+--- @within Switch
+--- Whether the switch should animate when toggled. Defaults to `true`.
+
+--- @prop IncludeIconOnSelected boolean
+--- @within Switch
+--- Whether to include an icon when the switch is selected. Defaults to `true`.
+
+--- @prop IncludeIconOnDeselected boolean
+--- @within Switch
+--- Whether to include an icon when the switch is deselected. Defaults to `true`.
+
+--- @prop BackgroundColor3 Color3
+--- @within Switch
+--- The color of the switch when it is deselected.
+
+--- @prop OnBackgroundColor3 Color3
+--- @within Switch
+--- The color of the switch when it is selected.
+
+--- @prop FillColor3 Color3
+--- @within Switch
+--- The color of the switch's fill.
+
+--- @prop ButtonColor3 Color3
+--- @within Switch
+--- The color of the switch's button when it is deselected.
+
+--- @prop OnButtonColor3 Color3
+--- @within Switch
+--- The color of the switch's button when it is selected.
+
+--- @prop DisabledColor3 Color3
+--- @within Switch
+--- The color of the switch when it is disabled and deselected.
+
+--- @prop OnDisabledColor3 Color3
+--- @within Switch
+--- The color of the switch when it is disabled and selected.
+
+--- @prop Elevation number
+--- @within Switch
+--- The elevation of the switch. Defaults to `0`.
+
+--- @prop SchemeType Enums.SchemeType
+--- @within Switch
+--- The scheme type of the switch. Defaults to `Enums.SchemeType.Light`.
+
+--- @prop Scale number
+--- @within Switch
+--- The scale of the switch. Defaults to `1`.
+
 -- Services
 -- @Packages
 local Maid = require("@wally/Maid")
@@ -28,13 +96,20 @@ type SwitchRenderData = {
 	Outline: AppearanceData,
 }
 type FontData = Types.FontData
-type SwitchProperties = RobloxTypes.GuiObjectProperties & {
+
+type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
 	OnChanged: (newValue: boolean) -> (),
 	IsEnabled: boolean?,
-	IsAnimated: boolean?,
+	Elevation: number?,
 	IncludeIconOnSelected: boolean?,
 	IncludeIconOnDeselected: boolean?,
+}
+
+type SwitchProperties = BaseSwitchProperties & {
+	IsAnimated: boolean?,
+	SchemeType: Enums.SchemeType?,
+	Scale: number?,
 	BackgroundColor3: Color3?,
 	OnBackgroundColor3: Color3?,
 	FillColor3: Color3?,
@@ -42,10 +117,10 @@ type SwitchProperties = RobloxTypes.GuiObjectProperties & {
 	OnButtonColor3: Color3?,
 	DisabledColor3: Color3?,
 	OnDisabledColor3: Color3?,
-	Elevation: number?,
-	SchemeType: Enums.SchemeType?,
-	FontData: FontData?,
-	Scale: number?,
+}
+
+type ThemeSwitchProperties = BaseSwitchProperties & {
+	Style: Style,
 }
 -- Constants
 local SWITCH_HEIGHT_DP = 32
@@ -104,7 +179,6 @@ function Component:render(): React.ReactElement<
 	"ImageButton"
 >
 	-- unpack state
-
 	local isHovered: boolean = self.state.IsHovered
 	local isPressed: boolean = self.state.IsPressed
 	local isFocused: boolean = self.state.IsFocused
@@ -113,34 +187,34 @@ function Component:render(): React.ReactElement<
 	local value: boolean = self.props.Value
 	local onChanged: (newValue: boolean) -> () = self.props.OnChanged
 	local backgroundColor3: Color3 = self.props.BackgroundColor3 :: Color3?
-		or Defaults.New.BackgroundColor3
+		or Defaults.BackgroundColor3
 	local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
-		or Defaults.New.OnBackgroundColor3
-	local elevation: number = self.props.Elevation :: number? or Defaults.New.Elevation
+		or Defaults.OnBackgroundColor3
+	local elevation: number = self.props.Elevation :: number? or Defaults.Elevation
 	local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
-		or Defaults.New.SchemeType
+		or Defaults.SchemeType
 	local buttonColor3: Color3 = self.props.ButtonColor3 :: Color3?
-		or Defaults.New.ButtonColor3
+		or Defaults.ButtonColor3
 	local onButtonColor3: Color3 = self.props.OnButtonColor3 :: Color3?
-		or Defaults.New.OnButtonColor3
+		or Defaults.OnButtonColor3
 	local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3?
-		or Defaults.New.DisabledColor3
+		or Defaults.DisabledColor3
 	local onDisabledColor3: Color3 = self.props.OnDisabledColor3 :: Color3?
-		or Defaults.New.OnDisabledColor3
-	local fillColor3: Color3 = self.props.FillColor3 :: Color3? or Defaults.New.FillColor3
-	local scale = (self.props.Scale :: number?) or Defaults.New.Scale
+		or Defaults.OnDisabledColor3
+	local fillColor3: Color3 = self.props.FillColor3 :: Color3? or Defaults.FillColor3
+	local scale = (self.props.Scale :: number?) or Defaults.Scale
 	local isAnimated = if self.props.IsAnimated ~= nil
 		then self.props.IsAnimated
-		else Defaults.New.IsAnimated
+		else Defaults.IsAnimated
 	local isEnabled = if self.props.IsEnabled ~= nil
 		then self.props.IsEnabled
-		else Defaults.New.IsEnabled
+		else Defaults.IsEnabled
 	local includeIconOnSelected = if self.props.IncludeIconOnSelected ~= nil
 		then self.props.IncludeIconOnSelected
-		else Defaults.New.IncludeIconOnSelected
+		else Defaults.IncludeIconOnSelected
 	local includeIconOnDeselected = if self.props.IncludeIconOnDeselected ~= nil
 		then self.props.IncludeIconOnDeselected
-		else Defaults.New.IncludeIconOnDeselected
+		else Defaults.IncludeIconOnDeselected
 
 	-- solve some internal stuff
 	local icon: ImageData?
@@ -378,28 +452,31 @@ function Component:render(): React.ReactElement<
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
 
-	local renderData: SwitchRenderData = if isAnimated then newSwitchRenderData(
-		Types._AppearanceData.lerp(
-			unselectedRenderData.Text,
-			selectedRenderData.Text,
-			alpha
-		),
-		Types._AppearanceData.lerp(
-			unselectedRenderData.Button,
-			selectedRenderData.Button,
-			alpha
-		),
-		Types._AppearanceData.lerp(
-			unselectedRenderData.Background,
-			selectedRenderData.Background,
-			alpha
-		),
-		Types._AppearanceData.lerp(
-			unselectedRenderData.Outline,
-			selectedRenderData.Outline,
-			alpha
+	local renderData: SwitchRenderData = if isAnimated
+		then newSwitchRenderData(
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Text,
+				selectedRenderData.Text,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Button,
+				selectedRenderData.Button,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Background,
+				selectedRenderData.Background,
+				alpha
+			),
+			Types._AppearanceData.lerp(
+				unselectedRenderData.Outline,
+				selectedRenderData.Outline,
+				alpha
+			)
 		)
-	) elseif value then selectedRenderData else unselectedRenderData
+		elseif value then selectedRenderData
+		else unselectedRenderData
 
 	local buttonSize: number
 	if icon then
@@ -651,4 +728,27 @@ function Component:willUnmount()
 	getAlphaRunner(self):Disconnect()
 end
 
-return Component
+return {
+	Full = Component,
+	OnSurfaceContainerPrimary = function(props: ThemeSwitchProperties): React.ReactElement<
+		SwitchProperties,
+		"OnSurfaceContainerPrimary"
+	>
+		local newProps = table.clone(props) :: SwitchProperties
+		newProps.IsAnimated = props.Style.IsAnimated
+		newProps.SchemeType = props.Style.SchemeType
+		newProps.Scale = props.Style.Scale
+
+		newProps.BackgroundColor3 =
+			props.Style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+		newProps.OnBackgroundColor3 = props.Style:GetColor(Enums.ColorRoleType.Outline)
+		newProps.FillColor3 = props.Style:GetColor(Enums.ColorRoleType.Primary)
+		newProps.ButtonColor3 = props.Style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.OnButtonColor3 =
+			props.Style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
+		newProps.DisabledColor3 = props.Style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.OnDisabledColor3 = props.Style:GetColor(Enums.ColorRoleType.Surface)
+
+		return React.createElement(Component, newProps)
+	end,
+}

@@ -13,9 +13,7 @@ type ImageData = Types.ImageData
 -- References
 -- Private Functions
 -- Class
-local Util = {}
-
-function Util.new(
+return function(
 	props: RobloxTypes.ImageLabelProperties & {
 		Icon: ImageData?,
 		Color: Color3?,
@@ -35,5 +33,3 @@ function Util.new(
 		}, props)
 	)
 end
-
-return Util
