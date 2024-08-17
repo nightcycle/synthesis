@@ -5,7 +5,6 @@
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
-local RobloxTypes = require("@proj/RobloxTypes")
 -- Types
 -- Constants
 -- Variables
@@ -27,7 +26,6 @@ return function(target: Frame)
 			ShadowColor3 = Color3.new(0, 0, 0),
 			ShadowTransparency = 0.6,
 			ShadowCornerRadius = UDim.new(0, 10),
-			IsShadowEnabled = true,
 			Elevation = 0,
 			SchemeType = nil,
 		} :: ShadowFrame.ShadowFrameProperties

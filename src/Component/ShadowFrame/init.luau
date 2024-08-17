@@ -14,7 +14,6 @@ export type ShadowFrameProperties = RobloxTypes.ImageLabelProperties & {
 	ShadowColor3: Color3?,
 	ShadowTransparency: number?,
 	ShadowCornerRadius: UDim?,
-	IsShadowEnabled: boolean?,
 	Elevation: number?,
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
@@ -33,9 +32,6 @@ return function(
 	local shadowColor3: Color3 = props.ShadowColor3 or Color3.new(0, 0, 0)
 	local shadowCornerRadius: UDim = props.ShadowCornerRadius or UDim.new(0.5, 0)
 	local shadowTransparency: number = props.ShadowTransparency or 0.1
-	local isShadowEnabled: boolean = if props.IsShadowEnabled ~= nil
-		then props.IsShadowEnabled
-		else true
 	local elevation: number = props.Elevation or 0
 	local schemeType: Enums.SchemeType = props.SchemeType or Enums.SchemeType.Light
 	local scale: number = props.Scale or 1
