@@ -58,7 +58,11 @@ return function(
 				BackgroundTransparency = if pxRadiusSize > 0
 					then 1
 					else shadowTransparency,
-				BackgroundColor3 = shadowColor3,
+				BackgroundColor3 = Theme.getElevatedColor(
+					shadowColor3,
+					elevation,
+					schemeType
+				),
 				ImageTransparency = if pxRadiusSize > 0 then shadowTransparency else 1,
 				ScaleType = Enum.ScaleType.Slice,
 				AutomaticSize = Enum.AutomaticSize.XY,
