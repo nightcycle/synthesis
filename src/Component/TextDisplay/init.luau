@@ -156,6 +156,7 @@ function Library.Simple(
 ): React.ReactElement<RobloxTypes.TextLabelProperties, "TextLabel">
 	local fontType: Enums.FontType = props.FontType
 	local fontData = props.Style:GetFontData(fontType)
+	local scale = props.Style.Scale
 	return React.createElement(
 		"TextLabel",
 		PropUtil.mergeTextLabel(
@@ -163,7 +164,7 @@ function Library.Simple(
 				Text = props.Text,
 				TextColor3 = props.Style:GetColor(props.ColorRoleType),
 				BackgroundTransparency = 1,
-				TextSize = Typography.getTextSize(fontData.Size, 1),
+				TextSize = Typography.getTextSize(fontData.Size, scale),
 				LineHeight = Typography.getGuiLineHeight(
 					fontData.LineHeight,
 					fontData.Size

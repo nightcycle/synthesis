@@ -9,6 +9,15 @@ local Style = require("@proj/Style")
 -- Types
 type ImageData = Types.ImageData
 type Style = Style.Style
+export type StylePaddingProps = {
+	LeftRightDp: number,
+	TopBottomDp: number,
+	Style: Style,
+}
+export type StyleSimpleProps = {
+	PaddingDp: number,
+	Style: Style,
+}
 -- Constants
 -- Variables
 -- References
@@ -17,11 +26,7 @@ type Style = Style.Style
 local Util = {}
 
 function Util.Style(
-	props: {
-		LeftRightDp: number,
-		TopBottomDp: number,
-		Style: Style,
-	}
+	props: StylePaddingProps
 ): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
 	local leftRight = UDim.new(0, math.round(props.LeftRightDp * props.Style.Scale))
 	local topBottom = UDim.new(0, math.round(props.TopBottomDp * props.Style.Scale))
@@ -37,10 +42,7 @@ function Util.Style(
 	)
 end
 
-function Util.StyleSimple(props: {
-	PaddingDp: number,
-	Style: Style,
-}): React.ReactElement<
+function Util.StyleSimple(props: StyleSimpleProps): React.ReactElement<
 	RobloxTypes.UIPaddingProperties,
 	"UIPadding"
 >

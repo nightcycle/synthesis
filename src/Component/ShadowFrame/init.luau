@@ -75,7 +75,6 @@ return function(
 				end :: any,
 			} :: RobloxTypes.ImageLabelProperties,
 			props
-		),
-		{}
+		)
 	)
 end

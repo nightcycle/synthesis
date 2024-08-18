@@ -24,7 +24,7 @@ function Util.mergeInstance(
 		Name = element.Name or props.Name,
 		children = React.createElement(
 			React.Fragment,
-			nil,
+			{},
 			element.children or {},
 			props.children or {}
 		),
@@ -43,14 +43,13 @@ function Util.mergeInstance(
 	return out
 end
 
-Util.mergeGuiBaseProperties = Util.mergeInstance
+Util.mergeGuiBase = Util.mergeInstance
 
 function Util.mergeGuiObject2D(
 	element: RobloxTypes.GuiBase2dProperties,
 	props: RobloxTypes.GuiBase2dProperties
 ): RobloxTypes.GuiBase2dProperties
-	local out =
-		Util.mergeGuiBaseProperties(element, props) :: RobloxTypes.GuiBase2dProperties
+	local out = Util.mergeGuiBase(element, props) :: RobloxTypes.GuiBase2dProperties
 	out.AutoLocalize = if element.AutoLocalize ~= nil
 		then element.AutoLocalize
 		else props.AutoLocalize
@@ -191,6 +190,24 @@ function Util.mergeScrollingFrame(
 		or props.VerticalScrollBarInset
 	out.VerticalScrollBarPosition = element.VerticalScrollBarPosition
 		or props.VerticalScrollBarPosition
+	return out
+end
+
+Util.mergeUIBase = Util.mergeInstance
+
+Util.mergeUIComponent = Util.mergeUIBase
+
+function Util.mergeUIGradient(
+	element: RobloxTypes.UIGradientProperties,
+	props: RobloxTypes.UIGradientProperties
+): RobloxTypes.UIGradientProperties
+	local out = Util.mergeUIComponent(element, props) :: RobloxTypes.UIGradientProperties
+	out.Color = element.Color or props.Color
+	out.Rotation = element.Rotation or props.Rotation
+	out.Transparency = element.Transparency or props.Transparency
+	out.Offset = element.Offset or props.Offset
+	out.Enabled = element.Enabled or props.Enabled
+
 	return out
 end
 
