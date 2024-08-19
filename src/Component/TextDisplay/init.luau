@@ -88,8 +88,8 @@ function Library.Full(
 		local baseDp = if ignoreLineHeight
 			then 1
 			else Typography.getGuiLineHeight(fontData.LineHeight, fontData.Size)
-		local dp = baseDp * Typography.getTextSize(fontData.Size, scale)
-		iconSize = UDim2.fromOffset(dp, dp)
+		local px = math.ceil(1 * baseDp * Typography.getTextSize(fontData.Size, scale))
+		iconSize = UDim2.fromOffset(px, px)
 	end
 	local labelProps = {
 		Text = text,

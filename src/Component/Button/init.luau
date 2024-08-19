@@ -41,11 +41,11 @@ export type StyleButtonProperties = BaseButtonProperties & {
 }
 
 -- Constants
-local ICON_DIM_DP = 24
-local BUTTON_PAD_DP = math.ceil((40 - ICON_DIM_DP) / 2)
-local TARGET_PAD_DP = math.ceil((48 - (ICON_DIM_DP + 2 * BUTTON_PAD_DP)) / 2)
-local TEXT_PAD_UPDOWN_DP = 3
-local TEXT_PAD_LEFTRIGHT_DP = 8
+local ICON_DIM_DP = 16
+local BUTTON_PAD_DP = 4
+local TARGET_PAD_DP = 6
+local TEXT_PAD_UPDOWN_DP = 2
+local TEXT_PAD_LEFTRIGHT_DP = 6
 -- Variables
 -- References
 -- Private Functions
@@ -146,7 +146,7 @@ Library.Full = function(props: ButtonProperties): React.ReactElement<
 						Scale = scale,
 						LeftIcon = icon,
 						RightIcon = nil,
-						IconSeparationPaddingDp = nil,
+						IconSeparationPaddingDp = 8,
 						IgnoreLineHeight = true,
 						TextXAlignment = Enum.TextXAlignment.Left,
 						children = {

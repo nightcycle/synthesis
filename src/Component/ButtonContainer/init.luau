@@ -38,6 +38,7 @@ local SOUND_TYPE = Enums.SoundType.ui_tap_variant_01
 local RIP_STEP = 0.005
 local MOVE_WEIGHT = 0.7 -- the percent of the duration spent on the moving part
 local MOVE_BUFFER = 0.2
+local BORDER_THICKNESS_DP = 1
 -- Variables
 -- References
 -- Private Functions
@@ -197,7 +198,7 @@ return function(
 		else 1
 
 	local targetPadPx = math.ceil(targetPaddingDp * scale)
-
+	local borderThicknessPx = math.ceil(scale * BORDER_THICKNESS_DP)
 	local buttonContents = {
 		UIGradient = if isRippleEnabled and backgroundData
 			then React.createElement(
@@ -231,10 +232,18 @@ return function(
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = borderColor3,
 				LineJoinMode = Enum.LineJoinMode.Round,
-				Thickness = math.ceil(scale * 2),
+				Thickness = borderThicknessPx,
 				Transparency = borderData.Transparency,
 			})
-			else nil,
+			else React.createElement(
+				"UIPadding",
+				{
+					PaddingLeft = UDim.new(0, borderThicknessPx),
+					PaddingRight = UDim.new(0, borderThicknessPx),
+					PaddingTop = UDim.new(0, borderThicknessPx),
+					PaddingBottom = UDim.new(0, borderThicknessPx),
+				} :: RobloxTypes.UIPaddingProperties
+			),
 	}
 
 	local propCopy: RobloxTypes.GuiButtonProperties =

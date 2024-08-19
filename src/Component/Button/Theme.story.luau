@@ -55,9 +55,9 @@ return function(target: Frame)
 							Type = renderType,
 							-- LayoutOrder = 2,
 							Text = if math.random() < 0.5 then "Button" else nil,
-							FontType = Enums.FontType.LabelMedium,
+							FontType = Enums.FontType.LabelLarge,
 							IsEnabled = true,
-							Icon = MaterialIcons.watch_later,
+							Icon = MaterialIcons.add,
 							Style = style,
 							[React.Event.Activated] = function()
 								print(`click "{renderType}"`)
