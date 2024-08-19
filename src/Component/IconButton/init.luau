@@ -14,6 +14,7 @@ local Types = require("@proj/Types")
 local IconDisplay = require("@comp/IconDisplay")
 local ButtonContainer = require("@comp/ButtonContainer")
 local Style = require("@proj/Style")
+local Defaults = require("./Defaults")
 
 -- Types
 type Style = Style.Style
@@ -53,20 +54,28 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 >
 	-- unpack props
 	local buttonType: Enums.ButtonRenderType = props.Type
-	local fillColor3: Color3? = props.FillColor3
-	local iconColor3: Color3 = props.IconColor3
+	local fillColor3: Color3? = props.FillColor3 or Defaults.FillColor3
+	local iconColor3: Color3 = props.IconColor3 or Defaults.IconColor3
 	local fillDisabledColor3: Color3? = props.FillDisabledColor3
+		or Defaults.FillDisabledColor3
 	local iconDisabledColor3: Color3? = props.IconDisabledColor3
-	local isAnimated: boolean = if props.IsAnimated ~= nil then props.IsAnimated else true
+		or Defaults.IconDisabledColor3
+	local isAnimated: boolean = if props.IsAnimated ~= nil
+		then props.IsAnimated
+		else Defaults.IsAnimated
 	local clickVolume: number = if props.ClickVolume ~= nil
 		then props.ClickVolume
-		else 0.5
-	local isEnabled: boolean = if props.IsEnabled ~= nil then props.IsEnabled else true
-	local scale = if props.Scale ~= nil then props.Scale else 1
+		else Defaults.ClickVolume
+	local isEnabled: boolean = if props.IsEnabled ~= nil
+		then props.IsEnabled
+		else Defaults.IsEnabled
+	local scale = if props.Scale ~= nil then props.Scale else Defaults.Scale
 	local schemeType = if props.SchemeType ~= nil
 		then props.SchemeType
-		else Enums.SchemeType.Light
-	local elevation = if props.Elevation ~= nil then props.Elevation else 0
+		else Defaults.SchemeType
+	local elevation = if props.Elevation ~= nil
+		then props.Elevation
+		else Defaults.Elevation
 
 	-- process state / props
 	local iconDim = math.ceil(ICON_DIM_DP * scale)
