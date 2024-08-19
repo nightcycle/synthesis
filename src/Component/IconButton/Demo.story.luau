@@ -4,6 +4,7 @@
 -- @Packages
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
+local MaterialIcons = require("@wally/MaterialIcons")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local Enums = require("@proj/Enums")
@@ -18,7 +19,7 @@ return function(target: Frame)
 	local folder = Instance.new("Folder")
 	local root = ReactRoblox.createRoot(folder)
 
-	local ButtonContainer = require("../ButtonContainer")
+	local IconButton = require("../IconButton")
 	local TextDisplay = require("@comp/TextDisplay")
 	local UIPadding = require("@comp/Padding")
 	local Style = require("@proj/Style")
@@ -29,53 +30,20 @@ return function(target: Frame)
 			then Enums.ColorRoleType.OnPrimary
 			else Enums.ColorRoleType.OnSurface
 		return React.createElement(
-			ButtonContainer,
+			IconButton.Full,
 			{
 				AutomaticSize = Enum.AutomaticSize.XY,
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				TargetPaddingDp = 12,
 				Type = renderType,
-				Content = function(
-					props: ButtonContainer.ButtonContainerContentProperties
-				)
-					return React.createElement(
-						TextDisplay.Simple,
-						{
-							AutomaticSize = Enum.AutomaticSize.XY,
-							Text = renderType,
-							ColorRoleType = lineColorRole,
-							Color = props.Color3,
-							TextTransparency = props.Transparency,
-							FontType = Enums.FontType.LabelLarge,
-							Style = style,
-						} :: TextDisplay.StyleTextDisplayProperties
-					)
-				end,
 				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-				LineColor3 = style:GetColor(lineColorRole),
-				RippleDuration = 0.5,
-				BorderSizePixel = 0,
+				IconColor3 = style:GetColor(lineColorRole),
+				Icon = MaterialIcons.watch_later,
 				IsAnimated = true,
 				[React.Event.Activated] = function()
 					print(`click "{renderType}"`)
 				end :: any,
-				children = {
-					UICorners = React.createElement(
-						"UICorner",
-						{
-							CornerRadius = UDim.new(0.5, 0),
-						} :: RobloxTypes.UICornerProperties
-					),
-					UIPadding = React.createElement(
-						UIPadding.StyleSimple,
-						{
-							Style = style,
-							PaddingDp = 6,
-						} :: UIPadding.StyleSimpleProps
-					),
-				},
-			} :: ButtonContainer.ButtonContainerProperties
+			} :: IconButton.IconButtonProperties
 		)
 	end
 

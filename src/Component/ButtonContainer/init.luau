@@ -19,14 +19,15 @@ export type ButtonContainerContentProperties = {
 export type ButtonContainerProperties = RobloxTypes.GuiButtonProperties & {
 	Type: Enums.ButtonRenderType,
 	Content: (ButtonContainerContentProperties) -> React.ReactElement<any, any>,
+	LineColor3: Color3,
+	TargetPaddingDp: number?,
 	Scale: number?,
 	Elevation: number?,
 	SchemeType: Enums.SchemeType?,
-	BackgroundColor3: Color3?,
+	FillColor3: Color3?,
 	RippleColor3: Color3?,
-	LineColor3: Color3,
-	DisabledBackgroundColor3: Color3?,
-	DisabledBorderColor3: Color3?,
+	DisabledFillColor3: Color3?,
+	DisabledLineColor3: Color3?,
 	IsAnimated: boolean?,
 	IsEnabled: boolean?,
 	ClickVolume: number?,
@@ -48,10 +49,10 @@ return function(
 ): React.ReactElement<RobloxTypes.GuiButtonProperties, "ImageButton">
 	-- unpack props
 	local buttonType: Enums.ButtonRenderType = props.Type
-	local rawBackgroundColor3: Color3? = props.BackgroundColor3
+	local rawFillColor3: Color3? = props.FillColor3
 	local rawLineColor3: Color3 = props.LineColor3
-	local disabledBackgroundColor3: Color3? = props.DisabledBackgroundColor3
-	local disabledBorderColor3: Color3? = props.DisabledBorderColor3
+	local disabledFillColor3: Color3? = props.DisabledFillColor3
+	local disabledLineColor3: Color3? = props.DisabledLineColor3
 	local isAnimated: boolean = if props.IsAnimated ~= nil then props.IsAnimated else true
 	local clickVolume: number = if props.ClickVolume ~= nil
 		then props.ClickVolume
@@ -63,6 +64,7 @@ return function(
 		else Enums.SchemeType.Light
 	local elevation = if props.Elevation ~= nil then props.Elevation else 0
 	local rippleDuration = props.RippleDuration or 0.5
+	local targetPaddingDp = props.TargetPaddingDp or 0
 
 	local currentRippleAlpha, setCurrentRippleAlpha = React.useState(0)
 	local isRippleReset, setIsRippleReset = React.useState(false)
@@ -86,11 +88,11 @@ return function(
 		schemeType,
 		elevation,
 		rawLineColor3,
-		rawBackgroundColor3,
+		rawFillColor3,
 		rawLineColor3,
-		disabledBackgroundColor3,
-		disabledBorderColor3,
-		disabledBorderColor3
+		disabledFillColor3,
+		disabledLineColor3,
+		disabledLineColor3
 	)
 
 	local backgroundData = renderData.Background
@@ -186,19 +188,61 @@ return function(
 	end
 	assert(rippleSequence)
 
+	local buttonBackgroundColor3 = if isRippleEnabled
+			and originRippleAlpha ~= nil
+		then Color3.new(1, 1, 1)
+		else backgroundColor3
+	local buttonBackgroundTransparency = if backgroundData
+		then backgroundData.Transparency
+		else 1
+
+	local targetPadPx = math.ceil(targetPaddingDp * scale)
+
+	local buttonContents = {
+		UIGradient = if isRippleEnabled and backgroundData
+			then React.createElement(
+				"UIGradient",
+				{
+					Color = rippleSequence,
+					Transparency = NumberSequence.new(backgroundData.Transparency),
+				} :: RobloxTypes.UIGradientProperties
+			)
+			else nil,
+		Content = props.Content({
+			Color3 = textColor3,
+			Transparency = textTransparency,
+		}),
+
+		Border = if borderData
+			then React.createElement("UIStroke", {
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				Color = borderColor3,
+				LineJoinMode = Enum.LineJoinMode.Round,
+				Thickness = math.ceil(scale * 2),
+				Transparency = borderData.Transparency,
+			})
+			else nil,
+	}
+
+	local propCopy: RobloxTypes.GuiButtonProperties =
+		table.clone(props) :: RobloxTypes.GuiButtonProperties
+	do
+		for k, v in pairs(propCopy.children or {}) do
+			buttonContents[k] = v
+		end
+		propCopy.children = nil
+	end
 	return React.createElement(
 		"ImageButton",
 		PropUtil.mergeGuiButton(
 			{
 				AutoButtonColor = false,
-				BackgroundColor3 = if not isRippleEnabled
-						or originRippleAlpha == nil
-					then backgroundColor3
-					else Color3.new(1, 1, 1),
-				BackgroundTransparency = if backgroundData
-					then backgroundData.Transparency
+				BackgroundColor3 = if targetPaddingDp == 0
+					then buttonBackgroundColor3
+					else nil,
+				BackgroundTransparency = if targetPaddingDp == 0
+					then buttonBackgroundTransparency
 					else 1,
-
 				[React.Event.InputBegan] = function(_, input: InputObject)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
 						if not isHovered then
@@ -257,34 +301,48 @@ return function(
 					end :: any
 					else nil,
 				children = {
-					UIGradient = if isRippleEnabled and backgroundData
+					TargetPadding = if targetPaddingDp ~= 0
 						then React.createElement(
-							"UIGradient",
+							"UIPadding",
 							{
-								Color = rippleSequence,
-								Transparency = NumberSequence.new(
-									backgroundData.Transparency
-								),
-							} :: RobloxTypes.UIGradientProperties
+								PaddingLeft = UDim.new(0, targetPadPx),
+								PaddingRight = UDim.new(0, targetPadPx),
+								PaddingTop = UDim.new(0, targetPadPx),
+								PaddingBottom = UDim.new(0, targetPadPx),
+							} :: RobloxTypes.UIPaddingProperties
 						)
 						else nil,
-					Content = props.Content({
-						Color3 = textColor3,
-						Transparency = textTransparency,
-					}),
-					
-					Border = if borderData
-						then React.createElement("UIStroke", {
-							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-							Color = borderData.Color3,
-							LineJoinMode = Enum.LineJoinMode.Round,
-							Thickness = math.ceil(scale * 2),
-							Transparency = borderData.Transparency,
-						})
+					UIListLayout = React.createElement(
+						"UIListLayout",
+						{
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							FillDirection = Enum.FillDirection.Vertical,
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							HorizontalAlignment = Enum.HorizontalAlignment.Center,
+							Padding = UDim.new(0, 0),
+							HorizontalFlex = Enum.UIFlexAlignment.Fill,
+							ItemLineAlignment = Enum.ItemLineAlignment.Center,
+							VerticalFlex = Enum.UIFlexAlignment.Fill,
+							Wraps = false,
+						} :: RobloxTypes.UIListLayoutProperties
+					),
+					ButtonContents = if targetPaddingDp == 0
+						then React.createElement(React.Fragment, {}, buttonContents)
+						else nil,
+					InnerButton = if targetPaddingDp ~= 0
+						then React.createElement(
+							"Frame",
+							{
+								AutomaticSize = Enum.AutomaticSize.XY,
+								BackgroundColor3 = buttonBackgroundColor3,
+								BackgroundTransparency = buttonBackgroundTransparency,
+							} :: RobloxTypes.FrameProperties,
+							buttonContents
+						)
 						else nil,
 				},
 			} :: RobloxTypes.ImageButtonProperties,
-			props
+			propCopy
 		)
 	)
 end

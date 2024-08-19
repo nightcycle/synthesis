@@ -8,17 +8,18 @@ local PropUtil = require("@proj/PropUtil")
 local Types = require("@proj/Types")
 -- Types
 type ImageData = Types.ImageData
+export type IconDisplayProperties = RobloxTypes.ImageLabelProperties & {
+	Icon: ImageData?,
+	Color: Color3?,
+	Transparency: number?,
+}
 -- Constants
 -- Variables
 -- References
 -- Private Functions
 -- Class
 return function(
-	props: RobloxTypes.ImageLabelProperties & {
-		Icon: ImageData?,
-		Color: Color3?,
-		Transparency: number?,
-	}
+	props: IconDisplayProperties
 ): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
 	local i = props.Icon
 	return React.createElement(
