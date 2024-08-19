@@ -272,12 +272,7 @@ return function(
 						Color3 = textColor3,
 						Transparency = textTransparency,
 					}),
-					UICorners = React.createElement(
-						"UICorner",
-						{
-							CornerRadius = UDim.new(0.5, 0),
-						} :: RobloxTypes.UICornerProperties
-					),
+					
 					Border = if borderData
 						then React.createElement("UIStroke", {
 							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
