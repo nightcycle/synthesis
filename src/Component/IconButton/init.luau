@@ -158,6 +158,33 @@ Library.OnSurfacePrimary = function(props: StyleIconButtonProperties)
 	return React.createElement(Library.Full, newProps)
 end
 
+Library.OnSurfacePrimaryContainer = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
 Library.OnSurfaceSecondary = function(props: StyleIconButtonProperties)
 	local style = props.Style
 
@@ -174,6 +201,33 @@ Library.OnSurfaceSecondary = function(props: StyleIconButtonProperties)
 	then
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
+Library.OnSurfaceSecondaryContainer = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
 	else
 		error(`bad type: {newProps.Type}`)
 	end
@@ -211,4 +265,32 @@ Library.OnSurfaceTertiary = function(props: StyleIconButtonProperties)
 
 	return React.createElement(Library.Full, newProps)
 end
+
+Library.OnSurfaceTertiaryContainer = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
 return Library

@@ -33,7 +33,7 @@ return function(target: Frame)
 			}
 		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
 			local style = Style.new(
-				1,
+				0.75,
 				Enum.Font.SourceSans,
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
@@ -158,13 +158,25 @@ return function(target: Frame)
 						"OnSurfacePrimary",
 						Enums.ColorRoleType.Surface
 					),
+					OnSurfacePrimaryContainer = newThemeBlock(
+						"OnSurfacePrimaryContainer",
+						Enums.ColorRoleType.Primary
+					),
 					OnSurfaceSecondary = newThemeBlock(
 						"OnSurfaceSecondary",
 						Enums.ColorRoleType.Surface
 					),
+					OnSurfaceSecondaryContainer = newThemeBlock(
+						"OnSurfaceSecondaryContainer",
+						Enums.ColorRoleType.Secondary
+					),
 					OnSurfaceTertiary = newThemeBlock(
 						"OnSurfaceTertiary",
 						Enums.ColorRoleType.Surface
+					),
+					OnSurfaceTertiaryContainer = newThemeBlock(
+						"OnSurfaceTertiaryContainer",
+						Enums.ColorRoleType.Tertiary
 					),
 				}
 			)
