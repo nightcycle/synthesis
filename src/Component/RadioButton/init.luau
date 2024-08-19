@@ -35,6 +35,7 @@ export type RadioButtonProperties = BaseRadioButtonProperties & {
 	IconColor3: Color3?,
 	DisabledColor3: Color3?,
 	Elevation: number?,
+	ClickVolume: number?,
 }
 
 export type ThemeRadioButtonProperties = BaseRadioButtonProperties & {
@@ -47,7 +48,7 @@ local UNSELECT_OUTLINE_WIDTH_DP = 2
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
-local RIPPLE_ALPHA_RUNNER_KEY = "RippleAlphaRunner"
+local RIPPLE_ALPHA_RUNNER_KEY = "BubbleAlphaRunner"
 -- Variables
 -- References
 -- Private Functions
@@ -56,7 +57,7 @@ function getAlphaRunner(
 ): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
-function getRippleAlphaRunner(
+function getBubbleAlphaRunner(
 	self: React.ComponentClass<RadioButtonProperties>
 ): Transition.TransitionRunner
 	return self[RIPPLE_ALPHA_RUNNER_KEY]
@@ -75,7 +76,7 @@ function Component:init(initialProps: RadioButtonProperties): ()
 	)
 	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(
 		self,
-		"RippleAlpha",
+		"BubbleAlpha",
 		0,
 		TRANSITION_TYPE,
 		Enums.TransitionDuration.Medium4
@@ -85,7 +86,7 @@ function Component:init(initialProps: RadioButtonProperties): ()
 		IsPressed = false,
 		IsFocused = false,
 		TargetValue = initialProps.Value,
-		RippleAlpha = getRippleAlphaRunner(self):Get(),
+		BubbleAlpha = getBubbleAlphaRunner(self):Get(),
 		Alpha = getAlphaRunner(self):Get(),
 		KnobAbsolutePosition = Vector2.new(0, 0),
 		KnobAbsoluteSize = Vector2.new(0, 0),
@@ -104,6 +105,7 @@ function Component:render(): React.ReactElement<
 	-- unpack properties
 	local value: boolean = self.props.Value
 	local onChanged: (newValue: boolean) -> () = self.props.OnChanged
+	local clickVolume: number = self.props.ClickVolume :: number? or Defaults.ClickVolume
 	local elevation: number = self.props.Elevation :: number? or Defaults.Elevation
 	local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
 		or Defaults.SchemeType
@@ -144,24 +146,27 @@ function Component:render(): React.ReactElement<
 		getAlphaRunner(self):Update(value)
 	end
 	local function playSound()
+		if clickVolume <= 0 then
+			return
+		end
 		local soundType = Enums.SoundType.navigation_forward_selection_minimal
 		if value then
 			soundType = Enums.SoundType.navigation_backward_selection_minimal
 		end
-		Sounds.play(soundType)
+		Sounds.play(soundType, clickVolume)
 	end
 
-	local isRippleEnabled = (isHovered or isPressed or isFocused) and isEnabled
+	local isBubbleEnabled = (isHovered or isPressed or isFocused) and isEnabled
 
 	if isAnimated then
 		getAlphaRunner(self):Set(value, playSound)
-		getRippleAlphaRunner(self):Set(isRippleEnabled)
+		getBubbleAlphaRunner(self):Set(isBubbleEnabled)
 	else
-		isRippleEnabled = false
+		isBubbleEnabled = false
 	end
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
-	local rippleAlpha = if isAnimated then getRippleAlphaRunner(self):Get() else 0
+	local bubbleAlpha = if isAnimated then getBubbleAlphaRunner(self):Get() else 0
 
 	local renderData: RenderData
 	if state == Enums.ButtonStateType.Enabled then
@@ -266,6 +271,12 @@ function Component:render(): React.ReactElement<
 		)
 	end
 
+	local borderData = renderData.Border
+	assert(borderData, "borderData should exist")
+
+	local backgroundData = renderData.Background
+	assert(backgroundData, "backgroundData should exist")
+
 	return React.createElement(
 		"ImageButton",
 		PropUtil.mergeGuiObject(
@@ -365,8 +376,8 @@ function Component:render(): React.ReactElement<
 					HorizontalAlignment = Enum.HorizontalAlignment.Center,
 				} :: RobloxTypes.UIListLayoutProperties
 			),
-			Ripple = if isAnimated
-					and (math.round(rippleAlpha) ~= rippleAlpha or isRippleEnabled)
+			Bubble = if isAnimated
+					and (math.round(bubbleAlpha) ~= bubbleAlpha or isBubbleEnabled)
 				then React.createElement(PopUp, {
 					DisplayAnchorPoint = Vector2.new(0.5, 0.5),
 					TargetAbsolutePosition = self.state.KnobAbsolutePosition
@@ -375,15 +386,15 @@ function Component:render(): React.ReactElement<
 						RobloxTypes.FrameProperties,
 						"Frame"
 					>
-						local rippleSize =
-							math.ceil(2 * scale * BUTTON_SIZE_DP * rippleAlpha)
+						local bubbleSize =
+							math.ceil(2 * scale * BUTTON_SIZE_DP * bubbleAlpha)
 						return React.createElement(
 							"Frame",
 							{
-								BackgroundTransparency = 1 - 0.2 * rippleAlpha,
+								BackgroundTransparency = 1 - 0.2 * bubbleAlpha,
 								BackgroundColor3 = fillColor3,
 								BorderSizePixel = 0,
-								Size = UDim2.fromOffset(rippleSize, rippleSize),
+								Size = UDim2.fromOffset(bubbleSize, bubbleSize),
 							} :: RobloxTypes.FrameProperties,
 							{
 								React.createElement(
@@ -435,21 +446,21 @@ function Component:render(): React.ReactElement<
 						{
 							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 							Color = if value == false
-								then renderData.Border.Color3
-								else renderData.Background.Color3,
+								then borderData.Color3
+								else backgroundData.Color3,
 							LineJoinMode = Enum.LineJoinMode.Round,
 							Thickness = math.round(scale * UNSELECT_OUTLINE_WIDTH_DP),
-							Transparency = renderData.Border.Transparency,
+							Transparency = borderData.Transparency,
 						} :: RobloxTypes.UIStrokeProperties
 					),
 					Dot = React.createElement(
 						"Frame",
 						{
 							-- BackgroundTransparency = if value
-							-- 	then renderData.Border.Transparency
+							-- 	then borderData.Transparency
 							-- 	else 1,
 							BackgroundTransparency = 1
-								- (1 - renderData.Border.Transparency) * alpha,
+								- (1 - borderData.Transparency) * alpha,
 							AnchorPoint = Vector2.new(0.5, 0.5),
 							Size = (function(): UDim2
 								local dpWidth = 0.5
@@ -463,8 +474,8 @@ function Component:render(): React.ReactElement<
 								)
 							end)(),
 							BackgroundColor3 = if value == false or not isEnabled
-								then renderData.Border.Color3
-								else renderData.Background.Color3,
+								then borderData.Color3
+								else backgroundData.Color3,
 							BorderSizePixel = 0,
 						} :: RobloxTypes.FrameProperties,
 						{
@@ -484,7 +495,7 @@ end
 
 function Component:willUnmount()
 	getAlphaRunner(self):Disconnect()
-	getRippleAlphaRunner(self):Disconnect()
+	getBubbleAlphaRunner(self):Disconnect()
 end
 
 return {
@@ -504,6 +515,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.ClickVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,
@@ -522,6 +534,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.ClickVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,
@@ -540,6 +553,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+		newProps.ClickVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,

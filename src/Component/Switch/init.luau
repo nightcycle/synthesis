@@ -101,6 +101,7 @@ type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Elevation: number?,
 	IncludeIconOnSelected: boolean?,
 	IncludeIconOnDeselected: boolean?,
+	ClickVolume: number?,
 }
 
 export type SwitchProperties = BaseSwitchProperties & {
@@ -130,7 +131,7 @@ local OUTLINE_THICKNESS_DP = 2
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
 local TRANSITION_DURATION = Enums.TransitionDuration.Long1
 local ALPHA_RUNNER_KEY = "AlphaRunner"
-local RIPPLE_ALPHA_RUNNER_KEY = "RippleAlphaRunner"
+local RIPPLE_ALPHA_RUNNER_KEY = "BubbleAlphaRunner"
 -- Variables
 -- References
 -- Private Functions
@@ -152,7 +153,7 @@ function getAlphaRunner(
 ): Transition.TransitionRunner
 	return self[ALPHA_RUNNER_KEY]
 end
-function getRippleAlphaRunner(
+function getBubbleAlphaRunner(
 	self: React.ComponentClass<SwitchProperties>
 ): Transition.TransitionRunner
 	return self[RIPPLE_ALPHA_RUNNER_KEY]
@@ -170,7 +171,7 @@ function Component:init(initialProps: SwitchProperties): ()
 	)
 	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(
 		self,
-		"RippleAlpha",
+		"BubbleAlpha",
 		0,
 		TRANSITION_TYPE,
 		Enums.TransitionDuration.Medium4
@@ -180,7 +181,7 @@ function Component:init(initialProps: SwitchProperties): ()
 		IsPressed = false,
 		IsFocused = false,
 		TargetValue = initialProps.Value,
-		RippleAlpha = getRippleAlphaRunner(self):Get(),
+		BubbleAlpha = getBubbleAlphaRunner(self):Get(),
 		Alpha = getAlphaRunner(self):Get(),
 		KnobAbsolutePosition = Vector2.new(0, 0),
 		KnobAbsoluteSize = Vector2.new(0, 0),
@@ -201,6 +202,7 @@ function Component:render(): React.ReactElement<
 	-- unpack properties
 	local value: boolean = self.props.Value
 	local onChanged: (newValue: boolean) -> () = self.props.OnChanged
+	local clickVolume: number = self.props.ClickVolume or Defaults.ClickVolume
 	local backgroundColor3: Color3 = self.props.BackgroundColor3 :: Color3?
 		or Defaults.BackgroundColor3
 	local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
@@ -465,24 +467,27 @@ function Component:render(): React.ReactElement<
 		getAlphaRunner(self):Update(value)
 	end
 	local function playSound()
+		if clickVolume <= 0 then
+			return
+		end
 		local soundType = Enums.SoundType.navigation_forward_selection_minimal
 		if value then
 			soundType = Enums.SoundType.navigation_backward_selection_minimal
 		end
-		Sounds.play(soundType)
+		Sounds.play(soundType, clickVolume)
 	end
 
-	local isRippleEnabled = (isHovered or isPressed or isFocused) and isEnabled
+	local isBubbleEnabled = (isHovered or isPressed or isFocused) and isEnabled
 
 	if isAnimated then
 		getAlphaRunner(self):Set(value, playSound)
-		getRippleAlphaRunner(self):Set(isRippleEnabled)
+		getBubbleAlphaRunner(self):Set(isBubbleEnabled)
 	else
-		isRippleEnabled = false
+		isBubbleEnabled = false
 	end
 
 	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
-	local rippleAlpha = if isAnimated then getRippleAlphaRunner(self):Get() else 0
+	local bubbleAlpha = if isAnimated then getBubbleAlphaRunner(self):Get() else 0
 
 	local renderData: SwitchRenderData = if isAnimated
 		then newSwitchRenderData(
@@ -714,10 +719,10 @@ function Component:render(): React.ReactElement<
 						end :: any,
 					} :: RobloxTypes.FrameProperties,
 					{
-						Ripple = if isAnimated
+						Bubble = if isAnimated
 								and (
-									math.round(rippleAlpha) ~= rippleAlpha
-									or isRippleEnabled
+									math.round(bubbleAlpha) ~= bubbleAlpha
+									or isBubbleEnabled
 								)
 							then React.createElement(PopUp, {
 								DisplayAnchorPoint = Vector2.new(0.5, 0.5),
@@ -728,19 +733,19 @@ function Component:render(): React.ReactElement<
 									RobloxTypes.FrameProperties,
 									"Frame"
 								>
-									local rippleSize = math.ceil(
-										1.35 * scale * SWITCH_HEIGHT_DP * rippleAlpha
+									local bubbleSize = math.ceil(
+										1.35 * scale * SWITCH_HEIGHT_DP * bubbleAlpha
 									)
 									return React.createElement(
 										"Frame",
 										{
 											BackgroundTransparency = 1
-												- 0.2 * rippleAlpha,
+												- 0.2 * bubbleAlpha,
 											BackgroundColor3 = fillColor3,
 											BorderSizePixel = 0,
 											Size = UDim2.fromOffset(
-												rippleSize,
-												rippleSize
+												bubbleSize,
+												bubbleSize
 											),
 										} :: RobloxTypes.FrameProperties,
 										{
@@ -812,15 +817,14 @@ end
 
 function Component:willUnmount()
 	getAlphaRunner(self):Disconnect()
-	getRippleAlphaRunner(self):Disconnect()
+	getBubbleAlphaRunner(self):Disconnect()
 end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: ThemeSwitchProperties): React.ReactElement<
-		SwitchProperties,
-		"OnSurfacePrimary"
-	>
+	OnSurfacePrimary = function(
+		props: ThemeSwitchProperties
+	): React.ReactElement<SwitchProperties, "OnSurfacePrimary">
 		local style = props.Style
 
 		local newProps = table.clone(props) :: SwitchProperties;
@@ -837,6 +841,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 	OnSurfaceSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
@@ -859,6 +864,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 	OnSurfaceTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
@@ -881,6 +887,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 }

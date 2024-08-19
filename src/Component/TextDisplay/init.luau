@@ -29,7 +29,7 @@ export type TextDisplayProperties = RobloxTypes.FrameProperties & {
 }
 export type StyleTextDisplayProperties = RobloxTypes.TextLabelProperties & {
 	Text: string?,
-	ColorRoleType: Enums.ColorRoleType,
+	Color: Enums.ColorRoleType | Color3,
 	FontType: Enums.FontType,
 	Style: Style,
 	Elevation: number?,
@@ -162,7 +162,7 @@ function Library.Simple(
 		PropUtil.mergeTextLabel(
 			{
 				Text = props.Text,
-				TextColor3 = props.Style:GetColor(props.ColorRoleType),
+				TextColor3 = if typeof(props.Color) == "Color3" then props.Color else props.Style:GetColor(props.Color),
 				BackgroundTransparency = 1,
 				TextSize = Typography.getTextSize(fontData.Size, scale),
 				LineHeight = Typography.getGuiLineHeight(

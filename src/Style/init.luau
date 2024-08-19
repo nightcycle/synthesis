@@ -16,6 +16,7 @@ export type Style = {
 	__index: Style,
 	Scale: number,
 	IsAnimated: boolean,
+	Volume: number,
 	SchemeType: Enums.SchemeType,
 	_Theme: Theme,
 	_Typography: Typography,
@@ -91,7 +92,8 @@ function Style.new(
 	typographyOrFont: Typography | Enum.Font,
 	schemeType: Enums.SchemeType,
 	themeOrColor: Color3 | Theme,
-	isAnimated: boolean?
+	isAnimated: boolean?,
+	volume: number?
 ): Style
 	local typography: Typography
 	if typeof(typographyOrFont) == "EnumItem" then
@@ -116,6 +118,7 @@ function Style.new(
 	self.Scale = scale
 	self.SchemeType = schemeType
 	self.IsAnimated = if isAnimated ~= nil then isAnimated else true
+	self.Volume = volume or 0.5
 	self._Theme = theme
 	self._Typography = typography
 

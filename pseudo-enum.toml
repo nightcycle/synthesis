@@ -149,3 +149,8 @@ TransitionDuration = [
 	"ExtraLong4",
 	
 ]
+ButtonRenderType = [
+	"Filled",
+	"Outlined",
+	"TextIcon"
+]

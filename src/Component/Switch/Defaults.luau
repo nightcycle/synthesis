@@ -19,6 +19,7 @@ return {
 	DisabledColor3 = Color3.new(),
 	OnDisabledColor3 = Color3.new(),
 	Elevation = 0,
+	ClickVolume = 0.5,
 	SchemeType = Enums.SchemeType.Light,
 	Scale = 1,
 }
