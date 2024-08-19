@@ -15,7 +15,7 @@ local PropUtil = require("@proj/PropUtil")
 type Style = Style.Style
 type ImageData = Types.ImageData
 type FontData = Types.FontData
-export type TextDisplayProperties = RobloxTypes.FrameProperties & {
+export type TextDisplayProperties = RobloxTypes.GuiObjectProperties & {
 	Text: string?,
 	TextColor3: Color3?,
 	TextTransparency: number?,
@@ -23,7 +23,7 @@ export type TextDisplayProperties = RobloxTypes.FrameProperties & {
 	Scale: number?,
 	LeftIcon: ImageData?,
 	RightIcon: ImageData?,
-	PaddingDp: number?,
+	IconSeparationPaddingDp: number?,
 	IgnoreLineHeight: boolean?,
 	TextXAlignment: Enum.TextXAlignment?,
 }
@@ -62,9 +62,9 @@ end
 -- Class
 local Library = {}
 
-function Library.Icon(
+function Library.Full(
 	props: TextDisplayProperties
-): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+): React.ReactElement<RobloxTypes.GuiObjectProperties, "Frame"> | React.ReactElement<RobloxTypes.GuiObjectProperties, "TextLabel">
 	local scale: number = props.Scale or 1
 	local fontData: FontData = props.FontData
 		or Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1.5)
@@ -81,7 +81,7 @@ function Library.Icon(
 		then props.IgnoreLineHeight
 		else false
 
-	local paddingDp = props.PaddingDp or 2
+	local paddingDp = props.IconSeparationPaddingDp or 2
 
 	local iconSize: UDim2
 	do
@@ -91,64 +91,84 @@ function Library.Icon(
 		local dp = baseDp * Typography.getTextSize(fontData.Size, scale)
 		iconSize = UDim2.fromOffset(dp, dp)
 	end
-	return React.createElement(
-		"Frame",
-		PropUtil.mergeFrame({} :: RobloxTypes.FrameProperties, props),
-		{
-			UIListLayout = React.createElement(
-				"UIListLayout",
-				{
-					Padding = UDim.new(0, paddingDp * scale),
-					SortOrder = Enum.SortOrder.LayoutOrder,
-					FillDirection = Enum.FillDirection.Horizontal,
-					ItemLineAlignment = Enum.ItemLineAlignment.Center,
-					VerticalAlignment = Enum.VerticalAlignment.Center,
-					HorizontalAlignment = Enum.HorizontalAlignment.Center,
-					HorizontalFlex = Enum.UIFlexAlignment.Fill,
-				} :: RobloxTypes.UIListLayoutProperties
-			),
-			Label = React.createElement(
-				"TextLabel",
-				{
-					Text = text,
-					RichText = true,
-					LayoutOrder = 1,
-					Visible = text:len() > 0,
-					TextColor3 = textColor3,
-					TextTransparency = textTransparency,
-					BackgroundTransparency = 1,
-					TextXAlignment = if textXAlignment
-						then textXAlignment
-						elseif leftIcon then Enum.TextXAlignment.Center
-						else Enum.TextXAlignment.Left,
-					AutomaticSize = Enum.AutomaticSize.X,
-					TextSize = Typography.getTextSize(fontData.Size, scale),
-					LineHeight = Typography.getGuiLineHeight(
+	local labelProps = {
+		Text = text,
+		RichText = true,
+		LayoutOrder = 1,
+		Visible = text:len() > 0,
+		TextColor3 = textColor3,
+		TextTransparency = textTransparency,
+		BackgroundTransparency = 1,
+		TextXAlignment = if textXAlignment
+			then textXAlignment
+			elseif leftIcon then Enum.TextXAlignment.Center
+			else Enum.TextXAlignment.Left,
+		AutomaticSize = Enum.AutomaticSize.X,
+		BorderSizePixel = 0,
+		TextSize = Typography.getTextSize(fontData.Size, scale),
+		LineHeight = Typography.getGuiLineHeight(fontData.LineHeight, fontData.Size),
+		FontFace = fontData.Font,
+		Size = UDim2.fromOffset(
+			0,
+			(
+				if ignoreLineHeight
+					then 1
+					else Typography.getGuiLineHeight(
 						fontData.LineHeight,
 						fontData.Size
-					),
-					FontFace = fontData.Font,
-					Size = UDim2.fromOffset(
-						0,
-						(
-							if ignoreLineHeight
-								then 1
-								else Typography.getGuiLineHeight(
-									fontData.LineHeight,
-									fontData.Size
-								)
-						) * Typography.getTextSize(fontData.Size, scale)
-					),
-				} :: RobloxTypes.TextLabelProperties
-			),
-			LeftIcon = if leftIcon
-				then newTextIcon(leftIcon, 0, iconSize, textColor3, textTransparency)
-				else nil,
-			RightIcon = if rightIcon
-				then newTextIcon(rightIcon, 2, iconSize, textColor3, textTransparency)
-				else nil,
-		}
-	)
+					)
+			) * Typography.getTextSize(fontData.Size, scale)
+		),
+	} :: RobloxTypes.TextLabelProperties
+
+	return if leftIcon or rightIcon
+		then React.createElement(
+			"Frame",
+			PropUtil.mergeGuiObject(
+				{
+					BorderSizePixel = 0,
+					BackgroundTransparency = 1,
+					children = {
+						UIListLayout = React.createElement(
+							"UIListLayout",
+							{
+								Padding = UDim.new(0, paddingDp * scale),
+								SortOrder = Enum.SortOrder.LayoutOrder,
+								FillDirection = Enum.FillDirection.Horizontal,
+								ItemLineAlignment = Enum.ItemLineAlignment.Center,
+								VerticalAlignment = Enum.VerticalAlignment.Center,
+								HorizontalAlignment = Enum.HorizontalAlignment.Center,
+								HorizontalFlex = Enum.UIFlexAlignment.Fill,
+							} :: RobloxTypes.UIListLayoutProperties
+						),
+						Label = React.createElement("TextLabel", labelProps),
+						LeftIcon = if leftIcon
+							then newTextIcon(
+								leftIcon,
+								0,
+								iconSize,
+								textColor3,
+								textTransparency
+							)
+							else nil,
+						RightIcon = if rightIcon
+							then newTextIcon(
+								rightIcon,
+								2,
+								iconSize,
+								textColor3,
+								textTransparency
+							)
+							else nil,
+					},
+				} :: RobloxTypes.GuiObjectProperties,
+				props
+			)
+		)
+		else React.createElement(
+			"TextLabel",
+			PropUtil.mergeTextLabel(labelProps, props :: any) :: any
+		)
 end
 
 function Library.Simple(
@@ -162,7 +182,9 @@ function Library.Simple(
 		PropUtil.mergeTextLabel(
 			{
 				Text = props.Text,
-				TextColor3 = if typeof(props.Color) == "Color3" then props.Color else props.Style:GetColor(props.Color),
+				TextColor3 = if typeof(props.Color) == "Color3"
+					then props.Color
+					else props.Style:GetColor(props.Color),
 				BackgroundTransparency = 1,
 				TextSize = Typography.getTextSize(fontData.Size, scale),
 				LineHeight = Typography.getGuiLineHeight(

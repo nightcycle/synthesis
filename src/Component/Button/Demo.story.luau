@@ -19,7 +19,7 @@ return function(target: Frame)
 	local folder = Instance.new("Folder")
 	local root = ReactRoblox.createRoot(folder)
 
-	local IconButton = require("../IconButton")
+	local IconButton = require("../Button")
 	local Style = require("@proj/Style")
 	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
 
@@ -34,6 +34,7 @@ return function(target: Frame)
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Type = renderType,
+				
 				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 				IconColor3 = style:GetColor(lineColorRole),
 				Icon = MaterialIcons.watch_later,
@@ -41,7 +42,7 @@ return function(target: Frame)
 				[React.Event.Activated] = function()
 					print(`click "{renderType}"`)
 				end :: any,
-			} :: IconButton.IconButtonProperties
+			} :: IconButton.ButtonProperties
 		)
 	end
 

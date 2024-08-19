@@ -95,11 +95,11 @@ return function(target: Frame)
 						ButtonColor3 = style:GetColor(
 							Enums.ColorRoleType.PrimaryContainer
 						),
-						OnButtonColor3 = style:GetColor(
+						IconColor3 = style:GetColor(
 							Enums.ColorRoleType.OnPrimaryContainer
 						),
 						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 						Elevation = 0,
 						SchemeType = style.SchemeType,
 						Scale = 1,

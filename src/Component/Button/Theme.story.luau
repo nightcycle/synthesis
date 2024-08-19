@@ -24,7 +24,7 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require("../IconButton")
+		local Interface = require("../Button")
 
 		local function halfFrame(
 			props: RobloxTypes.FrameProperties & {
@@ -54,6 +54,8 @@ return function(target: Frame)
 							AnchorPoint = Vector2.new(0.5, 0.5),
 							Type = renderType,
 							-- LayoutOrder = 2,
+							Text = if math.random() < 0.5 then "Button" else nil,
+							FontType = Enums.FontType.LabelMedium,
 							IsEnabled = true,
 							Icon = MaterialIcons.watch_later,
 							Style = style,
