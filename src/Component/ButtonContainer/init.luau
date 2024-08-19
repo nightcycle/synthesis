@@ -212,7 +212,20 @@ return function(
 			Color3 = textColor3,
 			Transparency = textTransparency,
 		}),
-
+		UIListLayout = React.createElement(
+			"UIListLayout",
+			{
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				FillDirection = Enum.FillDirection.Vertical,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				Padding = UDim.new(0, 0),
+				-- HorizontalFlex = Enum.UIFlexAlignment.Fill,
+				-- ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+				-- VerticalFlex = Enum.UIFlexAlignment.Fill,
+				-- Wraps = false,
+			} :: RobloxTypes.UIListLayoutProperties
+		),
 		Border = if borderData
 			then React.createElement("UIStroke", {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -325,7 +338,7 @@ return function(
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 							Padding = UDim.new(0, 0),
 							HorizontalFlex = Enum.UIFlexAlignment.Fill,
-							ItemLineAlignment = Enum.ItemLineAlignment.Center,
+							ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
 							VerticalFlex = Enum.UIFlexAlignment.Fill,
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
