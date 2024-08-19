@@ -11,9 +11,7 @@ local PropUtil = require("@proj/PropUtil")
 -- References
 -- Private Functions
 -- Class
-return function(
-	props: RobloxTypes.FrameProperties
-): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+return function(props: RobloxTypes.FrameProperties): React.ReactNode
 	local newProps = PropUtil.mergeFrame({
 		AutomaticSize = Enum.AutomaticSize.XY,
 		Size = UDim2.fromScale(0, 0),

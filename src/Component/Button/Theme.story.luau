@@ -26,12 +26,10 @@ return function(target: Frame)
 	task.spawn(function()
 		local Interface = require("../Button")
 
-		local function halfFrame(
-			props: RobloxTypes.FrameProperties & {
-				Color3: Color3,
-				IsDarkMode: boolean,
-			}
-		): React.ReactElement<RobloxTypes.FrameProperties, "Frame">
+		local function halfFrame(props: RobloxTypes.FrameProperties & {
+			Color3: Color3,
+			IsDarkMode: boolean,
+		}): React.ReactNode
 			local style = Style.new(
 				0.75,
 				Enum.Font.SourceSans,

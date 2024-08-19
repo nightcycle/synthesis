@@ -101,7 +101,6 @@ type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Elevation: number?,
 	IncludeIconOnSelected: boolean?,
 	IncludeIconOnDeselected: boolean?,
-	ClickVolume: number?,
 }
 
 export type SwitchProperties = BaseSwitchProperties & {
@@ -115,6 +114,7 @@ export type SwitchProperties = BaseSwitchProperties & {
 	OnButtonColor3: Color3?,
 	DisabledColor3: Color3?,
 	OnDisabledColor3: Color3?,
+	ClickVolume: number?,
 }
 
 export type StyleSwitchProperties = BaseSwitchProperties & {
@@ -190,10 +190,7 @@ function Component:init(initialProps: SwitchProperties): ()
 	-- local absoluteSize, setAbsoluteSize = React.useState(Vector2.new(0, 0))
 end
 
-function Component:render(): React.ReactElement<
-	RobloxTypes.GuiObjectProperties,
-	"ImageButton"
->
+function Component:render(): React.ReactNode
 	-- unpack state
 	local isHovered: boolean = self.state.IsHovered
 	local isPressed: boolean = self.state.IsPressed
@@ -658,10 +655,7 @@ function Component:render(): React.ReactElement<
 						),
 					} :: RobloxTypes.UICornerProperties
 				),
-				UIPadding = (function(): React.ReactElement<
-					RobloxTypes.UIPaddingProperties,
-					"UIPadding"
-				>
+				UIPadding = (function(): React.ReactNode
 					local widthPaddingState: UDim
 					do
 						local size = scale
@@ -731,10 +725,7 @@ function Component:render(): React.ReactElement<
 								TargetAbsolutePosition = self.state.KnobAbsolutePosition
 									+ self.state.KnobAbsoluteSize
 										* Vector2.new(0.5, 0.5),
-								DisplayComponent = function(): React.ReactElement<
-									RobloxTypes.FrameProperties,
-									"Frame"
-								>
+								DisplayComponent = function(): React.ReactNode
 									local bubbleSize = math.ceil(
 										1.35 * scale * SWITCH_HEIGHT_DP * bubbleAlpha
 									)
@@ -826,7 +817,7 @@ return {
 	Full = Component,
 	OnSurfacePrimary = function(
 		props: StyleSwitchProperties
-	): React.ReactElement<SwitchProperties, "OnSurfacePrimary">
+	): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: SwitchProperties;
@@ -846,10 +837,7 @@ return {
 		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: StyleSwitchProperties): React.ReactElement<
-		SwitchProperties,
-		"OnSurfaceSecondary"
-	>
+	OnSurfaceSecondary = function(props: StyleSwitchProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: SwitchProperties;
@@ -869,10 +857,7 @@ return {
 		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: StyleSwitchProperties): React.ReactElement<
-		SwitchProperties,
-		"OnSurfaceTertiary"
-	>
+	OnSurfaceTertiary = function(props: StyleSwitchProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: SwitchProperties;

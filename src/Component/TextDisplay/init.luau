@@ -44,7 +44,7 @@ function newTextIcon(
 	size: UDim2,
 	color3: Color3,
 	transparency: number
-): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
+): React.ReactNode
 	return React.createElement(
 		"ImageLabel",
 		{
@@ -62,9 +62,7 @@ end
 -- Class
 local Library = {}
 
-function Library.Full(
-	props: TextDisplayProperties
-): React.ReactElement<RobloxTypes.GuiObjectProperties, "Frame"> | React.ReactElement<RobloxTypes.GuiObjectProperties, "TextLabel">
+function Library.Full(props: TextDisplayProperties): React.ReactNode
 	local scale: number = props.Scale or 1
 	local fontData: FontData = props.FontData
 		or Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1.5)
@@ -171,9 +169,7 @@ function Library.Full(
 		)
 end
 
-function Library.Simple(
-	props: StyleTextDisplayProperties
-): React.ReactElement<RobloxTypes.TextLabelProperties, "TextLabel">
+function Library.Simple(props: StyleTextDisplayProperties): React.ReactNode
 	local fontType: Enums.FontType = props.FontType
 	local fontData = props.Style:GetFontData(fontType)
 	local scale = props.Style.Scale

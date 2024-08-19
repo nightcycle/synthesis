@@ -18,7 +18,7 @@ export type ButtonContainerContentProperties = {
 }
 export type ButtonContainerProperties = RobloxTypes.GuiButtonProperties & {
 	Type: Enums.ButtonRenderType,
-	Content: (ButtonContainerContentProperties) -> React.ReactElement<any, any>,
+	Content: (ButtonContainerContentProperties) -> React.ReactNode,
 	LineColor3: Color3,
 	TargetPaddingDp: number?,
 	Scale: number?,
@@ -45,9 +45,7 @@ local BORDER_THICKNESS_DP = 1
 
 -- Class
 
-return function(
-	props: ButtonContainerProperties
-): React.ReactElement<RobloxTypes.GuiButtonProperties, "ImageButton">
+return function(props: ButtonContainerProperties): React.ReactNode
 	-- unpack props
 	local buttonType: Enums.ButtonRenderType = props.Type
 	local rawFillColor3: Color3? = props.FillColor3

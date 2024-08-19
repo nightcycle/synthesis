@@ -26,9 +26,7 @@ local HALF_IMAGE_SIZE = IMAGE_SIZE / 2
 -- Private Functions
 -- Class
 
-return function(
-	props: ShadowFrameProperties
-): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
+return function(props: ShadowFrameProperties): React.ReactNode
 	local shadowColor3: Color3 = props.ShadowColor3 or Color3.new(0, 0, 0)
 	local shadowCornerRadius: UDim = props.ShadowCornerRadius or UDim.new(0.5, 0)
 	local shadowTransparency: number = props.ShadowTransparency or 0.1

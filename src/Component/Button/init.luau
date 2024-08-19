@@ -52,10 +52,7 @@ local TEXT_PAD_LEFTRIGHT_DP = 6
 
 -- Class
 local Library = {}
-Library.Full = function(props: ButtonProperties): React.ReactElement<
-	ButtonContainer.ButtonContainerProperties,
-	typeof(ButtonContainer)
->
+Library.Full = function(props: ButtonProperties): React.ReactNode
 	-- unpack props
 	local buttonType: Enums.ButtonRenderType = props.Type
 	local icon: Types.ImageData? = props.Icon

@@ -93,10 +93,7 @@ function Component:init(initialProps: RadioButtonProperties): ()
 	})
 end
 
-function Component:render(): React.ReactElement<
-	RobloxTypes.GuiObjectProperties,
-	"ImageButton"
->
+function Component:render(): React.ReactNode
 	-- unpack state
 	local isHovered: boolean = self.state.IsHovered
 	local isPressed: boolean = self.state.IsPressed
@@ -383,10 +380,7 @@ function Component:render(): React.ReactElement<
 					DisplayAnchorPoint = Vector2.new(0.5, 0.5),
 					TargetAbsolutePosition = self.state.KnobAbsolutePosition
 						+ self.state.KnobAbsoluteSize * Vector2.new(0.5, 0.5),
-					DisplayComponent = function(): React.ReactElement<
-						RobloxTypes.FrameProperties,
-						"Frame"
-					>
+					DisplayComponent = function(): React.ReactNode
 						local bubbleSize =
 							math.ceil(2 * scale * BUTTON_SIZE_DP * bubbleAlpha)
 						return React.createElement(
@@ -501,10 +495,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: StyleRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
-		"OnSurfacePrimary"
-	>
+	OnSurfacePrimary = function(props: StyleRadioButtonProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: RadioButtonProperties;
@@ -520,10 +511,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: StyleRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
-		"OnSurfaceSecondary"
-	>
+	OnSurfaceSecondary = function(props: StyleRadioButtonProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: RadioButtonProperties;
@@ -539,10 +527,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: StyleRadioButtonProperties): React.ReactElement<
-		RadioButtonProperties,
-		"OnSurfaceTertiary"
-	>
+	OnSurfaceTertiary = function(props: StyleRadioButtonProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: RadioButtonProperties;

@@ -25,9 +25,7 @@ export type StyleSimpleProps = {
 -- Class
 local Util = {}
 
-function Util.Style(
-	props: StylePaddingProps
-): React.ReactElement<RobloxTypes.UIPaddingProperties, "UIPadding">
+function Util.Style(props: StylePaddingProps): React.ReactNode
 	local leftRight = UDim.new(0, math.round(props.LeftRightDp * props.Style.Scale))
 	local topBottom = UDim.new(0, math.round(props.TopBottomDp * props.Style.Scale))
 
@@ -42,10 +40,7 @@ function Util.Style(
 	)
 end
 
-function Util.StyleSimple(props: StyleSimpleProps): React.ReactElement<
-	RobloxTypes.UIPaddingProperties,
-	"UIPadding"
->
+function Util.StyleSimple(props: StyleSimpleProps): React.ReactNode
 	local padding = UDim.new(0, math.round(props.PaddingDp * props.Style.Scale))
 
 	return React.createElement(

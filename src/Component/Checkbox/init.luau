@@ -100,10 +100,7 @@ function Component:init(initialProps: CheckboxProperties): ()
 	})
 end
 
-function Component:render(): React.ReactElement<
-	RobloxTypes.GuiObjectProperties,
-	"ImageButton"
->
+function Component:render(): React.ReactNode
 	-- unpack state
 	local isHovered: boolean = self.state.IsHovered
 	local isPressed: boolean = self.state.IsPressed
@@ -400,10 +397,7 @@ function Component:render(): React.ReactElement<
 					DisplayAnchorPoint = Vector2.new(0.5, 0.5),
 					TargetAbsolutePosition = self.state.KnobAbsolutePosition
 						+ self.state.KnobAbsoluteSize * Vector2.new(0.5, 0.5),
-					DisplayComponent = function(): React.ReactElement<
-						RobloxTypes.FrameProperties,
-						"Frame"
-					>
+					DisplayComponent = function(): React.ReactNode
 						local bubbleSize =
 							math.ceil(2 * scale * BUTTON_SIZE_DP * bubbleAlpha)
 						return React.createElement(
@@ -481,10 +475,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: StyleCheckboxProperties): React.ReactElement<
-		CheckboxProperties,
-		"OnSurfacePrimary"
-	>
+	OnSurfacePrimary = function(props: StyleCheckboxProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: CheckboxProperties;
@@ -501,10 +492,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: StyleCheckboxProperties): React.ReactElement<
-		CheckboxProperties,
-		"OnSurfaceSecondary"
-	>
+	OnSurfaceSecondary = function(props: StyleCheckboxProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: CheckboxProperties;
@@ -521,10 +509,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: StyleCheckboxProperties): React.ReactElement<
-		CheckboxProperties,
-		"OnSurfaceTertiary"
-	>
+	OnSurfaceTertiary = function(props: StyleCheckboxProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: CheckboxProperties;

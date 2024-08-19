@@ -18,9 +18,7 @@ export type IconDisplayProperties = RobloxTypes.ImageLabelProperties & {
 -- References
 -- Private Functions
 -- Class
-return function(
-	props: IconDisplayProperties
-): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
+return function(props: IconDisplayProperties): React.ReactNode
 	local i = props.Icon
 
 	return React.createElement(

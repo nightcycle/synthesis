@@ -14,16 +14,14 @@ export type PopUpProperties = RobloxTypes.FrameProperties & {
 	-- OriginAnchorPoint: Vector2?,
 	DisplayAnchorPoint: Vector2?,
 	TargetAbsolutePosition: Vector2,
-	DisplayComponent: () -> React.ReactElement<any, any>,
+	DisplayComponent: () -> React.ReactNode,
 }
 -- Constants
 -- Variables
 -- References
 -- Private Functions
 -- Class
-return function(
-	props: PopUpProperties
-): React.ReactElement<RobloxTypes.ScreenGuiProperties, "ScreenGui">
+return function(props: PopUpProperties): React.ReactNode
 	-- local originAnchorPoint: Vector2 = props.OriginAnchorPoint or Vector2.new(0, 0)
 	local displayAnchorPoint: Vector2 = props.DisplayAnchorPoint or Vector2.new(0, 0)
 

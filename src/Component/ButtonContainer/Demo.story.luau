@@ -24,7 +24,7 @@ return function(target: Frame)
 	local Style = require("@proj/Style")
 	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
 
-	local function newButton(renderType: Enums.ButtonRenderType)
+	local function newButton(renderType: Enums.ButtonRenderType): React.ReactNode
 		local lineColorRole = if renderType == Enums.ButtonRenderType.Filled
 			then Enums.ColorRoleType.OnPrimary
 			else Enums.ColorRoleType.OnSurface
@@ -38,7 +38,7 @@ return function(target: Frame)
 				Type = renderType,
 				Content = function(
 					props: ButtonContainer.ButtonContainerContentProperties
-				)
+				): React.ReactNode
 					return React.createElement(
 						TextDisplay.Simple,
 						{

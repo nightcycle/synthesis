@@ -43,10 +43,7 @@ return function(target: Frame)
 						{
 							TargetAbsolutePosition = popUpPosition,
 							DisplayAnchorPoint = Vector2.new(0.5, 0),
-							DisplayComponent = function(): React.ReactElement<
-								RobloxTypes.TextLabelProperties,
-								"TextLabel"
-							>
+							DisplayComponent = function(): React.ReactNode
 								return React.createElement(
 									"TextLabel",
 									{
