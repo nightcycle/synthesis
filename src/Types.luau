@@ -281,6 +281,28 @@ function Types._RenderData.solveButton(
 				FILL_DISABLED_TRANS
 			)
 		end
+	else
+		assert(borderColor, "Filled buttons require a fillColor")
+		if state == Enums.ButtonStateType.Hovered then
+			backgroundData = Types._AppearanceData.new(
+				Theme.getElevatedColor(borderColor, elevation + 1, schemeType),
+				LINE_HOVER_TRANS
+			)
+		elseif state == Enums.ButtonStateType.Focused then
+			backgroundData = Types._AppearanceData.new(
+				Theme.getElevatedColor(borderColor, elevation, schemeType),
+				LINE_FOCUSPRESS_TRANS
+			)
+		elseif state == Enums.ButtonStateType.Pressed then
+			backgroundData = Types._AppearanceData.new(
+				Theme.getElevatedColor(
+					borderColor,
+					math.max(elevation - 1, 0),
+					schemeType
+				),
+				LINE_FOCUSPRESS_TRANS
+			)
+		end
 	end
 
 	-- set border
@@ -295,19 +317,17 @@ function Types._RenderData.solveButton(
 			elseif state == Enums.ButtonStateType.Hovered then
 				borderData = Types._AppearanceData.new(
 					Theme.getElevatedColor(borderColor, elevation, schemeType),
-					LINE_HOVER_TRANS
+					0
 				)
-				backgroundData = borderData
 			elseif state == Enums.ButtonStateType.Focused then
 				borderData = Types._AppearanceData.new(
 					Theme.getElevatedColor(borderColor, elevation, schemeType),
-					LINE_FOCUSPRESS_TRANS
+					0
 				)
-				backgroundData = borderData
 			elseif state == Enums.ButtonStateType.Pressed then
 				borderData = Types._AppearanceData.new(
 					Theme.getElevatedColor(borderColor, elevation, schemeType),
-					LINE_FOCUSPRESS_TRANS
+					0
 				)
 			else
 				error(`invalid state: {state}`)
@@ -339,14 +359,14 @@ function Types._RenderData.solveButton(
 					Theme.getElevatedColor(textColor, elevation + 1, schemeType),
 					if renderType == Enums.ButtonRenderType.Filled
 						then FILL_HOVER_TRANS
-						else LINE_HOVER_TRANS
+						else 0
 				)
 			elseif state == Enums.ButtonStateType.Focused then
 				textData = Types._AppearanceData.new(
 					Theme.getElevatedColor(textColor, elevation, schemeType),
 					if renderType == Enums.ButtonRenderType.Filled
 						then FILL_FOCUSPRESS_TRANS
-						else LINE_FOCUSPRESS_TRANS
+						else 0
 				)
 			elseif state == Enums.ButtonStateType.Pressed then
 				textData = Types._AppearanceData.new(
@@ -357,7 +377,7 @@ function Types._RenderData.solveButton(
 					),
 					if renderType == Enums.ButtonRenderType.Filled
 						then FILL_FOCUSPRESS_TRANS
-						else LINE_FOCUSPRESS_TRANS
+						else 0
 				)
 			else
 				error(`invalid state: {state}`)

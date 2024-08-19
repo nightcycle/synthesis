@@ -71,12 +71,7 @@ return function(target: Frame)
 							Padding = UDim.new(0, 0),
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					UICorners = React.createElement(
-						"UICorner",
-						{
-							CornerRadius = UDim.new(0.5, 0),
-						} :: RobloxTypes.UICornerProperties
-					),
+
 					UIPadding = React.createElement(
 						UIPadding.Style,
 						{
