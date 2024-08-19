@@ -13,24 +13,34 @@ local Sounds = require("@proj/Sounds")
 local Types = require("@proj/Types")
 local IconDisplay = require("@comp/IconDisplay")
 local ButtonContainer = require("@comp/ButtonContainer")
+local Style = require("@proj/Style")
+
 -- Types
-export type IconButtonProperties = RobloxTypes.GuiButtonProperties & {
+type Style = Style.Style
+type BaseIconButtonProperties = RobloxTypes.GuiButtonProperties & {
+	IsEnabled: boolean?,
+	Elevation: number?,
 	Type: Enums.ButtonRenderType,
 	Icon: Types.ImageData,
+}
+export type IconButtonProperties = BaseIconButtonProperties & {
 	Scale: number?,
-	Elevation: number?,
 	SchemeType: Enums.SchemeType?,
 	FillColor3: Color3?,
 	IconColor3: Color3,
-	DisabledColor3: Color3?,
+	FillDisabledColor3: Color3?,
+	IconDisabledColor3: Color3?,
 	IsAnimated: boolean?,
-	IsEnabled: boolean?,
 	ClickVolume: number?,
 }
+export type StyleIconButtonProperties = BaseIconButtonProperties & {
+	Style: Style,
+}
+
 -- Constants
 local ICON_DIM_DP = 24
 local BUTTON_PAD_DP = math.ceil((40 - ICON_DIM_DP) / 2)
-local TARGET_PAD_DP = math.ceil((48 - ICON_DIM_DP) / 2)
+local TARGET_PAD_DP = math.ceil((48 - (ICON_DIM_DP + 2 * BUTTON_PAD_DP)) / 2)
 -- Variables
 -- References
 -- Private Functions
@@ -45,6 +55,8 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 	local buttonType: Enums.ButtonRenderType = props.Type
 	local fillColor3: Color3? = props.FillColor3
 	local iconColor3: Color3 = props.IconColor3
+	local fillDisabledColor3: Color3? = props.FillDisabledColor3
+	local iconDisabledColor3: Color3? = props.IconDisabledColor3
 	local isAnimated: boolean = if props.IsAnimated ~= nil then props.IsAnimated else true
 	local clickVolume: number = if props.ClickVolume ~= nil
 		then props.ClickVolume
@@ -58,7 +70,7 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 
 	-- process state / props
 	local iconDim = math.ceil(ICON_DIM_DP * scale)
-
+	local iconPad = math.ceil(BUTTON_PAD_DP * scale)
 	local mergeProps: ButtonContainer.ButtonContainerProperties =
 		PropUtil.mergeGuiButton({}, props) :: ButtonContainer.ButtonContainerProperties
 
@@ -68,10 +80,12 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 	mergeProps.SchemeType = schemeType
 	mergeProps.FillColor3 = fillColor3
 	mergeProps.LineColor3 = iconColor3
-	mergeProps.DisabledLineColor3 = props.DisabledColor3
+	mergeProps.DisabledLineColor3 = iconDisabledColor3
+	mergeProps.DisabledFillColor3 = fillDisabledColor3
 	mergeProps.IsAnimated = isAnimated
 	mergeProps.IsEnabled = isEnabled
 	mergeProps.ClickVolume = clickVolume
+	mergeProps.TargetPaddingDp = TARGET_PAD_DP
 	mergeProps.children = {
 		UICorners = React.createElement(
 			"UICorner",
@@ -82,10 +96,10 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 		UIPadding = React.createElement(
 			"UIPadding",
 			{
-				PaddingLeft = UDim.new(0, 6),
-				PaddingRight = UDim.new(0, 6),
-				PaddingTop = UDim.new(0, 6),
-				PaddingBottom = UDim.new(0, 6),
+				PaddingLeft = UDim.new(0, iconPad),
+				PaddingRight = UDim.new(0, iconPad),
+				PaddingTop = UDim.new(0, iconPad),
+				PaddingBottom = UDim.new(0, iconPad),
 			} :: RobloxTypes.UIPaddingProperties
 		),
 	}
@@ -96,8 +110,8 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 			IconDisplay,
 			{
 				Icon = props.Icon,
-				Color = contentProps.Color3,
-				Transparency = contentProps.Transparency,
+				IconColor3 = contentProps.Color3,
+				IconTransparency = contentProps.Transparency,
 				Size = UDim2.fromOffset(iconDim, iconDim),
 			} :: IconDisplay.IconDisplayProperties
 		)
@@ -108,4 +122,84 @@ Library.Full = function(props: IconButtonProperties): React.ReactElement<
 	)
 end
 
+Library.OnSurfacePrimary = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
+Library.OnSurfaceSecondary = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
+Library.OnSurfaceTertiary = function(props: StyleIconButtonProperties)
+	local style = props.Style
+
+	local newProps = table.clone(props) :: IconButtonProperties;
+	(newProps :: any).Style = nil
+	newProps.Scale = style.Scale
+	newProps.SchemeType = style.SchemeType
+	if newProps.Type == Enums.ButtonRenderType.Filled then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
+	elseif
+		newProps.Type == Enums.ButtonRenderType.Outlined
+		or newProps.Type == Enums.ButtonRenderType.TextIcon
+	then
+		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+	else
+		error(`bad type: {newProps.Type}`)
+	end
+	newProps.IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IsAnimated = style.IsAnimated
+	newProps.ClickVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
 return Library

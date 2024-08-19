@@ -237,6 +237,7 @@ return function(
 		PropUtil.mergeGuiButton(
 			{
 				AutoButtonColor = false,
+				Active = isEnabled,
 				BackgroundColor3 = if targetPaddingDp == 0
 					then buttonBackgroundColor3
 					else nil,
@@ -289,6 +290,9 @@ return function(
 
 				[React.Event.MouseButton1Up] = if isRippleEnabled
 					then function(button: GuiButton, x: number, y: number)
+						if not isEnabled then
+							return
+						end
 						setIsRippleReset(true)
 						setOriginRippleAlpha(
 							math.clamp(

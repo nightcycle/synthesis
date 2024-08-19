@@ -117,7 +117,7 @@ export type SwitchProperties = BaseSwitchProperties & {
 	OnDisabledColor3: Color3?,
 }
 
-export type ThemeSwitchProperties = BaseSwitchProperties & {
+export type StyleSwitchProperties = BaseSwitchProperties & {
 	Style: Style,
 }
 -- Constants
@@ -552,6 +552,7 @@ function Component:render(): React.ReactElement<
 					switchSize.X.Offset + outlineThickness * 2,
 					switchSize.Y.Offset + outlineThickness * 2
 				),
+				Active = isEnabled,
 				AutoButtonColor = false,
 				BackgroundColor3 = renderData.Background.Color3,
 				BackgroundTransparency = if useStroke
@@ -571,6 +572,7 @@ function Component:render(): React.ReactElement<
 				Size = switchSize,
 				Position = UDim2.fromOffset(outlineThickness, outlineThickness),
 				BackgroundColor3 = renderData.Background.Color3,
+				Active = isEnabled,
 				BackgroundTransparency = if useStroke
 					then renderData.Background.Transparency
 					else 1,
@@ -823,7 +825,7 @@ end
 return {
 	Full = Component,
 	OnSurfacePrimary = function(
-		props: ThemeSwitchProperties
+		props: StyleSwitchProperties
 	): React.ReactElement<SwitchProperties, "OnSurfacePrimary">
 		local style = props.Style
 
@@ -844,7 +846,7 @@ return {
 		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: ThemeSwitchProperties): React.ReactElement<
+	OnSurfaceSecondary = function(props: StyleSwitchProperties): React.ReactElement<
 		SwitchProperties,
 		"OnSurfaceSecondary"
 	>
@@ -867,7 +869,7 @@ return {
 		newProps.ClickVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: ThemeSwitchProperties): React.ReactElement<
+	OnSurfaceTertiary = function(props: StyleSwitchProperties): React.ReactElement<
 		SwitchProperties,
 		"OnSurfaceTertiary"
 	>

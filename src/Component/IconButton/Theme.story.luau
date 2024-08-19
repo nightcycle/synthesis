@@ -4,6 +4,8 @@
 -- @Packages
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
+local MaterialIcons = require("@wally/MaterialIcons")
+
 -- Modules
 local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
@@ -22,7 +24,7 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require("../Switch")
+		local Interface = require("../IconButton")
 
 		local function halfFrame(
 			props: RobloxTypes.FrameProperties & {
@@ -42,7 +44,26 @@ return function(target: Frame)
 				backgroundRole: Enums.ColorRoleType
 			)
 				local comp: typeof(Interface.OnSurfacePrimary) = Interface[name]
-				local defaultSelection, setSelection = React.useState(false)
+
+				local function newButton(renderType: Enums.ButtonRenderType)
+					return React.createElement(
+						comp,
+						{
+							AutomaticSize = Enum.AutomaticSize.XY,
+							Position = UDim2.new(0.5, 0, 0.5, 0),
+							AnchorPoint = Vector2.new(0.5, 0.5),
+							Type = renderType,
+							-- LayoutOrder = 2,
+							IsEnabled = true,
+							Icon = MaterialIcons.watch_later,
+							Style = style,
+							[React.Event.Activated] = function()
+								print(`click "{renderType}"`)
+							end :: any,
+						} :: any
+					)
+				end
+
 				return React.createElement(Container, {
 					BackgroundTransparency = 0,
 					BackgroundColor3 = style:GetColor(backgroundRole),
@@ -52,7 +73,7 @@ return function(target: Frame)
 					UIListLayout = React.createElement(
 						"UIListLayout",
 						{
-							SortOrder = Enum.SortOrder.LayoutOrder,
+							SortOrder = Enum.SortOrder.Name,
 							FillDirection = Enum.FillDirection.Vertical,
 							Padding = UDim.new(0, math.round(5 * style.Scale)),
 							VerticalAlignment = Enum.VerticalAlignment.Center,
@@ -78,19 +99,26 @@ return function(target: Frame)
 							LayoutOrder = 1,
 						} :: TextDisplay.StyleTextDisplayProperties
 					),
-					Switch = React.createElement(comp, {
+					Container = React.createElement(Container, {
 						LayoutOrder = 2,
-						Value = defaultSelection,
-						OnChanged = function(value: boolean)
-							print(name, value)
-							setSelection(value)
-						end,
-						IsEnabled = true,
-						IncludeIconOnSelected = true,
-						IncludeIconOnDeselected = true,
-						Elevation = 0,
-						Style = style,
+						children = {
+							UIListLayout = React.createElement(
+								"UIListLayout",
+								{
+									SortOrder = Enum.SortOrder.LayoutOrder,
+									FillDirection = Enum.FillDirection.Horizontal,
+									Padding = UDim.new(0, math.round(5 * style.Scale)),
+									VerticalAlignment = Enum.VerticalAlignment.Center,
+									HorizontalAlignment = Enum.HorizontalAlignment.Center,
+									-- VerticalFlex = Enum.UIFlexAlignment.SpaceEvenly,
+								} :: RobloxTypes.UIListLayoutProperties
+							),
+							FilledButton = newButton(Enums.ButtonRenderType.Filled),
+							IconButton = newButton(Enums.ButtonRenderType.TextIcon),
+							OutlinedButton = newButton(Enums.ButtonRenderType.Outlined),
+						},
 					}),
+
 					-- Divider2 = React.createElement("Frame", {
 					-- 	BackgroundTransparency = 0,
 					-- 	LayoutOrder = 3,
@@ -117,7 +145,7 @@ return function(target: Frame)
 						{
 							SortOrder = Enum.SortOrder.Name,
 							FillDirection = Enum.FillDirection.Vertical,
-							Padding = UDim.new(0, 0),
+							Padding = UDim.new(0, 5 * style.Scale),
 							VerticalAlignment = Enum.VerticalAlignment.Center,
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 							HorizontalFlex = Enum.UIFlexAlignment.Fill,

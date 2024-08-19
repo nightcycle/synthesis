@@ -72,7 +72,7 @@ return function(target: Frame)
 						{
 							Text = name,
 							AutomaticSize = Enum.AutomaticSize.XY,
-							ColorRoleType = Enums.ColorRoleType.OnSurface,
+							Color = Enums.ColorRoleType.OnSurface,
 							FontType = Enums.FontType.TitleMedium,
 							Style = style,
 							LayoutOrder = 1,
@@ -90,7 +90,7 @@ return function(target: Frame)
 							IsEnabled = true,
 							Elevation = 0,
 							Style = style,
-						} :: Interface.ThemeCheckboxProperties
+						} :: Interface.StyleCheckboxProperties
 					),
 					-- Divider2 = React.createElement("Frame", {
 					-- 	BackgroundTransparency = 0,

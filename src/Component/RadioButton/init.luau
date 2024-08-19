@@ -38,7 +38,7 @@ export type RadioButtonProperties = BaseRadioButtonProperties & {
 	ClickVolume: number?,
 }
 
-export type ThemeRadioButtonProperties = BaseRadioButtonProperties & {
+export type StyleRadioButtonProperties = BaseRadioButtonProperties & {
 	Style: Style,
 }
 -- Constants
@@ -285,6 +285,7 @@ function Component:render(): React.ReactElement<
 					math.round(scale * LAYER_SIZE_DP),
 					math.round(scale * LAYER_SIZE_DP)
 				),
+				Active = isEnabled,
 				BackgroundTransparency = 1,
 				[React.Event.InputBegan] = function(_, input: InputObject)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
@@ -500,7 +501,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+	OnSurfacePrimary = function(props: StyleRadioButtonProperties): React.ReactElement<
 		RadioButtonProperties,
 		"OnSurfacePrimary"
 	>
@@ -519,7 +520,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+	OnSurfaceSecondary = function(props: StyleRadioButtonProperties): React.ReactElement<
 		RadioButtonProperties,
 		"OnSurfaceSecondary"
 	>
@@ -538,7 +539,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: ThemeRadioButtonProperties): React.ReactElement<
+	OnSurfaceTertiary = function(props: StyleRadioButtonProperties): React.ReactElement<
 		RadioButtonProperties,
 		"OnSurfaceTertiary"
 	>

@@ -10,8 +10,8 @@ local Types = require("@proj/Types")
 type ImageData = Types.ImageData
 export type IconDisplayProperties = RobloxTypes.ImageLabelProperties & {
 	Icon: ImageData?,
-	Color: Color3?,
-	Transparency: number?,
+	IconColor3: Color3?,
+	IconTransparency: number?,
 }
 -- Constants
 -- Variables
@@ -22,6 +22,7 @@ return function(
 	props: IconDisplayProperties
 ): React.ReactElement<RobloxTypes.ImageLabelProperties, "ImageLabel">
 	local i = props.Icon
+
 	return React.createElement(
 		"ImageLabel",
 		PropUtil.mergeImageLabel({
@@ -29,8 +30,8 @@ return function(
 			ImageRectOffset = if i then i.ImageRectOffset else nil,
 			ImageRectSize = if i then i.ImageRectSize else nil,
 			BackgroundTransparency = 1,
-			ImageColor3 = props.Color,
-			ImageTransparency = props.Transparency,
+			ImageColor3 = props.IconColor3,
+			ImageTransparency = props.IconTransparency,
 		}, props)
 	)
 end

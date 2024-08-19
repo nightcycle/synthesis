@@ -20,8 +20,6 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	local IconButton = require("../IconButton")
-	local TextDisplay = require("@comp/TextDisplay")
-	local UIPadding = require("@comp/Padding")
 	local Style = require("@proj/Style")
 	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
 
@@ -60,10 +58,10 @@ return function(target: Frame)
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,
-				FillDirection = Enum.FillDirection.Vertical,
+				FillDirection = Enum.FillDirection.Horizontal,
 				VerticalAlignment = Enum.VerticalAlignment.Center,
 				HorizontalAlignment = Enum.HorizontalAlignment.Center,
-				Padding = UDim.new(0, math.round(5 * style.Scale)),
+				Padding = UDim.new(0, math.round(10 * style.Scale)),
 			} :: RobloxTypes.UIListLayoutProperties
 		),
 	})

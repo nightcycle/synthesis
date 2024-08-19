@@ -41,7 +41,7 @@ export type CheckboxProperties = BaseCheckboxProperties & {
 	ClickVolume: number?,
 }
 
-export type ThemeCheckboxProperties = BaseCheckboxProperties & {
+export type StyleCheckboxProperties = BaseCheckboxProperties & {
 	Style: Style,
 }
 -- Constants
@@ -302,6 +302,7 @@ function Component:render(): React.ReactElement<
 					math.round(scale * LAYER_SIZE_DP),
 					math.round(scale * LAYER_SIZE_DP)
 				),
+				Active = isEnabled,
 				BackgroundTransparency = 1,
 				[React.Event.InputBegan] = function(_, input: InputObject)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
@@ -480,7 +481,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(props: ThemeCheckboxProperties): React.ReactElement<
+	OnSurfacePrimary = function(props: StyleCheckboxProperties): React.ReactElement<
 		CheckboxProperties,
 		"OnSurfacePrimary"
 	>
@@ -498,10 +499,9 @@ return {
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
 		newProps.ClickVolume = style.Volume
 
-
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceSecondary = function(props: ThemeCheckboxProperties): React.ReactElement<
+	OnSurfaceSecondary = function(props: StyleCheckboxProperties): React.ReactElement<
 		CheckboxProperties,
 		"OnSurfaceSecondary"
 	>
@@ -521,7 +521,7 @@ return {
 
 		return React.createElement(Component, newProps)
 	end,
-	OnSurfaceTertiary = function(props: ThemeCheckboxProperties): React.ReactElement<
+	OnSurfaceTertiary = function(props: StyleCheckboxProperties): React.ReactElement<
 		CheckboxProperties,
 		"OnSurfaceTertiary"
 	>
