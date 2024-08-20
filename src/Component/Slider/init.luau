@@ -306,8 +306,6 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local barTransparencySequence: NumberSequence?
 	local barFillColorSequence: ColorSequence?
 
-	print(`state=${state}`)
-
 	local transparency = if state == Enums.ButtonStateType.Disabled
 		then DISABLED_TRANSPARENCY
 		else 0
