@@ -77,7 +77,7 @@ return function(target: Frame)
 					Default = React.createElement(Interface.Full, {
 						LayoutOrder = 1,
 						Value = defaultSelection,
-						OnChanged = function(value: boolean)
+						OnChange = function(value: boolean)
 							print("Default", value)
 							setDefaultSelection(value)
 						end,
@@ -106,7 +106,7 @@ return function(target: Frame)
 					Inanimate = React.createElement(Interface.Full, {
 						LayoutOrder = 1,
 						Value = inanimateSelection,
-						OnChanged = function(value: boolean)
+						OnChange = function(value: boolean)
 							print("Inanimate", value)
 							setInanimateSelection(value)
 						end,
@@ -135,7 +135,7 @@ return function(target: Frame)
 					NoIcons = React.createElement(Interface.Full, {
 						LayoutOrder = 2,
 						Value = noIconSelection,
-						OnChanged = function(value: boolean)
+						OnChange = function(value: boolean)
 							print("NoIcons", value)
 							setNoIconSelection(value)
 						end,
@@ -164,7 +164,7 @@ return function(target: Frame)
 					Disabled = React.createElement(Interface.Full, {
 						LayoutOrder = 3,
 						Value = disabledSelection,
-						OnChanged = function(value: boolean)
+						OnChange = function(value: boolean)
 							warn("Disabled", value)
 							setDisabledSelection(value)
 						end,

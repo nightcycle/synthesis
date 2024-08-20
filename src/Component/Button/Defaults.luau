@@ -16,5 +16,5 @@ return {
 	FontData = Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1, nil),
 	IsAnimated = true,
 	Scale = 1,
-	ClickVolume = 0.5,
+	SoundVolume = 0.5,
 }

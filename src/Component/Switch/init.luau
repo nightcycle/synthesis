@@ -7,7 +7,7 @@
 --- @within Switch
 --- The current value of the switch.
 
---- @prop OnChanged (newValue: boolean) -> ()
+--- @prop OnChange (newValue: boolean) -> ()
 --- @within Switch
 --- A callback that fires when the switch is toggled.
 
@@ -96,7 +96,7 @@ type SwitchRenderData = {
 }
 type BaseSwitchProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
-	OnChanged: (newValue: boolean) -> (),
+	OnChange: (newValue: boolean) -> (),
 	IsEnabled: boolean?,
 	Elevation: number?,
 	IncludeIconOnSelected: boolean?,
@@ -114,7 +114,7 @@ export type SwitchProperties = BaseSwitchProperties & {
 	OnButtonColor3: Color3?,
 	DisabledColor3: Color3?,
 	OnDisabledColor3: Color3?,
-	ClickVolume: number?,
+	SoundVolume: number?,
 }
 
 export type StyleSwitchProperties = BaseSwitchProperties & {
@@ -198,8 +198,8 @@ function Component:render(): React.ReactNode
 
 	-- unpack properties
 	local value: boolean = self.props.Value
-	local onChanged: (newValue: boolean) -> () = self.props.OnChanged
-	local clickVolume: number = self.props.ClickVolume or Defaults.ClickVolume
+	local onChanged: (newValue: boolean) -> () = self.props.OnChange
+	local soundVolume: number = self.props.SoundVolume or Defaults.SoundVolume
 	local backgroundColor3: Color3 = self.props.BackgroundColor3 :: Color3?
 		or Defaults.BackgroundColor3
 	local onBackgroundColor3: Color3 = self.props.OnBackgroundColor3 :: Color3?
@@ -464,14 +464,14 @@ function Component:render(): React.ReactNode
 		getAlphaRunner(self):Update(value)
 	end
 	local function playSound()
-		if clickVolume <= 0 then
+		if soundVolume <= 0 then
 			return
 		end
 		local soundType = Enums.SoundType.navigation_forward_selection_minimal
 		if value then
 			soundType = Enums.SoundType.navigation_backward_selection_minimal
 		end
-		Sounds.play(soundType, clickVolume)
+		Sounds.play(soundType, soundVolume)
 	end
 
 	local isBubbleEnabled = (isHovered or isPressed or isFocused) and isEnabled
@@ -815,9 +815,7 @@ end
 
 return {
 	Full = Component,
-	OnSurfacePrimary = function(
-		props: StyleSwitchProperties
-	): React.ReactNode
+	OnSurfacePrimary = function(props: StyleSwitchProperties): React.ReactNode
 		local style = props.Style
 
 		local newProps = table.clone(props) :: SwitchProperties;
@@ -834,7 +832,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 	OnSurfaceSecondary = function(props: StyleSwitchProperties): React.ReactNode
@@ -854,7 +852,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 	OnSurfaceTertiary = function(props: StyleSwitchProperties): React.ReactNode
@@ -874,7 +872,7 @@ return {
 		newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 		return React.createElement(Component, newProps)
 	end,
 }

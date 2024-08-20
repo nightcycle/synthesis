@@ -22,7 +22,7 @@ type Style = Style.Style
 type RenderData = Types.RenderData
 type BaseRadioButtonProperties = RobloxTypes.GuiObjectProperties & {
 	Value: boolean,
-	OnChanged: (isSelected: boolean) -> (),
+	OnChange: (isSelected: boolean) -> (),
 	IsEnabled: boolean?,
 }
 
@@ -35,7 +35,7 @@ export type RadioButtonProperties = BaseRadioButtonProperties & {
 	IconColor3: Color3?,
 	DisabledColor3: Color3?,
 	Elevation: number?,
-	ClickVolume: number?,
+	SoundVolume: number?,
 }
 
 export type StyleRadioButtonProperties = BaseRadioButtonProperties & {
@@ -101,8 +101,8 @@ function Component:render(): React.ReactNode
 
 	-- unpack properties
 	local value: boolean = self.props.Value
-	local onChanged: (newValue: boolean) -> () = self.props.OnChanged
-	local clickVolume: number = self.props.ClickVolume :: number? or Defaults.ClickVolume
+	local onChanged: (newValue: boolean) -> () = self.props.OnChange
+	local soundVolume: number = self.props.SoundVolume :: number? or Defaults.SoundVolume
 	local elevation: number = self.props.Elevation :: number? or Defaults.Elevation
 	local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
 		or Defaults.SchemeType
@@ -143,14 +143,14 @@ function Component:render(): React.ReactNode
 		getAlphaRunner(self):Update(value)
 	end
 	local function playSound()
-		if clickVolume <= 0 then
+		if soundVolume <= 0 then
 			return
 		end
 		local soundType = Enums.SoundType.navigation_forward_selection_minimal
 		if value then
 			soundType = Enums.SoundType.navigation_backward_selection_minimal
 		end
-		Sounds.play(soundType, clickVolume)
+		Sounds.play(soundType, soundVolume)
 	end
 
 	local isBubbleEnabled = (isHovered or isPressed or isFocused) and isEnabled
@@ -507,7 +507,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,
@@ -523,7 +523,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,
@@ -539,7 +539,7 @@ return {
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
 		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
 		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.ClickVolume = style.Volume
+		newProps.SoundVolume = style.Volume
 
 		return React.createElement(Component, newProps)
 	end,

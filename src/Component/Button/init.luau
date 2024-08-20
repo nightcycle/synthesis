@@ -33,7 +33,7 @@ export type ButtonProperties = BaseButtonProperties & {
 	FillDisabledColor3: Color3?,
 	TextDisabledColor3: Color3?,
 	IsAnimated: boolean?,
-	ClickVolume: number?,
+	SoundVolume: number?,
 }
 export type StyleButtonProperties = BaseButtonProperties & {
 	Style: Style,
@@ -67,9 +67,9 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 	local isAnimated: boolean = if props.IsAnimated ~= nil
 		then props.IsAnimated
 		else Defaults.IsAnimated
-	local clickVolume: number = if props.ClickVolume ~= nil
-		then props.ClickVolume
-		else Defaults.ClickVolume
+	local soundVolume: number = if props.SoundVolume ~= nil
+		then props.SoundVolume
+		else Defaults.SoundVolume
 	local isEnabled: boolean = if props.IsEnabled ~= nil
 		then props.IsEnabled
 		else Defaults.IsEnabled
@@ -97,7 +97,7 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 	mergeProps.DisabledFillColor3 = fillDisabledColor3
 	mergeProps.IsAnimated = isAnimated
 	mergeProps.IsEnabled = isEnabled
-	mergeProps.ClickVolume = clickVolume
+	mergeProps.SoundVolume = soundVolume
 	mergeProps.TargetPaddingDp = TARGET_PAD_DP
 	mergeProps.children = {
 		UICorners = React.createElement(
@@ -202,7 +202,7 @@ Library.OnSurfacePrimary = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)
@@ -230,7 +230,7 @@ Library.OnSurfacePrimaryContainer = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)
@@ -258,7 +258,7 @@ Library.OnSurfaceSecondary = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)
@@ -286,7 +286,7 @@ Library.OnSurfaceSecondaryContainer = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)
@@ -316,7 +316,7 @@ Library.OnSurfaceTertiary = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)
@@ -344,7 +344,7 @@ Library.OnSurfaceTertiaryContainer = function(props: StyleButtonProperties)
 	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
 	newProps.IsAnimated = style.IsAnimated
-	newProps.ClickVolume = style.Volume
+	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
 	return React.createElement(Library.Full, newProps)

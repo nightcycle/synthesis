@@ -20,7 +20,7 @@ return function(target: Frame)
 	local root = ReactRoblox.createRoot(folder)
 
 	task.spawn(function()
-		local Interface = require("../Checkbox")
+		local Interface = require("../Slider")
 
 		local function halfFrame(props: RobloxTypes.FrameProperties & {
 			Color3: Color3,
@@ -32,11 +32,9 @@ return function(target: Frame)
 				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
 				props.Color3
 			)
-			local defaultSelection, setDefaultSelection = React.useState(true)
-			local inanimateSelection, setInanimateSelection = React.useState(false)
-			local noIconSelection, setNoIconSelection = React.useState(true)
-			local disabledSelection, setDisabledSelection =
-				React.useState(math.random() > 0.5)
+			local defaultValue, setDefaultValue =
+				React.useState(50 :: number | NumberRange)
+
 			return React.createElement(
 				"Frame",
 				{
@@ -57,124 +55,47 @@ return function(target: Frame)
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-
-					-- Enums.ColorRoleType.SurfaceContainerHighest,
-					-- Enums.ColorRoleType.Outline,
-					-- Enums.ColorRoleType.Primary,
-					-- Enums.ColorRoleType.PrimaryContainer,
-					-- Enums.ColorRoleType.OnPrimaryContainer,
-					-- Enums.ColorRoleType.Surface,
-					-- Enums.ColorRoleType.OnSurface,
-
-					-- backgroundColor: Enums.ColorRoleType,
-					-- onBackgroundColor: Enums.ColorRoleType,
-					-- fillColor: Enums.ColorRoleType,
-					-- buttonColor: Enums.ColorRoleType,
-					-- onButtonColor: Enums.ColorRoleType,
-					-- disabledColor: Enums.ColorRoleType,
-					-- onDisabledColor: Enums.ColorRoleType,
-
 					Default = React.createElement(
 						Interface.Full,
 						{
 							LayoutOrder = 1,
-							Value = defaultSelection,
-							OnChanged = function(value: boolean)
+							Value = defaultValue,
+							OnChange = function(value: number | NumberRange)
 								print("Default", value)
-								setDefaultSelection(value)
+								setDefaultValue(value)
 							end,
+							Range = NumberRange.new(0, 100),
 							IsEnabled = true,
 							IsAnimated = true,
-							IncludeIconOnSelected = true,
-							IncludeIconOnDeselected = true,
-							OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-							IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-							DisabledColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSurface
-							),
-							OnDisabledColor3 = style:GetColor(
-								Enums.ColorRoleType.Surface
-							),
 							Elevation = 0,
 							SchemeType = style.SchemeType,
+							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
-						} :: Interface.CheckboxProperties
+							SnapCount = 5,
+							IsPopUpEnabled = true,
+							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
+							ContainerColor3 = style:GetColor(
+								Enums.ColorRoleType.PrimaryContainer
+							),
+							PopUpColor3 = style:GetColor(
+								Enums.ColorRoleType.SurfaceContainerHighest
+							),
+							OnPopUpColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
+							OnContainerColor3 = style:GetColor(
+								Enums.ColorRoleType.OnPrimaryContainer
+							),
+							PopUpFontData = style:GetFontData(Enums.FontType.LabelSmall),
+						} :: Interface.SliderProperties
 					),
-
-					Inanimate = React.createElement(Interface.Full, {
-						LayoutOrder = 1,
-						Value = inanimateSelection,
-						OnChanged = function(value: boolean)
-							print("Inanimate", value)
-							setInanimateSelection(value)
-						end,
-						IsEnabled = true,
-						IsAnimated = false,
-						IncludeIconOnSelected = true,
-						IncludeIconOnDeselected = true,
-						OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						Elevation = 0,
-						SchemeType = style.SchemeType,
-						Scale = 1,
-					}),
-
-					NoIcons = React.createElement(Interface.Full, {
-						LayoutOrder = 2,
-						Value = noIconSelection,
-						OnChanged = function(value: boolean)
-							print("NoIcons", value)
-							setNoIconSelection(value)
-						end,
-						IsEnabled = true,
-						IsAnimated = true,
-						IncludeIconOnSelected = false,
-						IncludeIconOnDeselected = false,
-						OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						Elevation = 0,
-						SchemeType = style.SchemeType,
-						Scale = 1,
-					}),
-
-					Disabled = React.createElement(Interface.Full, {
-						LayoutOrder = 3,
-						Value = disabledSelection,
-						OnChanged = function(value: boolean)
-							warn("Disabled", value)
-							setDisabledSelection(value)
-						end,
-						IsEnabled = false,
-						IsAnimated = true,
-						IncludeIconOnSelected = true,
-						IncludeIconOnDeselected = true,
-						OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-						Elevation = 0,
-						SchemeType = style.SchemeType,
-						Scale = 1,
-					}),
 				}
 			)
 		end
 
 		local COLORS: { [number]: Color3 } = {
 			Color3.fromHSV(0, 0.9, 0.8),
-			-- Color3.fromHSV(0, 0.25, 0.8),
-			-- Color3.fromHSV(0, 0.9, 0.5),
 			Color3.fromHSV(0.6, 0.9, 0.7),
 			Color3.fromHSV(0.35, 0.9, 0.7),
-			-- Color3.fromHSV(0.1, 0.9, 0.7),
 		}
 
 		local element = React.createElement(

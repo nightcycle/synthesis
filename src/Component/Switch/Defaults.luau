@@ -6,7 +6,7 @@ local Enums = require("@proj/Enums")
 -- Types
 return {
 	Value = false,
-	OnChanged = function(newValue: boolean) end,
+	OnChange = function(newValue: boolean) end,
 	IsEnabled = true,
 	IsAnimated = true,
 	IncludeIconOnSelected = true,
@@ -19,7 +19,7 @@ return {
 	DisabledColor3 = Color3.new(),
 	OnDisabledColor3 = Color3.new(),
 	Elevation = 0,
-	ClickVolume = 0.5,
+	SoundVolume = 0.5,
 	SchemeType = Enums.SchemeType.Light,
 	Scale = 1,
 }

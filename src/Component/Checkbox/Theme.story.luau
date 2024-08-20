@@ -81,7 +81,7 @@ return function(target: Frame)
 						{
 							LayoutOrder = 2,
 							Value = defaultSelection,
-							OnChanged = function(value: boolean)
+							OnChange = function(value: boolean)
 								print(name, value)
 								setSelection(value)
 							end,

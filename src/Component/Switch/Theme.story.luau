@@ -79,7 +79,7 @@ return function(target: Frame)
 					Switch = React.createElement(comp, {
 						LayoutOrder = 2,
 						Value = defaultSelection,
-						OnChanged = function(value: boolean)
+						OnChange = function(value: boolean)
 							print(name, value)
 							setSelection(value)
 						end,

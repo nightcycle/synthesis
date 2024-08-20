@@ -30,7 +30,7 @@ export type ButtonContainerProperties = RobloxTypes.GuiButtonProperties & {
 	DisabledLineColor3: Color3?,
 	IsAnimated: boolean?,
 	IsEnabled: boolean?,
-	ClickVolume: number?,
+	SoundVolume: number?,
 	RippleDuration: number?,
 }
 -- Constants
@@ -53,8 +53,8 @@ return function(props: ButtonContainerProperties): React.ReactNode
 	local disabledFillColor3: Color3? = props.DisabledFillColor3
 	local disabledLineColor3: Color3? = props.DisabledLineColor3
 	local isAnimated: boolean = if props.IsAnimated ~= nil then props.IsAnimated else true
-	local clickVolume: number = if props.ClickVolume ~= nil
-		then props.ClickVolume
+	local soundVolume: number = if props.SoundVolume ~= nil
+		then props.SoundVolume
 		else 0.5
 	local isEnabled: boolean = if props.IsEnabled ~= nil then props.IsEnabled else true
 	local scale = if props.Scale ~= nil then props.Scale else 1
@@ -288,8 +288,8 @@ return function(props: ButtonContainerProperties): React.ReactNode
 				end,
 				[React.Event.Activated] = function()
 					if isEnabled then
-						if clickVolume >= 0 then
-							Sounds.play(SOUND_TYPE, clickVolume)
+						if soundVolume >= 0 then
+							Sounds.play(SOUND_TYPE, soundVolume)
 						end
 					end
 				end,
