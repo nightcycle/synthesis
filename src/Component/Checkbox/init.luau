@@ -74,20 +74,20 @@ local Component: React.ComponentClass<CheckboxProperties> =
 	React.Component:extend("Checkbox")
 
 function Component:init(initialProps: CheckboxProperties): ()
-	self[ALPHA_RUNNER_KEY] = Transition.Runner(
-		self,
-		"Alpha",
-		initialProps.Value and 1 or 0,
-		TRANSITION_TYPE,
-		TRANSITION_DURATION
-	)
-	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(
-		self,
-		"BubbleAlpha",
-		0,
-		TRANSITION_TYPE,
-		Enums.TransitionDuration.Medium4
-	)
+	self[ALPHA_RUNNER_KEY] = Transition.Runner(function(alpha: number)
+		if self.state["Alpha"] ~= alpha then
+			self:setState({
+				Alpha = alpha,
+			})
+		end
+	end, initialProps.Value and 1 or 0, TRANSITION_TYPE, TRANSITION_DURATION)
+	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(function(alpha: number)
+		if self.state["BubbleAlpha"] ~= alpha then
+			self:setState({
+				BubbleAlpha = alpha,
+			})
+		end
+	end, 0, TRANSITION_TYPE, Enums.TransitionDuration.Medium4)
 	self:setState({
 		IsHovered = false,
 		IsPressed = false,

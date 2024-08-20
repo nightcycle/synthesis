@@ -4,6 +4,7 @@
 -- Packages
 local React = require("@wally/React")
 local TableUtil = require("@wally/TableUtil")
+local CurveUtil = require("@wally/CurveUtil")
 -- Modules
 local PropUtil = require("@proj/PropUtil")
 local RobloxTypes = require("@proj/RobloxTypes")
@@ -16,6 +17,7 @@ local Sounds = require("@proj/Sounds")
 local PopUp = require("@comp/PopUp")
 local TextDisplay = require("@comp/TextDisplay")
 local Container = require("@comp/Container")
+local Transition = require("@proj/Transition")
 -- Types
 type Style = Style.Style
 export type BaseSliderProperties = RobloxTypes.GuiButtonProperties & {
@@ -230,6 +232,41 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local isPressed: boolean, setIsPressed = React.useState(false)
 	local isFocused: boolean, setIsFocused = React.useState(false)
 
+	local isPressAlpha1: number, setIsPressAlpha1 = React.useState(0)
+	local isPressAlpha2: number, setIsPressAlpha2 = React.useState(0)
+	React.useEffect(function()
+		if isAnimated then
+			local runner1 = Transition.Runner(
+				function(alpha: number)
+					if alpha ~= isPressAlpha1 then
+						setIsPressAlpha1(alpha)
+					end
+				end,
+				isPressAlpha1,
+				Enums.TransitionType.Standard,
+				Enums.TransitionDuration.Short1
+			)
+			runner1:Set(selectionIndex == 1)
+			local runner2 = Transition.Runner(
+				function(alpha: number)
+					if alpha ~= isPressAlpha2 then
+						setIsPressAlpha2(alpha)
+					end
+				end,
+				isPressAlpha2,
+				Enums.TransitionType.Standard,
+				Enums.TransitionDuration.Short1
+			)
+			runner2:Set(selectionIndex == 2)
+			return function()
+				runner1:Disconnect()
+				runner2:Disconnect()
+			end
+		else
+			return function() end
+		end
+	end)
+
 	-- process value
 	local function formatScalarValue(scalarValue: number): number
 		local outValue = math.clamp(scalarValue, range.Min, range.Max)
@@ -292,20 +329,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	)
 	local state =
 		Types._RenderData.getButtonState(isHovered, isPressed, isFocused, isEnabled)
-	local handleWidthPx1: number
-	if
-		state == Enums.ButtonStateType.Enabled
-		or state == Enums.ButtonStateType.Hovered
-	then
-		handleWidthPx1 = math.ceil(HANDLE_WIDTH_DP * scale)
-	elseif state == Enums.ButtonStateType.Disabled then
-		handleWidthPx1 = math.ceil(DISABLED_HANDLE_WIDTH_DP * scale)
-	else
-		handleWidthPx1 = math.ceil(PRESSED_HANDLE_WIDTH_DP * scale)
-	end
+
+	local defHandleAlphaWidth = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+	local pressHandleAlphaWidth = math.ceil(PRESSED_HANDLE_WIDTH_DP * scale)
+		/ absoluteSize.X
 
 	-- solve handles color / number sequence
-	local handleAlphaWidth1 = handleWidthPx1 / absoluteSize.X
+
 	local leftRightPadAlphaWidth = padPx / absoluteSize.X
 
 	local handleTransparencySequence: NumberSequence?
@@ -319,11 +349,26 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	if absoluteSize.X > 0 then
 		if handleAlpha2 then
 			local handleAlphaWidth2: number
-			if selectionIndex == 2 then
-				handleAlphaWidth2 = handleAlphaWidth1
-				handleAlphaWidth1 = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+			local handleAlphaWidth1: number
+			if isAnimated then
+				handleAlphaWidth2 = CurveUtil.lerp(
+					defHandleAlphaWidth,
+					pressHandleAlphaWidth,
+					isPressAlpha2
+				)
+				handleAlphaWidth1 = CurveUtil.lerp(
+					defHandleAlphaWidth,
+					pressHandleAlphaWidth,
+					isPressAlpha1
+				)
 			else
-				handleAlphaWidth2 = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+				if selectionIndex == 2 then
+					handleAlphaWidth2 = pressHandleAlphaWidth
+					handleAlphaWidth1 = defHandleAlphaWidth
+				else
+					handleAlphaWidth1 = pressHandleAlphaWidth
+					handleAlphaWidth2 = defHandleAlphaWidth
+				end
 			end
 			local minAlpha = math.clamp(
 				leftRightPadAlphaWidth + handleAlpha1 * (1 - 2 * leftRightPadAlphaWidth),
@@ -393,8 +438,11 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 			end
 		else
 			-- print("handleAlpha1", handleAlpha1)
+			local handleAlphaWidth =
+				CurveUtil.lerp(defHandleAlphaWidth, pressHandleAlphaWidth, isPressAlpha1)
 			local handleGapAlphaWidth = (
-				handleWidthPx1 + (2 * math.ceil(HANDLE_PAD_DP * scale))
+				math.round(handleAlphaWidth * absoluteSize.X)
+				+ (2 * math.ceil(HANDLE_PAD_DP * scale))
 			) / absoluteSize.X
 			local renderAlpha1 = math.clamp(
 				leftRightPadAlphaWidth + handleAlpha1 * (1 - 2 * leftRightPadAlphaWidth),
@@ -402,8 +450,8 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				1 - leftRightPadAlphaWidth
 			)
 
-			local handle1Finish = math.clamp(renderAlpha1 + handleAlphaWidth1 / 2, 0, 1)
-			local handle1Start = math.clamp(renderAlpha1 - handleAlphaWidth1 / 2, 0, 1)
+			local handle1Finish = math.clamp(renderAlpha1 + handleAlphaWidth / 2, 0, 1)
+			local handle1Start = math.clamp(renderAlpha1 - handleAlphaWidth / 2, 0, 1)
 
 			local handle1GapStart =
 				math.clamp(handle1Start - handleGapAlphaWidth / 2, 0, 1)
@@ -451,12 +499,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		button: ImageButton,
 		x: number,
 		y: number,
-		isOnRelease: boolean
+		isOnRelease: boolean,
+		overrideIsPressed: boolean?
 	)
 		if not isEnabled then
 			return
 		end
-		if not isPressed then
+		if not isPressed and not overrideIsPressed then
 			return
 		end
 		local start = button.AbsolutePosition.X + padPx
@@ -585,6 +634,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						if not isPressed then
 							setIsPressed(true)
 						end
+						updateHandle(
+							inst,
+							input.Position.X,
+							input.Position.Y,
+							false,
+							true
+						)
 					end
 				end :: any,
 				[React.Event.MouseLeave] = function()
@@ -737,6 +793,12 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					{}
 				)
 				else nil,
+			UISizeConstraint = React.createElement(
+				"UISizeConstraint",
+				{
+					MinSize = Vector2.new(math.ceil(absoluteSize.Y * 3), 0),
+				} :: RobloxTypes.UISizeConstraintProperties
+			),
 			UIListLayout = React.createElement(
 				"UIListLayout",
 				{
@@ -879,7 +941,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 															BackgroundTransparency = if math.abs(
 																	handleAlpha1 - alpha
 																)
-																	< handleAlphaWidth1
+																	< pressHandleAlphaWidth
 																		* 0.5
 																then 1
 																else 0,
@@ -951,4 +1013,55 @@ Library.OnSurfacePrimary = function(props: StyleSliderProperties): React.ReactNo
 	return React.createElement(Library.Full, newProps)
 end
 
+Library.OnSurfaceSecondary = function(props: StyleSliderProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: SliderProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
+	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
+	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.DisabledContainerColor3 =
+		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.SoundVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
+Library.OnSurfaceTertiary = function(props: StyleSliderProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: SliderProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
+	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
+	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.DisabledContainerColor3 =
+		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.SoundVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
 return Library

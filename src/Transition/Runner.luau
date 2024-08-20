@@ -25,8 +25,7 @@ export type TransitionRunner = {
 
 -- Class
 return function(
-	component: React.ComponentClass<any>,
-	stateKey: string,
+	setAlpha: (alpha: number) -> (),
 	initialAlpha: number,
 	transitionType: Enums.TransitionType,
 	transitionDuration: Enums.TransitionDuration
@@ -59,11 +58,8 @@ return function(
 			end
 			currentAlpha += dt * math.sign(goalAlpha - currentAlpha) / duration
 			currentAlpha = math.clamp(currentAlpha, 0, 1)
-			if component.state[stateKey] ~= currentAlpha then
-				component:setState({
-					[stateKey] = currentAlpha,
-				})
-			end
+
+			setAlpha(currentAlpha)
 		end)
 	end
 	return {

@@ -169,7 +169,7 @@ function Library.Full(props: TextDisplayProperties): React.ReactNode
 		)
 end
 
-function Library.Simple(props: StyleTextDisplayProperties): React.ReactNode
+function Library.StyleSimple(props: StyleTextDisplayProperties): React.ReactNode
 	local fontType: Enums.FontType = props.FontType
 	local fontData = props.Style:GetFontData(fontType)
 	local scale = props.Style.Scale
