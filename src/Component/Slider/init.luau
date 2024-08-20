@@ -21,7 +21,7 @@ export type BaseSliderProperties = RobloxTypes.GuiButtonProperties & {
 	OnChange: (value: number | NumberRange) -> (),
 	OnRelease: ((value: number | NumberRange) -> ())?,
 	SnapCount: number?,
-	IsPopUpEnabled: boolean?,
+	IsLabelEnabled: boolean?,
 	IsEnabled: boolean?,
 	Elevation: number?,
 }
@@ -34,9 +34,9 @@ export type SliderProperties = BaseSliderProperties & {
 	DisabledContainerColor3: Color3?,
 	DisabledOnFillColor3: Color3?,
 	DisabledOnContainerColor3: Color3?,
-	PopUpColor3: Color3?,
-	OnPopUpColor3: Color3?,
-	PopUpFontData: Types.FontData?,
+	LabelColor3: Color3?,
+	OnLabelColor3: Color3?,
+	LabelFontData: Types.FontData?,
 	SoundVolume: number?,
 	IsAnimated: boolean?,
 	SchemeType: Enums.SchemeType?,
@@ -61,18 +61,6 @@ local SOUND_TYPE = Enums.SoundType.ui_tap_variant_01
 -- Variables
 -- References
 -- Private Functions
-local unpackSequence = function(sequence: NumberSequence | ColorSequence): {
-	[number]: Color3,
-} | {
-	[number]: number,
-}
-	local out: { [number]: any } = {}
-	for i, keypoint in ipairs(sequence.Keypoints) do
-		out[keypoint.Time] = keypoint.Value
-	end
-	return out
-end
-
 local packSequence = function(sequence: {
 	[number]: Color3,
 } | {
@@ -195,21 +183,27 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local onChange: (NumberRange | number) -> () = props.OnChange
 	local onRelease: ((NumberRange | number) -> ())? = props.OnRelease
 	local snapCount: number? = props.SnapCount or Defaults.SnapCount
-	local isPopUpEnabled: boolean = props.IsPopUpEnabled or Defaults.IsPopUpEnabled
-	local isEnabled: boolean = props.IsEnabled or Defaults.IsEnabled
-	local isAnimated: boolean = props.IsAnimated or Defaults.IsAnimated
+	local isLabelEnabled: boolean = if props.IsLabelEnabled ~= nil
+		then props.IsLabelEnabled
+		else Defaults.IsLabelEnabled
+	local isEnabled: boolean = if props.IsEnabled ~= nil
+		then props.IsEnabled
+		else Defaults.IsEnabled
+	local isAnimated: boolean = if props.IsAnimated ~= nil
+		then props.IsAnimated
+		else Defaults.IsAnimated
 	local elevation: number = props.Elevation or Defaults.Elevation
 	local scale: number = props.Scale or Defaults.Scale
 	local soundVolume: number = props.SoundVolume or Defaults.SoundVolume
 	local schemeType: Enums.SchemeType = props.SchemeType or Defaults.SchemeType
-	local fontData: Types.FontData = props.PopUpFontData or Defaults.PopUpFontData
+	local labelFontData: Types.FontData = props.LabelFontData or Defaults.LabelFontData
 	local fillColor3: Color3 = props.FillColor3 or Defaults.FillColor3
 	local containerColor3: Color3 = props.ContainerColor3 or Defaults.ContainerColor3
 	local onFillColor3: Color3 = props.OnFillColor3 or Defaults.OnFillColor3
 	local onContainerColor3: Color3 = props.OnContainerColor3
 		or Defaults.OnContainerColor3
-	local popUpColor3: Color3 = props.PopUpColor3 or Defaults.PopUpColor3
-	local onPopUpColor3: Color3 = props.OnPopUpColor3 or Defaults.OnPopUpColor3
+	local labelColor3: Color3 = props.LabelColor3 or Defaults.LabelColor3
+	local onLabelColor3: Color3 = props.OnLabelColor3 or Defaults.OnLabelColor3
 
 	local disabledFillColor3: Color3 = props.DisabledFillColor3
 		or Defaults.DisabledFillColor3
@@ -220,7 +214,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local disabledOnContainerColor3: Color3 = props.DisabledOnContainerColor3
 		or Defaults.DisabledOnContainerColor3
 
-	local popUpFontData: Types.FontData = props.PopUpFontData or Defaults.PopUpFontData
+	local labelFontData: Types.FontData = props.LabelFontData or Defaults.LabelFontData
 
 	-- set up state
 	local absoluteSize: Vector2, setAbsoluteSize = React.useState(Vector2.new(0, 0))
@@ -290,9 +284,12 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		schemeType
 	)
 	local state =
-		Types._RenderData.getButtonState(isEnabled, isHovered, isPressed, isFocused)
+		Types._RenderData.getButtonState(isHovered, isPressed, isFocused, isEnabled)
 	local handleWidthPx: number
-	if state == Enums.ButtonStateType.Enabled then
+	if
+		state == Enums.ButtonStateType.Enabled
+		or state == Enums.ButtonStateType.Hovered
+	then
 		handleWidthPx = math.ceil(HANDLE_WIDTH_DP * scale)
 	elseif state == Enums.ButtonStateType.Disabled then
 		handleWidthPx = math.ceil(DISABLED_HANDLE_WIDTH_DP * scale)
@@ -303,12 +300,17 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	-- solve handles color / number sequence
 	local handleAlphaWidth = handleWidthPx / absoluteSize.X
 	local leftRightPadAlphaWidth = padPx / absoluteSize.X
-	local dotAlphaWidth = math.ceil(DOT_DIAMETER_DP * scale) / absoluteSize.X
 	local handleGapAlphaWidth = (handleWidthPx + (2 * math.ceil(HANDLE_PAD_DP * scale)))
 		/ absoluteSize.X
 	local handleTransparencySequence: NumberSequence?
 	local barTransparencySequence: NumberSequence?
 	local barFillColorSequence: ColorSequence?
+
+	print(`state=${state}`)
+
+	local transparency = if state == Enums.ButtonStateType.Disabled
+		then DISABLED_TRANSPARENCY
+		else 0
 
 	if absoluteSize.X > 0 then
 		if handleAlpha2 then
@@ -335,17 +337,17 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						[1] = 1,
 					}
 					handleTransData[handle1Start] = 1
-					handleTransData[handle1Finish] = 0
+					handleTransData[handle1Finish] = transparency
 					handleTransparencySequence =
 						packSequence(drawPackSequence(handleTransData)) :: NumberSequence
 				end
 
 				local barTransData = {
-					[0] = 0,
+					[0] = transparency,
 
-					[1] = 0,
+					[1] = transparency,
 				}
-				barTransData[handle1GapStart] = 0
+				barTransData[handle1GapStart] = transparency
 				barTransData[handle1GapFinish] = 1
 				barTransparencySequence =
 					packSequence(drawPackSequence(barTransData)) :: NumberSequence
@@ -361,7 +363,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				barFillColorSequence = packSequence(barColorData) :: ColorSequence
 			else
 				handleTransparencySequence = NumberSequence.new(1)
-				barTransparencySequence = NumberSequence.new(0)
+				barTransparencySequence = NumberSequence.new(transparency)
 			end
 		end
 	end
@@ -375,24 +377,32 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		if not isEnabled then
 			return
 		end
+		if not isPressed then
+			return
+		end
 		local start = button.AbsolutePosition.X + padPx
 		local width = button.AbsoluteSize.X - (2 * padPx)
 		-- print(`x: ${x}, start: ${start}, width: ${width}`)
 		local alpha = math.clamp((x - start) / width, 0, 1)
 		-- print(`alpha: ${alpha}`)
 		if not selectionIndex then
-			if not handleAlpha2 then
+			if not handleAlpha2 and selectionIndex ~= 1 then
 				setSelectionIndex(1)
 			end
 		end
 		if typeof(value) == "number" then
 			local newValue =
 				formatScalarValue(range.Min + alpha * (range.Max - range.Min))
+			if newValue == value then
+				return
+			end
 			if isOnRelease then
 				if onRelease then
 					onRelease(newValue)
 				end
-				setSelectionIndex(nil)
+				if selectionIndex ~= nil then
+					setSelectionIndex(nil)
+				end
 			else
 				onChange(newValue)
 			end
@@ -420,14 +430,23 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						end
 					end
 				end :: any,
+				[React.Event.MouseLeave] = function()
+					if isHovered then
+						setIsHovered(false)
+					end
+					if isPressed then
+						setIsPressed(false)
+					end
+				end,
 				[React.Event.InputChanged] = function(
 					inst: ImageButton,
 					input: InputObject
 				)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						if selectionIndex then
-							updateHandle(inst, input.Position.X, input.Position.Y, false)
-						end
+						-- print(`selectionIndex=${selectionIndex}`)
+						-- if selectionIndex then
+						updateHandle(inst, input.Position.X, input.Position.Y, false)
+						-- end
 					end
 				end :: any,
 				[React.Event.InputEnded] = function(

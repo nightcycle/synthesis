@@ -72,20 +72,20 @@ return function(target: Frame)
 							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
 							SnapCount = 5,
-							IsPopUpEnabled = true,
+							IsLabelEnabled = true,
 							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 							ContainerColor3 = style:GetColor(
 								Enums.ColorRoleType.PrimaryContainer
 							),
-							PopUpColor3 = style:GetColor(
+							LabelColor3 = style:GetColor(
 								Enums.ColorRoleType.SurfaceContainerHighest
 							),
-							OnPopUpColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
 							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
 							OnContainerColor3 = style:GetColor(
 								Enums.ColorRoleType.OnPrimaryContainer
 							),
-							PopUpFontData = style:GetFontData(Enums.FontType.LabelSmall),
+							LabelFontData = style:GetFontData(Enums.FontType.LabelSmall),
 						} :: Interface.SliderProperties
 					),
 				}

@@ -7,7 +7,7 @@ local Types = require("@proj/Types")
 -- Types
 return {
 	SnapCount = nil,
-	IsPopUpEnabled = true,
+	IsLabelEnabled = true,
 	IsEnabled = true,
 	IsAnimated = true,
 	Elevation = 0,
@@ -22,7 +22,7 @@ return {
 	DisabledContainerColor3 = Color3.new(),
 	DisabledOnFillColor3 = Color3.new(1, 1, 1),
 	DisabledOnContainerColor3 = Color3.new(1, 1, 1),
-	PopUpColor3 = Color3.new(),
-	OnPopUpColor3 = Color3.new(1, 1, 1),
-	PopUpFontData = Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1, nil),
+	LabelColor3 = Color3.new(),
+	OnLabelColor3 = Color3.new(1, 1, 1),
+	LabelFontData = Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1, nil),
 }
