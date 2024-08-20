@@ -285,23 +285,22 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	)
 	local state =
 		Types._RenderData.getButtonState(isHovered, isPressed, isFocused, isEnabled)
-	local handleWidthPx: number
+	local handleWidthPx1: number
 	if
 		state == Enums.ButtonStateType.Enabled
 		or state == Enums.ButtonStateType.Hovered
 	then
-		handleWidthPx = math.ceil(HANDLE_WIDTH_DP * scale)
+		handleWidthPx1 = math.ceil(HANDLE_WIDTH_DP * scale)
 	elseif state == Enums.ButtonStateType.Disabled then
-		handleWidthPx = math.ceil(DISABLED_HANDLE_WIDTH_DP * scale)
+		handleWidthPx1 = math.ceil(DISABLED_HANDLE_WIDTH_DP * scale)
 	else
-		handleWidthPx = math.ceil(PRESSED_HANDLE_WIDTH_DP * scale)
+		handleWidthPx1 = math.ceil(PRESSED_HANDLE_WIDTH_DP * scale)
 	end
 
 	-- solve handles color / number sequence
-	local handleAlphaWidth = handleWidthPx / absoluteSize.X
+	local handleAlphaWidth1 = handleWidthPx1 / absoluteSize.X
 	local leftRightPadAlphaWidth = padPx / absoluteSize.X
-	local handleGapAlphaWidth = (handleWidthPx + (2 * math.ceil(HANDLE_PAD_DP * scale)))
-		/ absoluteSize.X
+
 	local handleTransparencySequence: NumberSequence?
 	local barTransparencySequence: NumberSequence?
 	local barFillColorSequence: ColorSequence?
@@ -312,17 +311,92 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 
 	if absoluteSize.X > 0 then
 		if handleAlpha2 then
+			local handleAlphaWidth2: number
+			if selectionIndex == 2 then
+				handleAlphaWidth2 = handleAlphaWidth1
+				handleAlphaWidth1 = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+			else
+				handleAlphaWidth2 = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+			end
+			local minAlpha = math.clamp(
+				leftRightPadAlphaWidth + handleAlpha1 * (1 - 2 * leftRightPadAlphaWidth),
+				leftRightPadAlphaWidth,
+				1 - leftRightPadAlphaWidth
+			)
+			local minHandleGapAlphaWidth = (
+				handleAlphaWidth1 + (2 * math.ceil(HANDLE_PAD_DP * scale))
+			) / absoluteSize.X
+			local minFinish = math.clamp(minAlpha + handleAlphaWidth1 / 2, 0, 1)
+			local minStart = math.clamp(minAlpha - handleAlphaWidth1 / 2, 0, 1)
+			local minGapStart = math.clamp(minStart - minHandleGapAlphaWidth / 2, 0, 1)
+			local minGapFinish = math.clamp(minFinish + minHandleGapAlphaWidth / 2, 0, 1)
+
+			local maxHandleGapAlphaWidth = (
+				handleAlphaWidth2 + (2 * math.ceil(HANDLE_PAD_DP * scale))
+			) / absoluteSize.X
+			local maxAlpha = math.clamp(
+				leftRightPadAlphaWidth + handleAlpha2 * (1 - 2 * leftRightPadAlphaWidth),
+				leftRightPadAlphaWidth,
+				1 - leftRightPadAlphaWidth
+			)
+
+			local maxFinish = math.clamp(maxAlpha + handleAlphaWidth2 / 2, 0, 1)
+			local maxStart = math.clamp(maxAlpha - handleAlphaWidth2 / 2, 0, 1)
+			local maxGapStart = math.clamp(maxStart - maxHandleGapAlphaWidth / 2, 0, 1)
+			local maxGapFinish = math.clamp(maxFinish + maxHandleGapAlphaWidth / 2, 0, 1)
+
+			do
+				local handleTransData = {
+					[0] = 1,
+					[1] = 1,
+				}
+				handleTransData[minStart] = 1
+				handleTransData[minFinish] = transparency
+
+				handleTransData[maxStart] = 1
+				handleTransData[maxFinish] = transparency
+
+				handleTransparencySequence =
+					packSequence(drawPackSequence(handleTransData)) :: NumberSequence
+
+				local barTransData = {
+					[0] = transparency,
+					[1] = transparency,
+				}
+				local barColorData: { [number]: Color3 } = {
+					[0] = actualContainerColor3,
+					[1] = actualContainerColor3,
+				}
+				if maxGapStart > minGapFinish then
+					barTransData[minGapStart] = transparency
+					barTransData[minGapFinish] = 1
+
+					barTransData[maxGapStart] = transparency
+					barTransData[maxGapFinish] = 1
+				else
+					barTransData[minGapStart] = transparency
+					barTransData[maxGapFinish] = 1
+				end
+				barColorData[minGapStart] = actualContainerColor3
+				barColorData[maxGapFinish] = actualFillColor3
+				barTransparencySequence =
+					packSequence(drawPackSequence(barTransData)) :: NumberSequence
+				barFillColorSequence =
+					packSequence(drawPackSequence(barColorData)) :: ColorSequence
+			end
 		else
 			-- print("handleAlpha1", handleAlpha1)
-
+			local handleGapAlphaWidth = (
+				handleWidthPx1 + (2 * math.ceil(HANDLE_PAD_DP * scale))
+			) / absoluteSize.X
 			local renderAlpha1 = math.clamp(
 				leftRightPadAlphaWidth + handleAlpha1 * (1 - 2 * leftRightPadAlphaWidth),
 				leftRightPadAlphaWidth,
 				1 - leftRightPadAlphaWidth
 			)
 
-			local handle1Finish = math.clamp(renderAlpha1 + handleAlphaWidth / 2, 0, 1)
-			local handle1Start = math.clamp(renderAlpha1 - handleAlphaWidth / 2, 0, 1)
+			local handle1Finish = math.clamp(renderAlpha1 + handleAlphaWidth1 / 2, 0, 1)
+			local handle1Start = math.clamp(renderAlpha1 - handleAlphaWidth1 / 2, 0, 1)
 
 			local handle1GapStart =
 				math.clamp(handle1Start - handleGapAlphaWidth / 2, 0, 1)
@@ -380,13 +454,27 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		end
 		local start = button.AbsolutePosition.X + padPx
 		local width = button.AbsoluteSize.X - (2 * padPx)
-		-- print(`x: ${x}, start: ${start}, width: ${width}`)
 		local alpha = math.clamp((x - start) / width, 0, 1)
-		-- print(`alpha: ${alpha}`)
+
 		if not selectionIndex then
-			if not handleAlpha2 and selectionIndex ~= 1 then
-				setSelectionIndex(1)
+			if handleAlpha2 then
+				local minDist = math.abs(handleAlpha1 - alpha)
+				local maxDist = math.abs(handleAlpha2 - alpha)
+				print(`h1:`, handleAlpha1, `h2:`, handleAlpha2, `alpha:`, alpha)
+				print(`minDist:`, minDist, `maxDist:`, maxDist)
+
+				if minDist < maxDist then
+					setSelectionIndex(1)
+				else
+					setSelectionIndex(2)
+				end
+			else
+				if selectionIndex ~= 1 then
+					setSelectionIndex(1)
+				end
 			end
+		elseif isOnRelease then
+			setSelectionIndex(nil)
 		end
 		if typeof(value) == "number" then
 			local newValue =
@@ -398,11 +486,37 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				if onRelease then
 					onRelease(newValue)
 				end
-				if selectionIndex ~= nil then
-					setSelectionIndex(nil)
-				end
 			else
 				onChange(newValue)
+			end
+		elseif selectionIndex then
+			local minVal, maxVal = value.Min, value.Max
+			local newVal = formatScalarValue(range.Min + alpha * (range.Max - range.Min))
+			local outValue: NumberRange
+			if selectionIndex == 1 then
+				if newVal == minVal then
+					return
+				end
+				if newVal >= maxVal then
+					return
+				end
+				outValue = NumberRange.new(newVal, maxVal)
+			else
+				if newVal == maxVal then
+					return
+				end
+				if newVal <= minVal then
+					return
+				end
+				outValue = NumberRange.new(minVal, newVal)
+			end
+
+			if isOnRelease then
+				if onRelease then
+					onRelease(outValue)
+				end
+			else
+				onChange(outValue)
 			end
 		end
 	end
@@ -435,16 +549,16 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					if isPressed then
 						setIsPressed(false)
 					end
+					if selectionIndex then
+						setSelectionIndex(nil)
+					end
 				end,
 				[React.Event.InputChanged] = function(
 					inst: ImageButton,
 					input: InputObject
 				)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
-						-- print(`selectionIndex=${selectionIndex}`)
-						-- if selectionIndex then
 						updateHandle(inst, input.Position.X, input.Position.Y, false)
-						-- end
 					end
 				end :: any,
 				[React.Event.InputEnded] = function(
@@ -645,7 +759,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 															BackgroundTransparency = if math.abs(
 																	handleAlpha1 - alpha
 																)
-																	< handleAlphaWidth
+																	< handleAlphaWidth1
 																		* 0.5
 																then 1
 																else 0,
