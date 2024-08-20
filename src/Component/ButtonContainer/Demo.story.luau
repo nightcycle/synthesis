@@ -40,7 +40,7 @@ return function(target: Frame)
 					props: ButtonContainer.ButtonContainerContentProperties
 				): React.ReactNode
 					return React.createElement(
-						TextDisplay.Simple,
+						TextDisplay.StyleSimple,
 						{
 							AutomaticSize = Enum.AutomaticSize.XY,
 							Text = renderType,

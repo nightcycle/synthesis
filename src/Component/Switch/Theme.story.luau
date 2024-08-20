@@ -66,7 +66,7 @@ return function(target: Frame)
 					-- 	Size = UDim2.new(1, 0, 0, 1),
 					-- }),
 					Title = React.createElement(
-						TextDisplay.Simple,
+						TextDisplay.StyleSimple,
 						{
 							Text = name,
 							AutomaticSize = Enum.AutomaticSize.XY,

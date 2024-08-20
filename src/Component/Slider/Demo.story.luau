@@ -88,7 +88,7 @@ return function(target: Frame)
 							OnContainerColor3 = style:GetColor(
 								Enums.ColorRoleType.OnPrimaryContainer
 							),
-							LabelFontData = style:GetFontData(Enums.FontType.LabelSmall),
+							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
 						} :: Interface.SliderProperties
 					),
 					NoSnap = React.createElement(
@@ -120,7 +120,7 @@ return function(target: Frame)
 							OnContainerColor3 = style:GetColor(
 								Enums.ColorRoleType.OnPrimaryContainer
 							),
-							LabelFontData = style:GetFontData(Enums.FontType.LabelSmall),
+							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
 						} :: Interface.SliderProperties
 					),
 					DoubleSlider = React.createElement(
@@ -152,7 +152,7 @@ return function(target: Frame)
 							OnContainerColor3 = style:GetColor(
 								Enums.ColorRoleType.OnPrimaryContainer
 							),
-							LabelFontData = style:GetFontData(Enums.FontType.LabelSmall),
+							LabelFontData = style:GetFontData(Enums.FontType.BodyLarge),
 						} :: Interface.SliderProperties
 					),
 				}

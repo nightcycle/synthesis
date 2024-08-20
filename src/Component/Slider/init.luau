@@ -13,6 +13,9 @@ local Types = require("@proj/Types")
 local Style = require("@proj/Style")
 local Defaults = require("./Defaults")
 local Sounds = require("@proj/Sounds")
+local PopUp = require("@comp/PopUp")
+local TextDisplay = require("@comp/TextDisplay")
+local Container = require("@comp/Container")
 -- Types
 type Style = Style.Style
 export type BaseSliderProperties = RobloxTypes.GuiButtonProperties & {
@@ -214,10 +217,12 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local disabledOnContainerColor3: Color3 = props.DisabledOnContainerColor3
 		or Defaults.DisabledOnContainerColor3
 
-	local labelFontData: Types.FontData = props.LabelFontData or Defaults.LabelFontData
-
 	-- set up state
 	local absoluteSize: Vector2, setAbsoluteSize = React.useState(Vector2.new(0, 0))
+	local handlePosition: Vector2?, setHandlePosition =
+		React.useState(Vector2.new(0, 0) :: Vector2?)
+	local absolutePosition: Vector2, setAbsolutePosition =
+		React.useState(Vector2.new(0, 0))
 	local selectionIndex: number?, setSelectionIndex = React.useState(nil :: number?)
 	local isHovered: boolean, setIsHovered = React.useState(false)
 	local isPressed: boolean, setIsPressed = React.useState(false)
@@ -488,6 +493,16 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				end
 			else
 				onChange(newValue)
+				setHandlePosition(
+					Vector2.new(
+						button.AbsolutePosition.X
+							+ math.round(
+								button.AbsoluteSize.X
+									* ((newValue - range.Min) / (range.Max - range.Min))
+							),
+						absolutePosition.Y - math.ceil(4 * scale)
+					)
+				)
 			end
 		elseif selectionIndex then
 			local minVal, maxVal = value.Min, value.Max
@@ -517,6 +532,16 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				end
 			else
 				onChange(outValue)
+				setHandlePosition(
+					Vector2.new(
+						button.AbsolutePosition.X
+							+ math.round(
+								button.AbsoluteSize.X
+									* ((newVal - range.Min) / (range.Max - range.Min))
+							),
+						absolutePosition.Y - math.ceil(4 * scale)
+					)
+				)
 			end
 		end
 	end
@@ -552,6 +577,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					if selectionIndex then
 						setSelectionIndex(nil)
 					end
+					if handlePosition then
+						setHandlePosition(nil)
+					end
 				end,
 				[React.Event.InputChanged] = function(
 					inst: ImageButton,
@@ -560,6 +588,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
 						updateHandle(inst, input.Position.X, input.Position.Y, false)
 					end
+				end :: any,
+				[React.Change.AbsolutePosition] = function(inst: TextButton)
+					setAbsolutePosition(inst.AbsolutePosition)
 				end :: any,
 				[React.Event.InputEnded] = function(
 					inst: ImageButton,
@@ -572,6 +603,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
 						if isPressed then
 							setIsPressed(false)
+						end
+						if handlePosition then
+							setHandlePosition(nil)
 						end
 					end
 				end,
@@ -617,6 +651,76 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 			props
 		),
 		{
+			Label = if isLabelEnabled
+					and isPressed
+					and handlePosition
+				then React.createElement(
+					PopUp,
+					{
+						TargetAbsolutePosition = handlePosition,
+						DisplayAnchorPoint = Vector2.new(0.5, 1),
+						DisplayComponent = function(): React.ReactNode
+							return React.createElement(Container, {
+								BackgroundColor3 = labelColor3,
+								BackgroundTransparency = 0,
+								AutomaticSize = Enum.AutomaticSize.XY,
+								AnchorPoint = Vector2.new(0.5, 1),
+							}, {
+								UIListLayout = React.createElement(
+									"UIListLayout",
+									{
+										SortOrder = Enum.SortOrder.LayoutOrder,
+										FillDirection = Enum.FillDirection.Vertical,
+										Padding = UDim.new(0, 0),
+										VerticalAlignment = Enum.VerticalAlignment.Center,
+										HorizontalAlignment = Enum.HorizontalAlignment.Center,
+									} :: RobloxTypes.UIListLayoutProperties
+								),
+								UIPadding = React.createElement(
+									"UIPadding",
+									{
+										PaddingTop = UDim.new(0, math.round(scale * 12)),
+										PaddingBottom = UDim.new(
+											0,
+											math.round(scale * 12)
+										),
+										PaddingLeft = UDim.new(0, math.round(scale * 16)),
+										PaddingRight = UDim.new(
+											0,
+											math.round(scale * 16)
+										),
+									} :: RobloxTypes.UIPaddingProperties
+								),
+								UICorner = React.createElement(
+									"UICorner",
+									{
+										CornerRadius = UDim.new(0.5, 0),
+									} :: RobloxTypes.UICornerProperties
+								),
+								TextDisplay = React.createElement(
+									TextDisplay.Full,
+									{
+										AutomaticSize = Enum.AutomaticSize.XY,
+										Scale = scale,
+										Text = if typeof(value) == "number"
+											then tostring(value)
+											elseif selectionIndex == 1 then tostring(
+												value.Min
+											)
+											elseif selectionIndex == 2 then tostring(
+												value.Max
+											)
+											else "",
+										TextColor3 = onLabelColor3,
+										FontData = labelFontData,
+									} :: TextDisplay.TextDisplayProperties
+								),
+							})
+						end,
+					} :: PopUp.PopUpProperties,
+					{}
+				)
+				else nil,
 			UIListLayout = React.createElement(
 				"UIListLayout",
 				{
