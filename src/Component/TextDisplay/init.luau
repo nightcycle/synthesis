@@ -1,6 +1,4 @@
 --!strict
-local _Package = script.Parent.Parent.Parent
-local _Packages = _Package.Parent
 -- Services
 -- Packages
 local React = require("@wally/React")
