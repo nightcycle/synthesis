@@ -909,4 +909,30 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	)
 end
 
+Library.OnSurfacePrimary = function(props: StyleSliderProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: SliderProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
+	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
+	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.DisabledContainerColor3 =
+		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.SoundVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
 return Library

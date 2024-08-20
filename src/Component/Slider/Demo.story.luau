@@ -37,7 +37,8 @@ return function(target: Frame)
 			local noSnapValue, setNoSnapValue = React.useState(50 :: number | NumberRange)
 			local doubleValue, setDoubleValue =
 				React.useState(NumberRange.new(5, 50) :: number | NumberRange)
-
+			local disableValue, setDisableValue =
+				React.useState(NumberRange.new(5, 50) :: number | NumberRange)
 			return React.createElement(
 				"Frame",
 				{
@@ -134,6 +135,38 @@ return function(target: Frame)
 							end,
 							Range = NumberRange.new(0, 100),
 							IsEnabled = true,
+							IsAnimated = true,
+							Elevation = 0,
+							SchemeType = style.SchemeType,
+							Size = UDim2.fromScale(0.7, 0),
+							Scale = 1,
+							IsLabelEnabled = true,
+							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
+							ContainerColor3 = style:GetColor(
+								Enums.ColorRoleType.PrimaryContainer
+							),
+							LabelColor3 = style:GetColor(
+								Enums.ColorRoleType.SurfaceContainerHighest
+							),
+							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
+							OnContainerColor3 = style:GetColor(
+								Enums.ColorRoleType.OnPrimaryContainer
+							),
+							LabelFontData = style:GetFontData(Enums.FontType.BodyLarge),
+						} :: Interface.SliderProperties
+					),
+					Disable = React.createElement(
+						Interface.Full,
+						{
+							LayoutOrder = 4,
+							Value = disableValue,
+							OnChange = function(value: number | NumberRange)
+								print("Disable", value)
+								setDisableValue(value)
+							end,
+							Range = NumberRange.new(0, 100),
+							IsEnabled = false,
 							IsAnimated = true,
 							Elevation = 0,
 							SchemeType = style.SchemeType,
