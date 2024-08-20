@@ -59,7 +59,9 @@ local LEFTRIGHT_PAD_DP = 4
 local HANDLE_PAD_DP = 6
 local DISABLED_TRANSPARENCY = 1 - 0.38
 local SEQ_STEP = 0.0005
-local SOUND_TYPE = Enums.SoundType.ui_tap_variant_01
+local SNAP_SOUND_TYPE = Enums.SoundType.navigation_hover_tap
+local GRAB_SOUND_TYPE = Enums.SoundType.navigation_forward_selection_minimal
+local UNGRAB_SOUND_TYPE = Enums.SoundType.navigation_backward_selection_minimal
 
 -- Variables
 -- References
@@ -462,11 +464,17 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		local alpha = math.clamp((x - start) / width, 0, 1)
 
 		if not selectionIndex then
+			if soundVolume > 0 then
+				Sounds.play(GRAB_SOUND_TYPE, soundVolume)
+			end
 			if handleAlpha2 then
 				local minDist = math.abs(handleAlpha1 - alpha)
 				local maxDist = math.abs(handleAlpha2 - alpha)
 				print(`h1:`, handleAlpha1, `h2:`, handleAlpha2, `alpha:`, alpha)
 				print(`minDist:`, minDist, `maxDist:`, maxDist)
+				if soundVolume > 0 then
+					Sounds.play(GRAB_SOUND_TYPE, soundVolume)
+				end
 
 				if minDist < maxDist then
 					setSelectionIndex(1)
@@ -475,10 +483,16 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				end
 			else
 				if selectionIndex ~= 1 then
+					if soundVolume > 0 then
+						Sounds.play(GRAB_SOUND_TYPE, soundVolume)
+					end
 					setSelectionIndex(1)
 				end
 			end
 		elseif isOnRelease then
+			if soundVolume > 0 then
+				Sounds.play(UNGRAB_SOUND_TYPE, soundVolume)
+			end
 			setSelectionIndex(nil)
 		end
 		if typeof(value) == "number" then
@@ -492,6 +506,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					onRelease(newValue)
 				end
 			else
+				if soundVolume > 0 and snapCount then
+					Sounds.play(SNAP_SOUND_TYPE, soundVolume)
+				end
 				onChange(newValue)
 				setHandlePosition(
 					Vector2.new(
@@ -531,6 +548,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					onRelease(outValue)
 				end
 			else
+				if soundVolume > 0 and snapCount then
+					Sounds.play(SNAP_SOUND_TYPE, soundVolume)
+				end
 				onChange(outValue)
 				setHandlePosition(
 					Vector2.new(
@@ -575,6 +595,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						setIsPressed(false)
 					end
 					if selectionIndex then
+						if soundVolume > 0 then
+							Sounds.play(UNGRAB_SOUND_TYPE, soundVolume)
+						end
 						setSelectionIndex(nil)
 					end
 					if handlePosition then
@@ -606,13 +629,6 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						end
 						if handlePosition then
 							setHandlePosition(nil)
-						end
-					end
-				end,
-				[React.Event.Activated] = function()
-					if isEnabled then
-						if soundVolume >= 0 then
-							Sounds.play(SOUND_TYPE, soundVolume)
 						end
 					end
 				end,
