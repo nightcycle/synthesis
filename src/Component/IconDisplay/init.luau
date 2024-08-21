@@ -30,6 +30,16 @@ return function(props: IconDisplayProperties): React.ReactNode
 			BackgroundTransparency = 1,
 			ImageColor3 = props.IconColor3,
 			ImageTransparency = props.IconTransparency,
+			children = {
+				UIAspectRatioConstraint = React.createElement(
+					"UIAspectRatioConstraint",
+					{
+						AspectRatio = 1,
+						AspectType = Enum.AspectType.FitWithinMaxSize,
+						DominantAxis = Enum.DominantAxis.Height,
+					} :: RobloxTypes.UIAspectRatioConstraintProperties
+				),
+			},
 		}, props)
 	)
 end

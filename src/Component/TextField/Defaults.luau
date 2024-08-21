@@ -9,6 +9,7 @@ return {
 	IsEnabled = true,
 	IsError = false,
 	IsFilled = true,
+	IsMultiLine = false,
 	Label = "Label",
 	BackgroundColor3 = Color3.new(1, 1, 1),
 	HightlightColor3 = Color3.new(1, 1, 1),
@@ -26,5 +27,6 @@ return {
 		1,
 		nil
 	),
+	ClearTextOnFocus = true,
 	Scale = 1,
 }
