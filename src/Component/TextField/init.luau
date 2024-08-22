@@ -29,6 +29,7 @@ type BaseTextFieldProperties = RobloxTypes.FrameProperties & {
 	IsMultiLine: boolean?,
 	IsEnabled: boolean?,
 	IsError: boolean?,
+	IsClearButtonEnabled: boolean?,
 	IsFilled: boolean?,
 	Label: string?,
 	CharacterLimit: number?,
@@ -37,7 +38,7 @@ type BaseTextFieldProperties = RobloxTypes.FrameProperties & {
 	Icon: ImageData?,
 }
 export type TextFieldProperties = BaseTextFieldProperties & {
-	HightlightColor3: Color3?,
+	BorderHightlightColor3: Color3?,
 	BackgroundColor3: Color3?,
 	ErrorColor3: Color3?,
 	BorderColor3: Color3?,
@@ -68,6 +69,9 @@ local ICON_WIDTH_DP = 18
 local DISABLED_TEXT_TRANSPARENCY = 1 - 0.38
 local DISABLED_OUTLINE_TRANSPARENCY = 1 - 0.12
 local DISABLED_BACKGROUND_TRANSPARENCY = 1 - 0.04
+local DROP_DOWN_ICON = MaterialIcons.arrow_drop_down
+local CANCEL_ICON = MaterialIcons.cancel
+local ERROR_ICON = MaterialIcons.error
 -- Variables
 -- References
 -- Private Functions
@@ -94,8 +98,8 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local leftIcon: ImageData? = props.Icon
 	local dropDownOptions: { string }? = props.DropDownOptions
 
-	local rawHightlightColor3: Color3 = props.HightlightColor3
-		or Defaults.HightlightColor3
+	local rawBorderHightlightColor3: Color3 = props.BorderHightlightColor3
+		or Defaults.BorderHightlightColor3
 	local rawBackgroundColor3: Color3 = props.BackgroundColor3 :: Color3
 		or Defaults.BackgroundColor3
 	local rawErrorColor3: Color3 = props.ErrorColor3 or Defaults.ErrorColor3
@@ -115,7 +119,9 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local isClearTextOnFocus: boolean = if props.ClearTextOnFocus ~= nil
 		then props.ClearTextOnFocus
 		else Defaults.ClearTextOnFocus
-
+	local isClearButtonEnabled: boolean = if props.IsClearButtonEnabled ~= nil
+		then props.IsClearButtonEnabled
+		else Defaults.IsClearButtonEnabled
 	-- set up state
 	local isHovered, setIsHovered = React.useState(false)
 	local isPressed, setIsPressed = React.useState(false)
@@ -131,8 +137,8 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	end
 
 	-- process colors
-	local hightlightColor3 =
-		Theme.getElevatedColor(rawHightlightColor3, elevation, schemeType)
+	local borderHightlightColor3 =
+		Theme.getElevatedColor(rawBorderHightlightColor3, elevation, schemeType)
 	local backgroundColor3 =
 		Theme.getElevatedColor(rawBackgroundColor3, elevation, schemeType)
 	local errorColor3 = Theme.getElevatedColor(rawErrorColor3, elevation, schemeType)
@@ -169,10 +175,17 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local labelFontData = if isLabelMinized then supportFontData else bodyFontData
 
 	local rightIconImage: ImageData? = if isError
-		then MaterialIcons.error
-		elseif value then MaterialIcons.cancel
-		elseif dropDownOptions then MaterialIcons.arrow_drop_down
+		then ERROR_ICON
+		elseif
+			isClearButtonEnabled
+			and value
+			and value:len() > 0
+			and not isTextBoxFocused
+		then CANCEL_ICON
+		elseif dropDownOptions then DROP_DOWN_ICON
 		else nil
+	local bottomLineThickness =
+		math.max(math.ceil((if isTextBoxFocused then 1 else 0.5) * outlineThickness), 1)
 
 	-- internal functions
 	local function formatText(input: string): string
@@ -181,6 +194,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		end
 		return input
 	end
+	value = value and formatText(value)
 
 	-- exit focus
 	React.useEffect(function()
@@ -250,13 +264,14 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 						)
 					end
 				end)(),
-				Label = if isLabelMinized and not isFilled
+				Label = if not isFilled
 					then React.createElement(
 						TextDisplay.Full,
 						{
-							TextColor3 = if isTextBoxFocused or isError
-								then labelColor3
-								else hightlightColor3,
+							TextColor3 = if isTextBoxFocused
+								then borderHightlightColor3
+								elseif isError then errorColor3
+								else borderHightlightColor3,
 							Scale = scale,
 							TextTransparency = if not isFilled
 								then if isLabelMinized then 0 else 1
@@ -277,7 +292,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				ref = textBoxRef,
 				LayoutOrder = 2,
 				RichText = true,
-				Visible = value and value:len() > 0,
+				Visible = (value and value:len() > 0) or isTextBoxFocused,
 				AutomaticSize = Enum.AutomaticSize.XY,
 				TextColor3 = textColor3,
 				MultiLine = isMultiLine,
@@ -290,6 +305,10 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				Interactable = isTextBoxFocused,
 				ClearTextOnFocus = false,
 				TextXAlignment = Enum.TextXAlignment.Left,
+				TextYAlignment = Enum.TextYAlignment.Top,
+				TextTruncate = if isTextBoxFocused
+					then Enum.TextTruncate.None
+					else Enum.TextTruncate.AtEnd,
 				TextSize = Typography.getTextSize(bodyFontData.Size, scale),
 				LineHeight = Typography.getGuiLineHeight(
 					bodyFontData.LineHeight,
@@ -311,8 +330,11 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					else UDim2.fromOffset(0, 0),
 				[React.Change.Text] = function(inst: TextBox)
 					if isEnabled and isTextBoxFocused then
-						print(`change: {inst.Text}`)
-						onChange(formatText(inst.Text))
+						local text = formatText(inst.Text)
+						if text ~= value then
+							onChange(text)
+						end
+						inst.Text = text
 					end
 				end :: any,
 				[React.Event.FocusLost] = function(_, enterPressed: boolean)
@@ -325,20 +347,242 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		)
 		else nil
 
+	local buttonInternals = React.createElement(React.Fragment, {}, {
+		CenterContainer = React.createElement(
+			Container,
+			{
+				LayoutOrder = 2,
+				AutomaticSize = Enum.AutomaticSize.Y,
+				Size = UDim2.new(1, 0, 0, math.ceil(scale * ICON_WIDTH_DP)),
+				ClipsDescendants = true,
+				children = {
+					InputTextBox = mainButtonTextBox,
+					Label = if isFilled or not isLabelMinized
+						then React.createElement(
+							TextDisplay.Full,
+							{
+								TextColor3 = if isLabelMinized and isFilled
+									then borderHightlightColor3
+									else labelColor3,
+								Scale = scale,
+								TextXAlignment = Enum.TextXAlignment.Left,
+								TextYAlignment = if isLabelMinized
+									then Enum.TextYAlignment.Bottom
+									else Enum.TextYAlignment.Center,
+								TextTransparency = if isEnabled
+									then 0
+									else DISABLED_TEXT_TRANSPARENCY,
+								FontData = if isLabelMinized
+									then supportFontData
+									else labelFontData,
+								Text = label,
+							} :: TextDisplay.TextDisplayProperties
+						)
+						else nil,
+					UIListLayout = React.createElement(
+						"UIListLayout",
+						{
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							FillDirection = Enum.FillDirection.Vertical,
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							HorizontalAlignment = Enum.HorizontalAlignment.Left,
+							Padding = UDim.new(0, 0),
+							HorizontalFlex = Enum.UIFlexAlignment.Fill,
+							ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+							VerticalFlex = Enum.UIFlexAlignment.None,
+							Wraps = false,
+						} :: RobloxTypes.UIListLayoutProperties
+					),
+					-- UIFlexItem = React.createElement(
+					-- 	"UIFlexItem",
+					-- 	{
+					-- 		FlexMode = Enum.UIFlexMode.Fill,
+					-- 		ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+					-- 	} :: RobloxTypes.UIFlexItemProperties
+					-- ),
+				},
+			} :: RobloxTypes.FrameProperties
+		),
+		DropDownIconButton = if rightIconImage == DROP_DOWN_ICON
+			then React.createElement("ImageButton", {
+				LayoutOrder = 3,
+				BackgroundTransparency = 1,
+
+				AutomaticSize = Enum.AutomaticSize.XY,
+				[React.Event.Activated] = function()
+					if value then
+					end
+				end :: any,
+			}, {
+
+				UIListLayout = React.createElement(
+					"UIListLayout",
+					{
+						SortOrder = Enum.SortOrder.LayoutOrder,
+						FillDirection = Enum.FillDirection.Horizontal,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+						HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						Padding = UDim.new(0, 0),
+						HorizontalFlex = Enum.UIFlexAlignment.None,
+						ItemLineAlignment = Enum.ItemLineAlignment.Automatic,
+						VerticalFlex = Enum.UIFlexAlignment.None,
+						Wraps = false,
+					} :: RobloxTypes.UIListLayoutProperties
+				),
+				UIAspectRatioConstraint = React.createElement(
+					"UIAspectRatioConstraint",
+					{
+						AspectRatio = 1,
+						AspectType = Enum.AspectType.ScaleWithParentSize,
+						DominantAxis = Enum.DominantAxis.Height,
+					} :: RobloxTypes.UIAspectRatioConstraintProperties
+				),
+				Icon = if rightIconImage
+					then React.createElement(
+						IconDisplay,
+						{
+							Icon = rightIconImage,
+							IconColor3 = textColor3,
+							IconTransparency = if isEnabled
+								then 0
+								else DISABLED_TEXT_TRANSPARENCY,
+							Scale = scale,
+							Size = iconSize,
+						} :: IconDisplay.IconDisplayProperties
+					)
+					else nil,
+			})
+			else nil,
+		ClearIconButton = if rightIconImage == CANCEL_ICON
+			then React.createElement("ImageButton", {
+				LayoutOrder = 3,
+				BackgroundTransparency = 1,
+
+				AutomaticSize = Enum.AutomaticSize.XY,
+				[React.Event.Activated] = function()
+					if value then
+						onChange("")
+					end
+				end :: any,
+			}, {
+
+				UIListLayout = React.createElement(
+					"UIListLayout",
+					{
+						SortOrder = Enum.SortOrder.LayoutOrder,
+						FillDirection = Enum.FillDirection.Horizontal,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+						HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						Padding = UDim.new(0, 0),
+						HorizontalFlex = Enum.UIFlexAlignment.None,
+						ItemLineAlignment = Enum.ItemLineAlignment.Automatic,
+						VerticalFlex = Enum.UIFlexAlignment.None,
+						Wraps = false,
+					} :: RobloxTypes.UIListLayoutProperties
+				),
+				UIAspectRatioConstraint = React.createElement(
+					"UIAspectRatioConstraint",
+					{
+						AspectRatio = 1,
+						AspectType = Enum.AspectType.ScaleWithParentSize,
+						DominantAxis = Enum.DominantAxis.Height,
+					} :: RobloxTypes.UIAspectRatioConstraintProperties
+				),
+				Icon = if rightIconImage
+					then React.createElement(
+						IconDisplay,
+						{
+							Icon = rightIconImage,
+							IconColor3 = textColor3,
+							IconTransparency = if isEnabled
+								then 0
+								else DISABLED_TEXT_TRANSPARENCY,
+							Scale = scale,
+							Size = iconSize,
+						} :: IconDisplay.IconDisplayProperties
+					)
+					else nil,
+			})
+			else nil,
+		ErrorIcon = if rightIconImage == ERROR_ICON
+			then React.createElement(
+				IconDisplay,
+				{
+					LayoutOrder = 3,
+					Icon = rightIconImage,
+					IconColor3 = textColor3,
+					IconTransparency = if isEnabled
+						then 0
+						else DISABLED_TEXT_TRANSPARENCY,
+					Scale = scale,
+					Size = iconSize,
+				} :: IconDisplay.IconDisplayProperties
+			)
+			else nil,
+		LeftIcon = if leftIcon
+			then React.createElement(
+				IconDisplay,
+				{
+					LayoutOrder = 0,
+					Icon = leftIcon,
+					IconColor3 = textColor3,
+					IconTransparency = if isEnabled
+						then 0
+						else DISABLED_TEXT_TRANSPARENCY,
+					Scale = scale,
+					Size = iconSize,
+				} :: IconDisplay.IconDisplayProperties
+			)
+			else nil,
+		UIListLayout = React.createElement(
+			"UIListLayout",
+			{
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				FillDirection = Enum.FillDirection.Horizontal,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				Padding = UDim.new(0, math.ceil(scale * TEXT_AND_ICON_PADDING_DP)),
+				HorizontalFlex = Enum.UIFlexAlignment.Fill,
+				ItemLineAlignment = Enum.ItemLineAlignment.Center,
+				VerticalFlex = Enum.UIFlexAlignment.Fill,
+				Wraps = false,
+			} :: RobloxTypes.UIListLayoutProperties
+		),
+		UIPadding = (function(): React.ReactNode
+			local pad = UDim.new(0, math.ceil(scale * TEXT_AND_ICON_PADDING_DP))
+			local zero = UDim.new(0, 0)
+			return React.createElement(
+				"UIPadding",
+				{
+					PaddingLeft = pad,
+					PaddingRight = pad,
+					PaddingTop = zero,
+					PaddingBottom = zero,
+				} :: RobloxTypes.UIPaddingProperties
+			)
+		end)(),
+	})
+
 	local mainButton = React.createElement(
 		"TextButton",
 		{
 			LayoutOrder = 2,
-			Size = UDim2.fromOffset(0, math.ceil(scale * CONTAINER_HEIGHT_DP)),
+			Size = UDim2.fromOffset(
+				0,
+				math.ceil(scale * CONTAINER_HEIGHT_DP)
+					- if isFilled then bottomLineThickness else 0
+			),
 			BackgroundColor3 = backgroundColor3,
 			Text = "",
 			BackgroundTransparency = if not isFilled
 				then 1
 				elseif isEnabled then 0
 				else DISABLED_BACKGROUND_TRANSPARENCY,
-			AutomaticSize = Enum.AutomaticSize.XY,
 			[React.Event.Activated] = function()
 				if isEnabled then
+					if not isTextBoxFocused and isClearTextOnFocus then
+						onChange("")
+					end
 					setIsTextBoxFocused(not isTextBoxFocused)
 				end
 			end :: any,
@@ -385,7 +629,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				{
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 					Color = if isTextBoxFocused or isError
-						then hightlightColor3
+						then borderHightlightColor3
 						elseif state == Enums.ButtonStateType.Hovered then textColor3
 						else borderColor3,
 					Enabled = not isFilled,
@@ -409,133 +653,69 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					),
 				} :: RobloxTypes.UISizeConstraintProperties
 			),
-			CenterContainer = React.createElement(
-				Container,
-				{
-					LayoutOrder = 3,
-					AutomaticSize = Enum.AutomaticSize.XY,
-					Size = UDim2.fromOffset(0, math.ceil(scale * ICON_WIDTH_DP)),
-					children = {
-						InputTextBox = mainButtonTextBox,
-						Label = if isFilled or not isLabelMinized
-							then React.createElement(
-								TextDisplay.Full,
+			Internals = if not isFilled
+				then buttonInternals
+				else React.createElement(
+					Container,
+					{
+						LayoutOrder = 1,
+						AutomaticSize = Enum.AutomaticSize.Y,
+						children = {
+							OutlineInternals = buttonInternals,
+							UIFlexItem = React.createElement(
+								"UIFlexItem",
 								{
-									TextColor3 = if isLabelMinized
-										then labelColor3
-										else hightlightColor3,
-									Scale = scale,
-									TextXAlignment = Enum.TextXAlignment.Left,
-									TextTransparency = if isEnabled
-										then 0
-										else DISABLED_TEXT_TRANSPARENCY,
-									FontData = labelFontData,
-									Text = label,
-								} :: TextDisplay.TextDisplayProperties
-							)
-							else nil,
-						UIListLayout = React.createElement(
-							"UIListLayout",
-							{
-								SortOrder = Enum.SortOrder.LayoutOrder,
-								FillDirection = Enum.FillDirection.Vertical,
-								VerticalAlignment = Enum.VerticalAlignment.Center,
-								HorizontalAlignment = Enum.HorizontalAlignment.Left,
-								Padding = UDim.new(0, 0),
-								HorizontalFlex = Enum.UIFlexAlignment.Fill,
-								ItemLineAlignment = Enum.ItemLineAlignment.Automatic,
-								VerticalFlex = Enum.UIFlexAlignment.None,
-								Wraps = false,
-							} :: RobloxTypes.UIListLayoutProperties
-						),
-					},
-				} :: RobloxTypes.FrameProperties
-			),
-			RightIconIconButton = if rightIconImage
-				then React.createElement("ImageButton", {
-					LayoutOrder = 3,
-					BackgroundTransparency = 1,
-
-					AutomaticSize = Enum.AutomaticSize.XY,
-					[React.Event.Activated] = function()
-						if value and isError then
-							onSubmit("")
-						else
-							if dropDownOptions and #dropDownOptions > 0 then
-								-- TODO
-								warn("drop it like it's hot")
-							end
-						end
-					end :: any,
-				}, {
-
-					UIListLayout = React.createElement(
-						"UIListLayout",
-						{
-							SortOrder = Enum.SortOrder.LayoutOrder,
-							FillDirection = Enum.FillDirection.Horizontal,
-							VerticalAlignment = Enum.VerticalAlignment.Center,
-							HorizontalAlignment = Enum.HorizontalAlignment.Center,
-							Padding = UDim.new(0, 0),
-							HorizontalFlex = Enum.UIFlexAlignment.None,
-							ItemLineAlignment = Enum.ItemLineAlignment.Automatic,
-							VerticalFlex = Enum.UIFlexAlignment.None,
-							Wraps = false,
-						} :: RobloxTypes.UIListLayoutProperties
-					),
-					RightIcon = React.createElement(
-						IconDisplay,
-						{
-							Icon = rightIconImage,
-							IconColor3 = if isError then errorColor3 else textColor3,
-							IconTransparency = if isError then 0 else 1,
-							Scale = scale,
-							Size = iconSize,
-						} :: IconDisplay.IconDisplayProperties
-					),
-				})
-				else nil,
-			LeftIcon = if leftIcon
+									FlexMode = Enum.UIFlexMode.Fill,
+									ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+								} :: RobloxTypes.UIFlexItemProperties
+							),
+						},
+					} :: RobloxTypes.FrameProperties
+				),
+			FilledButtonListLayout = if isFilled
 				then React.createElement(
-					IconDisplay,
+					"UIListLayout",
 					{
-						LayoutOrder = 0,
-						Icon = leftIcon,
-						IconColor3 = textColor3,
-						IconTransparency = if isEnabled
-							then 0
-							else DISABLED_TEXT_TRANSPARENCY,
-						Scale = scale,
-						Size = iconSize,
-					} :: IconDisplay.IconDisplayProperties
+						SortOrder = Enum.SortOrder.LayoutOrder,
+						FillDirection = Enum.FillDirection.Vertical,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+						HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						Padding = UDim.new(0, 0),
+						HorizontalFlex = Enum.UIFlexAlignment.Fill,
+						ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+						VerticalFlex = Enum.UIFlexAlignment.None,
+						Wraps = false,
+					} :: RobloxTypes.UIListLayoutProperties
 				)
 				else nil,
-			UIListLayout = React.createElement(
-				"UIListLayout",
-				{
-					SortOrder = Enum.SortOrder.LayoutOrder,
-					FillDirection = Enum.FillDirection.Horizontal,
-					VerticalAlignment = Enum.VerticalAlignment.Center,
-					HorizontalAlignment = Enum.HorizontalAlignment.Center,
-					Padding = UDim.new(0, math.ceil(scale * TEXT_AND_ICON_PADDING_DP)),
-					HorizontalFlex = Enum.UIFlexAlignment.Fill,
-					ItemLineAlignment = Enum.ItemLineAlignment.Center,
-					VerticalFlex = Enum.UIFlexAlignment.Fill,
-					Wraps = false,
-				} :: RobloxTypes.UIListLayoutProperties
-			),
-			UIPadding = (function(): React.ReactNode
-				local pad = UDim.new(0, math.ceil(scale * TEXT_AND_ICON_PADDING_DP))
-				return React.createElement(
-					"UIPadding",
+			BottomLine = if isFilled
+				then React.createElement(
+					"Frame",
 					{
-						PaddingLeft = pad,
-						PaddingRight = pad,
-						PaddingTop = pad,
-						PaddingBottom = pad,
-					} :: RobloxTypes.UIPaddingProperties
+						BorderSizePixel = 0,
+						AutomaticSize = Enum.AutomaticSize.X,
+						-- Visible = isTextBoxFocused or isError,
+						LayoutOrder = 2,
+						BackgroundColor3 = if isError
+							then errorColor3
+							else borderHightlightColor3,
+						Size = UDim2.new(0, 0, 0, bottomLineThickness),
+					} :: RobloxTypes.FrameProperties
 				)
-			end)(),
+				else nil,
+			-- TopLine = if isFilled
+			-- 	then React.createElement(
+			-- 		"Frame",
+			-- 		{
+			-- 			BorderSizePixel = 0,
+			-- 			AutomaticSize = Enum.AutomaticSize.X,
+			-- 			BackgroundTransparency = 1,
+			-- 			-- Visible = isTextBoxFocused or isError,
+			-- 			LayoutOrder = 0,
+			-- 			Size = UDim2.new(0, 0, 0, bottomLineThickness),
+			-- 		} :: RobloxTypes.FrameProperties
+			-- 	)
+			-- 	else nil,
 		}
 	)
 
@@ -556,7 +736,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 								0,
 								math.round(scale * SUPPORTING_TEXT_PADDING_DP)
 							),
-							HorizontalFlex = Enum.UIFlexAlignment.None,
+							HorizontalFlex = Enum.UIFlexAlignment.Fill,
 							ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
 							VerticalFlex = Enum.UIFlexAlignment.None,
 							Wraps = false,

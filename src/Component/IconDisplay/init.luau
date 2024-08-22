@@ -35,7 +35,7 @@ return function(props: IconDisplayProperties): React.ReactNode
 					"UIAspectRatioConstraint",
 					{
 						AspectRatio = 1,
-						AspectType = Enum.AspectType.FitWithinMaxSize,
+						AspectType = Enum.AspectType.ScaleWithParentSize,
 						DominantAxis = Enum.DominantAxis.Height,
 					} :: RobloxTypes.UIAspectRatioConstraintProperties
 				),

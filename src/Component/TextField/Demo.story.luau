@@ -37,6 +37,8 @@ return function(target: Frame)
 				React.useState(nil :: string?)
 			local defaultOutlinedValue, setDefaultOutlinedValue =
 				React.useState(nil :: string?)
+			local dropDownOutlinedValue, setDropDownOutlinedValue =
+				React.useState(nil :: string?)
 
 			return React.createElement(
 				"Frame",
@@ -76,8 +78,8 @@ return function(target: Frame)
 							BackgroundColor3 = style:GetColor(
 								Enums.ColorRoleType.SurfaceContainer
 							),
-							HightlightColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
+							BorderHightlightColor3 = style:GetColor(
+								Enums.ColorRoleType.Primary
 							),
 							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
 							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
@@ -91,7 +93,7 @@ return function(target: Frame)
 							Icon = MaterialIcons.vpn_key,
 							Elevation = 0,
 							SchemeType = Enums.SchemeType.Light,
-							BodyFontData = style:GetFontData(Enums.FontType.BodyMedium),
+							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
 							SupportFontData = style:GetFontData(
 								Enums.FontType.LabelSmall
 							),
@@ -104,7 +106,6 @@ return function(target: Frame)
 							Value = defaultOutlinedValue,
 							OnSubmit = function(txt: string?)
 								print(`submit: {txt}`)
-								
 							end,
 							OnChange = function(txt: string?)
 								print(`change: {txt}`)
@@ -115,11 +116,12 @@ return function(target: Frame)
 							IsFilled = false,
 							LayoutOrder = 2,
 							Label = "Label",
+							IsClearButtonEnabled = false,
 							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainer
+								Enums.ColorRoleType.SurfaceContainerHighest
 							),
-							HightlightColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
+							BorderHightlightColor3 = style:GetColor(
+								Enums.ColorRoleType.Primary
 							),
 							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
 							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
@@ -130,10 +132,60 @@ return function(target: Frame)
 							),
 							CharacterLimit = 20,
 							SupportingText = "Supporting Text",
-							Icon = MaterialIcons.vpn_key,
+							-- Icon = MaterialIcons.vpn_key,
 							Elevation = 0,
 							SchemeType = Enums.SchemeType.Light,
-							BodyFontData = style:GetFontData(Enums.FontType.BodyMedium),
+							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
+							SupportFontData = style:GetFontData(
+								Enums.FontType.LabelSmall
+							),
+							Scale = 1,
+						} :: Interface.TextFieldProperties
+					),
+					DropdownOutlined = React.createElement(
+						Interface.Full,
+						{
+							Value = dropDownOutlinedValue,
+							OnSubmit = function(txt: string?)
+								print(`submit: {txt}`)
+							end,
+							OnChange = function(txt: string?)
+								print(`change: {txt}`)
+								setDropDownOutlinedValue(txt)
+							end,
+							IsEnabled = true,
+							IsError = false,
+							IsFilled = false,
+							LayoutOrder = 3,
+							Label = "Label",
+							Size = UDim2.fromScale(0.8, 0),
+							IsClearButtonEnabled = false,
+							BackgroundColor3 = style:GetColor(
+								Enums.ColorRoleType.SurfaceContainerHighest
+							),
+							BorderHightlightColor3 = style:GetColor(
+								Enums.ColorRoleType.Primary
+							),
+							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
+							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
+							SupportingTextColor3 = style:GetColor(
+								Enums.ColorRoleType.OnSurface
+							),
+							CharacterLimit = 20,
+							SupportingText = "Supporting Text",
+							DropDownOptions = {
+								"Option 1",
+								"Option 2",
+								"Option 3",
+								"Option 4",
+								"Option 5",
+							},
+							-- Icon = MaterialIcons.vpn_key,
+							Elevation = 0,
+							SchemeType = Enums.SchemeType.Light,
+							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
 							SupportFontData = style:GetFontData(
 								Enums.FontType.LabelSmall
 							),
