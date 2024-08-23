@@ -20,6 +20,7 @@ return {
 	LabelColor3 = Color3.new(),
 	SupportingTextColor3 = Color3.new(),
 	Elevation = 0,
+	SoundVolume = 0.5,
 	SchemeType = Enums.SchemeType.Light,
 	BodyFontData = Types.FontData.new(Font.fromEnum(Enum.Font.BuilderSans), 14, 1, nil),
 	SupportFontData = Types.FontData.new(

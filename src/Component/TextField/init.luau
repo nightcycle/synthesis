@@ -16,7 +16,7 @@ local TextDisplay = require("@comp/TextDisplay")
 local Typography = require("@proj/Typography")
 local IconDisplay = require("@comp/IconDisplay")
 local Theme = require("@proj/Theme")
-local ButtonContainer = require("@comp/ButtonContainer")
+local Menu = require("@comp/Menu")
 -- Types
 type Style = Style.Style
 type ImageData = Types.ImageData
@@ -50,6 +50,7 @@ export type TextFieldProperties = BaseTextFieldProperties & {
 	BodyFontData: FontData?,
 	SupportFontData: FontData?,
 	Scale: number?,
+	SoundVolume: number?,
 }
 export type StyleTextFieldProperties = BaseTextFieldProperties & {
 	Style: Style,
@@ -97,6 +98,10 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local supportingText: string? = props.SupportingText
 	local leftIcon: ImageData? = props.Icon
 	local dropDownOptions: { string }? = props.DropDownOptions
+	local soundVolume: number = props.SoundVolume or Defaults.SoundVolume
+	if dropDownOptions and #dropDownOptions == 0 then
+		dropDownOptions = nil
+	end
 
 	local rawBorderHightlightColor3: Color3 = props.BorderHightlightColor3
 		or Defaults.BorderHightlightColor3
@@ -122,11 +127,15 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local isClearButtonEnabled: boolean = if props.IsClearButtonEnabled ~= nil
 		then props.IsClearButtonEnabled
 		else Defaults.IsClearButtonEnabled
+
 	-- set up state
 	local isHovered, setIsHovered = React.useState(false)
 	local isPressed, setIsPressed = React.useState(false)
 	local isFocused, setIsFocused = React.useState(false)
 	local isTextBoxFocused, setIsTextBoxFocused = React.useState(false)
+	local isDropDownOpen, setIsDropDownOpen = React.useState(false)
+	local absoluteSize, setAbsoluteSize = React.useState(Vector2.new(0, 0))
+	local absolutePosition, setAbsolutePosition = React.useState(Vector2.new(0, 0))
 
 	local textBoxRef = React.useRef(nil :: TextBox?)
 	if isTextBoxFocused then
@@ -348,6 +357,43 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		else nil
 
 	local buttonInternals = React.createElement(React.Fragment, {}, {
+		DropDown = if dropDownOptions and isDropDownOpen
+			then React.createElement(
+				Menu,
+				{
+					TargetAbsolutePosition = absolutePosition
+						+ Vector2.new(0, absoluteSize.Y),
+					TargetAbsoluteWidth = absoluteSize.X,
+					SurfaceColor3 = backgroundColor3,
+					OnSurfaceColor3 = textColor3,
+					SelectionSurfaceColor3 = borderHightlightColor3,
+					SelectionOnSurfaceColor3 = textColor3,
+					FontData = bodyFontData,
+					Elevation = elevation + 1,
+					SchemeType = schemeType,
+					SoundVolume = soundVolume,
+					OnCursorExit = function()
+						setIsDropDownOpen(false)
+					end,
+					Rows = (function(): { [number]: Types.ButtonData }
+						local rows: { [number]: Types.ButtonData } = {}
+						for i, option in ipairs(dropDownOptions) do
+							if value ~= option then
+								table.insert(
+									rows,
+									Types.ButtonData.new(function()
+										onChange(option)
+										onSubmit(option)
+										setIsDropDownOpen(false)
+									end, nil, option)
+								)
+							end
+						end
+						return rows
+					end)(),
+				} :: Menu.MenuProperties
+			)
+			else nil,
 		CenterContainer = React.createElement(
 			Container,
 			{
@@ -410,8 +456,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 
 				AutomaticSize = Enum.AutomaticSize.XY,
 				[React.Event.Activated] = function()
-					if value then
-					end
+					setIsDropDownOpen(true)
 				end :: any,
 			}, {
 
@@ -622,6 +667,16 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					end
 				end
 			end,
+			[React.Change.AbsoluteSize] = if dropDownOptions
+				then function(inst: TextButton)
+					setAbsoluteSize(inst.AbsoluteSize)
+				end :: any
+				else nil,
+			[React.Change.AbsolutePosition] = if dropDownOptions
+				then function(inst: TextButton)
+					setAbsolutePosition(inst.AbsolutePosition)
+				end :: any
+				else nil,
 		} :: RobloxTypes.TextButtonProperties,
 		{
 			UIStroke = React.createElement(
