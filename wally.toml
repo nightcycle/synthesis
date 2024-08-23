@@ -9,8 +9,8 @@ exclude = ["Packages", ".vscode", "media", "*.mp4", "*.gif", "*.png"]
 
 [dependencies]
 Maid = "nightcycle/maid@2.0.0"
-MaterialIcons = "nightcycle/material-icons-default-dp18-1x@1.0.3"
-OutlinedMaterialIcons = "nightcycle/material-icons-outlined-dp18-1x@1.0.3"
+MaterialIcons = "nightcycle/material-icons-default-dp24-1x@1.0.3"
+OutlinedMaterialIcons = "nightcycle/material-icons-outlined-dp24-1x@1.0.3"
 TableUtil = "nightcycle/table-util@2.0.0"
 HashUtil = "boatbomber/hashlib@1.0.0"
 CurveUtil = "nightcycle/curve-util@1.0.0"

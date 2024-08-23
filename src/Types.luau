@@ -41,17 +41,15 @@ export type SoundData = {
 export type ButtonData = {
 	Icon: ImageData?,
 	Text: string?,
-	Enabled: boolean,
+	IsEnabled: boolean,
 	OnClick: () -> (),
 }
 
 export type OptionData = {
 	Text: string,
 	Icon: ImageData?,
-	Disabled: boolean,
-	IsInitiallySelected: boolean,
-	SelectedText: string,
-	SelectedIcon: ImageData?,
+	IsEnabled: boolean,
+	Value: boolean,
 	OnSelect: (isSelected: boolean) -> (),
 }
 
@@ -101,27 +99,23 @@ function Types.ButtonData.new(
 		Icon = icon,
 		Text = text,
 		OnClick = onClick,
-		Enabled = if enabled == nil then true else enabled,
+		IsEnabled = if enabled == nil then true else enabled,
 	})
 end
 
 Types.OptionData = {}
 function Types.OptionData.new(
 	onSelect: (isSelected: boolean) -> (),
-	disabled: boolean,
-	isInitiallySelected: boolean,
+	value: boolean,
 	text: string?,
 	icon: ImageData?,
-	selectedText: string?,
-	selectedIcon: ImageData?
+	isEnabled: boolean?
 ): OptionData
 	return table.freeze({
 		Text = text or "",
 		Icon = icon,
-		Disabled = disabled,
-		SelectedText = selectedText or text or "",
-		SelectedIcon = selectedIcon or icon,
-		IsInitiallySelected = isInitiallySelected,
+		IsEnabled = if isEnabled ~= nil then isEnabled else true,
+		Value = value,
 		OnSelect = onSelect,
 	})
 end
