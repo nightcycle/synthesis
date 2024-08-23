@@ -5,6 +5,29 @@
 local Types = require("./Types")
 local Style = require("./Style")
 local Enums = require("./Enums")
+
+-- Components
+local Button = require("@comp/Button")
+local ButtonContainer = require("@comp/ButtonContainer")
+local Checkbox = require("@comp/Checkbox")
+local Container = require("@comp/Container")
+local Dialog = require("@comp/Dialog")
+local IconDisplay = require("@comp/IconDisplay")
+local Menu = require("@comp/Menu")
+local Padding = require("@comp/Padding")
+local PopUp = require("@comp/PopUp")
+local PopUpContainer = require("@comp/PopUpContainer")
+local ProgressIndicatorCircular = require("@comp/ProgressIndicator/Circular")
+local ScrollingContainer = require("@comp/ScrollingContainer")
+local Search = require("@comp/Search")
+local ShadowFrame = require("@comp/ShadowFrame")
+local Slider = require("@comp/Slider")
+local Snackbar = require("@comp/Snackbar")
+local Switch = require("@comp/Switch")
+local RadioButton = require("@comp/RadioButton")
+local TextDisplay = require("@comp/TextDisplay")
+local TextField = require("@comp/TextField")
+
 -- Types
 export type ImageData = Types.ImageData
 export type OptionData = Types.OptionData
@@ -23,6 +46,38 @@ export type ColorRoleType = Enums.ColorRoleType
 export type PaletteType = Enums.PaletteType
 export type TransitionType = Enums.TransitionType
 
+export type ButtonProperties = Button.ButtonProperties
+export type StyleButtonProperties = Button.StyleButtonProperties
+export type ButtonContainerContentProperties =
+	ButtonContainer.ButtonContainerContentProperties
+export type ButtonContainerProperties = ButtonContainer.ButtonContainerProperties
+export type CheckboxProperties = Checkbox.CheckboxProperties
+export type StyleCheckboxProperties = Checkbox.StyleCheckboxProperties
+export type DialogProperties = Dialog.DialogProperties
+export type StyleDialogProperties = Dialog.StyleDialogProperties
+export type IconDisplayProperties = IconDisplay.IconDisplayProperties
+export type MenuProperties = Menu.MenuProperties
+export type StylePaddingProperties = Padding.StylePaddingProperties
+export type StylePaddingSimpleProperties = Padding.StylePaddingSimpleProperties
+export type PopUpProperties = PopUp.PopUpProperties
+export type PopUpContainerProperties = PopUpContainer.PopUpContainerProperties
+export type ProgressIndicatorCircularProperties =
+	ProgressIndicatorCircular.ProgressIndicatorCircularProperties
+export type SearchProperties = Search.SearchProperties
+export type StyleSearchProperties = Search.StyleSearchProperties
+export type ShadowFrameProperties = ShadowFrame.ShadowFrameProperties
+export type SliderProperties = Slider.SliderProperties
+export type StyleSliderProperties = Slider.StyleSliderProperties
+export type SnackbarProperties = Snackbar.SnackbarProperties
+export type StyleSnackbarProperties = Snackbar.StyleSnackbarProperties
+export type SwitchProperties = Switch.SwitchProperties
+export type StyleSwitchProperties = Switch.StyleSwitchProperties
+export type RadioButtonProperties = RadioButton.RadioButtonProperties
+export type StyleRadioButtonProperties = RadioButton.StyleRadioButtonProperties
+export type TextDisplayProperties = TextDisplay.TextDisplayProperties
+export type StyleTextDisplayProperties = TextDisplay.StyleTextDisplayProperties
+export type TextFieldProperties = TextField.TextFieldProperties
+export type StyleTextFieldProperties = TextField.StyleTextFieldProperties
 -- Constants
 -- Variables
 -- References
@@ -32,77 +87,35 @@ local Synthetic = {}
 
 Synthetic.Enums = Enums
 Synthetic.Sounds = require("Sounds")
-Synthetic.Util = {
-	Container = require("Util/Container"),
-	Padding = require("Util/Padding"),
-	TextLabel = require("Util/TextLabel"),
-	ImageLabel = require("Util/ImageLabel"),
-	PopUp = require("Util/PopUp"),
-	ScrollingContainer = require("Util/ScrollingContainer"),
-}
+
 Synthetic.Transition = require("Transition")
 Synthetic.Types = Types
 Synthetic.Style = Style
 Synthetic.Theme = require("Theme")
 Synthetic.Typography = require("Typography")
 Synthetic.Component = {
-	Dialog = require("Component/Dialog"),
-	Menu = {
-		Row = {
-			Tabs = nil,
-			Segmented = require("Component/Menu/Row/Segmented"),
-			Bar = {
-				Bottom = require("Menu/Row/Bar/Bottom"),
-				Top = {
-					Center = require("Component/Menu/Row/Bar/Top/Center"),
-					Large = require("Component/Menu/Row/Bar/Top/Large"),
-					Medium = require("Component/Menu/Row/Bar/Top/Medium"),
-					Small = require("Component/Menu/Row/Bar/Top/Small"),
-				},
-			},
-		},
-		Column = {
-			Drawer = nil,
-			Rail = nil,
-			PopUp = nil,
-		},
-	},
+	Button = Button,
+	ButtonContainer = ButtonContainer,
+	Checkbox = Checkbox,
+	Container = Container,
+	Dialog = Dialog,
+	IconDisplay = IconDisplay,
+	Menu = Menu,
+	Padding = Padding,
+	PopUp = PopUp,
+	PopUpContainer = PopUpContainer,
 	ProgressIndicator = {
-		Circular = require("Component/ProgressIndicator/Circular"),
-		Linear = nil,
+		Circular = ProgressIndicatorCircular,
 	},
-	Button = {
-		Badge = require("Component/Button/Badge"),
-		ElevatedButton = require("Component/Button/ElevatedButton"),
-		ExtendedFAB = require("Component/Button/ExtendedFAB"),
-		FAB = require("Component/Button/FAB"),
-		FilledButton = require("Component/Button/FilledButton"),
-		FilledIconButton = require("Component/Button/FilledIconButton"),
-		IconButton = require("Component/Button/IconButton"),
-		Outlined = require("Component/Button/Outlined"),
-		OutlinedIcon = require("Component/Button/OutlinedIcon"),
-		Text = require("Component/Button/Text"),
-		Chip = {
-			Filter = require("Component/Button/Chip/Filter"),
-			Assist = require("Component/Button/Chip/Assist"),
-		},
-	},
-	Snackbar = {
-		Large = require("Component/Snackbar/Large"),
-		Small = require("Component/Snackbar/Small"),
-	},
-	Search = {
-		Filled = require("Component/Search/Filled"),
-		Text = require("Component/Search/Text"),
-	},
-	Checkbox = require("Component/Checkbox"),
-	RadioButton = require("Component/RadioButton"),
-	Switch = require("Component/Switch"),
-	Slider = require("Component/Slider"),
-	TextField = {
-		Filled = require("Component/TextField/Filled"),
-		Outlined = require("Component/TextField/Outlined"),
-	},
+	ScrollingContainer = ScrollingContainer,
+	Search = Search,
+	ShadowFrame = ShadowFrame,
+	Slider = Slider,
+	Snackbar = Snackbar,
+	Switch = Switch,
+	RadioButton = RadioButton,
+	TextDisplay = TextDisplay,
+	TextField = TextField,
 }
 
 return Synthetic

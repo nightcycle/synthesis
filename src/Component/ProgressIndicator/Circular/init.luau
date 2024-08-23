@@ -17,21 +17,21 @@ local PropUtil = require("@proj/PropUtil")
 -- Types
 type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
-type BaseCircularProgressIndicatorProperties = RobloxTypes.GuiObjectProperties & {
+type BaseProgressIndicatorCircularProperties = RobloxTypes.GuiObjectProperties & {
 	Progress: number?,
 	IsEnabled: boolean?,
 	Elevation: number?,
 }
 type Style = Style.Style
 type Spring = Spring.Spring
-export type CircularProgressIndicatorProperties = BaseCircularProgressIndicatorProperties & {
+export type ProgressIndicatorCircularProperties = BaseProgressIndicatorCircularProperties & {
 	FillColor3: Color3?,
 	EmptyColor3: Color3?,
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
 }
-export type StyleCircularProgressIndicatorProperties =
-	BaseCircularProgressIndicatorProperties
+export type StyleProgressIndicatorCircularProperties =
+	BaseProgressIndicatorCircularProperties
 	& {
 		Style: Style,
 	}
@@ -150,7 +150,7 @@ end
 -- Class
 local Library = {}
 
-Library.Full = function(props: CircularProgressIndicatorProperties): React.ReactNode
+Library.Full = function(props: ProgressIndicatorCircularProperties): React.ReactNode
 	-- unpack props
 	local progress: number? = props.Progress
 	local isEnabled: boolean = if props.IsEnabled ~= nil
@@ -254,10 +254,10 @@ Library.Full = function(props: CircularProgressIndicatorProperties): React.React
 end
 
 function Library.OnSurfacePrimary(
-	props: StyleCircularProgressIndicatorProperties
+	props: StyleProgressIndicatorCircularProperties
 ): React.ReactNode
 	local style = props.Style
-	local mergeProps = table.clone(props) :: CircularProgressIndicatorProperties
+	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
 	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
 	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
 	mergeProps.SchemeType = style.SchemeType
@@ -267,10 +267,10 @@ function Library.OnSurfacePrimary(
 end
 
 function Library.OnSurfaceSecondary(
-	props: StyleCircularProgressIndicatorProperties
+	props: StyleProgressIndicatorCircularProperties
 ): React.ReactNode
 	local style = props.Style
-	local mergeProps = table.clone(props) :: CircularProgressIndicatorProperties
+	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
 	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
 	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
 	mergeProps.SchemeType = style.SchemeType
@@ -280,10 +280,10 @@ function Library.OnSurfaceSecondary(
 end
 
 function Library.OnSurfaceTertiary(
-	props: StyleCircularProgressIndicatorProperties
+	props: StyleProgressIndicatorCircularProperties
 ): React.ReactNode
 	local style = props.Style
-	local mergeProps = table.clone(props) :: CircularProgressIndicatorProperties
+	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
 	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
 	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
 	mergeProps.SchemeType = style.SchemeType

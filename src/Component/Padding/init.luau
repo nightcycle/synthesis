@@ -9,12 +9,12 @@ local Style = require("@proj/Style")
 -- Types
 type ImageData = Types.ImageData
 type Style = Style.Style
-export type StylePaddingProps = {
+export type StylePaddingProperties = {
 	LeftRightDp: number,
 	TopBottomDp: number,
 	Style: Style,
 }
-export type StyleSimpleProps = {
+export type StylePaddingSimpleProperties = {
 	PaddingDp: number,
 	Style: Style,
 }
@@ -25,7 +25,7 @@ export type StyleSimpleProps = {
 -- Class
 local Util = {}
 
-function Util.Style(props: StylePaddingProps): React.ReactNode
+function Util.Style(props: StylePaddingProperties): React.ReactNode
 	local leftRight = UDim.new(0, math.round(props.LeftRightDp * props.Style.Scale))
 	local topBottom = UDim.new(0, math.round(props.TopBottomDp * props.Style.Scale))
 
@@ -40,7 +40,7 @@ function Util.Style(props: StylePaddingProps): React.ReactNode
 	)
 end
 
-function Util.StyleSimple(props: StyleSimpleProps): React.ReactNode
+function Util.StyleSimple(props: StylePaddingSimpleProperties): React.ReactNode
 	local padding = UDim.new(0, math.round(props.PaddingDp * props.Style.Scale))
 
 	return React.createElement(
