@@ -366,10 +366,10 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					TargetAbsoluteWidth = absoluteSize.X,
 					SurfaceColor3 = backgroundColor3,
 					OnSurfaceColor3 = textColor3,
-					SelectionSurfaceColor3 = borderHightlightColor3,
-					SelectionOnSurfaceColor3 = textColor3,
+					SelectionSurfaceColor3 = backgroundColor3,
+					SelectionOnSurfaceColor3 = borderHightlightColor3,
 					FontData = bodyFontData,
-					Elevation = elevation + 1,
+					Elevation = elevation,
 					SchemeType = schemeType,
 					SoundVolume = soundVolume,
 					OnCursorExit = function()

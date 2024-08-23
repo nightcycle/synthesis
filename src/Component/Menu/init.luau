@@ -361,7 +361,7 @@ return function(props: MenuProperties): React.ReactNode
 			SurfaceColor3 = rawSurfaceColor3,
 			Elevation = elevation,
 			SchemeType = schemeType,
-			DropShadowColor3 = dropShadowColor3,
+			DropShadowColor3 = rawDropShadowColor3,
 			DropShadowTransparency = dropShadowTransparency,
 			Scale = scale,
 			OnCursorExit = onCursorExit,

@@ -118,7 +118,7 @@ return function(target: Frame)
 							Label = "Label",
 							IsClearButtonEnabled = false,
 							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
+								Enums.ColorRoleType.SurfaceContainer
 							),
 							BorderHightlightColor3 = style:GetColor(
 								Enums.ColorRoleType.Primary
@@ -161,7 +161,7 @@ return function(target: Frame)
 							Size = UDim2.fromScale(0.8, 0),
 							IsClearButtonEnabled = false,
 							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
+								Enums.ColorRoleType.SurfaceContainer
 							),
 							BorderHightlightColor3 = style:GetColor(
 								Enums.ColorRoleType.Primary
