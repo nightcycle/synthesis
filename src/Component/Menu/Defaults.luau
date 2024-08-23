@@ -19,4 +19,5 @@ return {
 	DisabledSurfaceColor3 = Color3.new(0.7, 0.7, 0.7),
 	DisabledOnSurfaceColor3 = Color3.new(0.2, 0.2, 0.2),
 	DropShadowTransparency = 0.1,
+	SoundVolume = 1,
 }
