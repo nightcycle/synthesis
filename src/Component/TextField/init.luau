@@ -1,6 +1,5 @@
 --!strict
 -- Services
-local UserInputService = game:GetService("UserInputService")
 -- Packages
 local React = require("@wally/React")
 local MaterialIcons = require("@wally/MaterialIcons")

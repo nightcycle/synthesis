@@ -330,7 +330,9 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local state =
 		Types._RenderData.getButtonState(isHovered, isPressed, isFocused, isEnabled)
 
-	local defHandleAlphaWidth = math.ceil(HANDLE_WIDTH_DP * scale) / absoluteSize.X
+	local defHandleAlphaWidth = math.ceil(
+		(if isEnabled then HANDLE_WIDTH_DP else DISABLED_HANDLE_WIDTH_DP) * scale
+	) / absoluteSize.X
 	local pressHandleAlphaWidth = math.ceil(PRESSED_HANDLE_WIDTH_DP * scale)
 		/ absoluteSize.X
 

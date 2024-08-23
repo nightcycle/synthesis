@@ -72,7 +72,7 @@ return function(target: Frame)
 						{
 							Style = style,
 							PaddingDp = 6,
-						} :: UIPadding.StyleSimpleProps
+						} :: UIPadding.StylePaddingSimpleProperties
 					),
 				},
 			} :: ButtonContainer.ButtonContainerProperties

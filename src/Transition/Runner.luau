@@ -3,8 +3,6 @@
 -- Services
 local RunService = game:GetService("RunService")
 -- Packages
-local React = require("@wally/React")
-
 -- Modules
 local Enums = require("@proj/Enums")
 local Duration = require("./Duration")

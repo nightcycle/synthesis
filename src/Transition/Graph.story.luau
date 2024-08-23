@@ -129,10 +129,12 @@ return function(frame: Frame)
 				local prevY = solver(prevX)
 
 				local function drawSegment(offset: Vector2)
-					local success, msg = pcall(function()
+					local _success, _msg = pcall(function()
 						image:DrawLine(
-							Vector2.new(prevX, math.clamp(1 - prevY, 0, 1)) * image.Size + offset,
-							Vector2.new(clampX, math.clamp(1 - y, 0, 1)) * image.Size + offset,
+							Vector2.new(prevX, math.clamp(1 - prevY, 0, 1)) * image.Size
+								+ offset,
+							Vector2.new(clampX, math.clamp(1 - y, 0, 1)) * image.Size
+								+ offset,
 							if index % 2 == 0
 								then style:GetColor(Enums.ColorRoleType.OnPrimary)
 								else style:GetColor(Enums.ColorRoleType.OnTertiary),
@@ -147,7 +149,8 @@ return function(frame: Frame)
 				pcall(function()
 					image:DrawRectangle(
 						Vector2.new(prevX, 0) * label.AbsoluteSize,
-						Vector2.new((clampX - prevX), 1) * label.AbsoluteSize + Vector2.new(1, 0),
+						Vector2.new((clampX - prevX), 1) * label.AbsoluteSize
+							+ Vector2.new(1, 0),
 						-- Color3.fromHSV(
 						-- 	if index % 2 == 0 then 0.25 else 0.75,
 						-- 	1,
@@ -176,36 +179,64 @@ return function(frame: Frame)
 				return CurveUtil.ease(x, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 			end)
 			graphTransition("cubic-inout", function(x: number): number
-				return CurveUtil.ease(x, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
+				return CurveUtil.ease(
+					x,
+					Enum.EasingStyle.Cubic,
+					Enum.EasingDirection.InOut
+				)
 			end)
 		end
 
 		do
 			graphTransition("exp-in", function(x: number): number
-				return CurveUtil.ease(x, Enum.EasingStyle.Exponential, Enum.EasingDirection.In)
+				return CurveUtil.ease(
+					x,
+					Enum.EasingStyle.Exponential,
+					Enum.EasingDirection.In
+				)
 			end)
 			graphTransition("exp-out", function(x: number): number
-				return CurveUtil.ease(x, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+				return CurveUtil.ease(
+					x,
+					Enum.EasingStyle.Exponential,
+					Enum.EasingDirection.Out
+				)
 			end)
 			graphTransition("exp-inout", function(x: number): number
-				return CurveUtil.ease(x, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut)
+				return CurveUtil.ease(
+					x,
+					Enum.EasingStyle.Exponential,
+					Enum.EasingDirection.InOut
+				)
 			end)
 		end
 
 		do
 			graphTransition("emphasized", Module.Easing[Enums.TransitionType.Emphasized])
 
-			graphTransition("emphasized-decel", Module.Easing[Enums.TransitionType.EmphasizedDecelerate])
+			graphTransition(
+				"emphasized-decel",
+				Module.Easing[Enums.TransitionType.EmphasizedDecelerate]
+			)
 
-			graphTransition("emphasized-accel", Module.Easing[Enums.TransitionType.EmphasizedAccelerate])
+			graphTransition(
+				"emphasized-accel",
+				Module.Easing[Enums.TransitionType.EmphasizedAccelerate]
+			)
 		end
 
 		do
 			graphTransition("standard", Module.Easing[Enums.TransitionType.Standard])
 
-			graphTransition("standard-decel", Module.Easing[Enums.TransitionType.StandardDecelerate])
+			graphTransition(
+				"standard-decel",
+				Module.Easing[Enums.TransitionType.StandardDecelerate]
+			)
 
-			graphTransition("standard-accel", Module.Easing[Enums.TransitionType.StandardAccelerate])
+			graphTransition(
+				"standard-accel",
+				Module.Easing[Enums.TransitionType.StandardAccelerate]
+			)
 		end
 	end)
 	return function()

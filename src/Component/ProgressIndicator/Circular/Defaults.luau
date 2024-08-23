@@ -2,7 +2,6 @@
 
 -- Modules
 local Enums = require("@proj/Enums")
-local Types = require("@proj/Types")
 
 -- Types
 return {

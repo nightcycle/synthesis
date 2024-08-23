@@ -4,10 +4,8 @@
 -- @Packages
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
-local MaterialIcons = require("@wally/MaterialIcons")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
-local Types = require("@proj/Types")
 local Enums = require("@proj/Enums")
 local Style = require("@proj/Style")
 -- Types

@@ -4,7 +4,6 @@
 -- @Packages
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
-local MaterialIcons = require("@wally/MaterialIcons")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local Enums = require("@proj/Enums")
@@ -34,7 +33,7 @@ return function(target: Frame)
 				Progress = progress,
 				IsEnabled = true,
 				Elevation = 0,
-			} :: Circular.CircularProgressIndicatorProperties
+			} :: Circular.ProgressIndicatorCircularProperties
 		)
 	end
 

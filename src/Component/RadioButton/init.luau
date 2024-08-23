@@ -122,8 +122,6 @@ function Component:render(): React.ReactNode
 		then self.props.IsEnabled
 		else Defaults.IsEnabled
 
-	local pressAlphaRunner = getAlphaRunner(self)
-
 	local state: Enums.ButtonStateType
 	if isEnabled then
 		if isPressed then

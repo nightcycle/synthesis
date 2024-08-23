@@ -93,8 +93,6 @@ return function(props: MenuProperties): React.ReactNode
 	local surfaceColor3 = Theme.getElevatedColor(rawSurfaceColor3, elevation, schemeType)
 	local onSurfaceColor3 =
 		Theme.getElevatedColor(rawOnSurfaceColor3, elevation, schemeType)
-	local dropShadowColor3 =
-		Theme.getElevatedColor(rawDropShadowColor3, elevation, schemeType)
 	local selectionSurfaceColor3 =
 		Theme.getElevatedColor(rawSelectionSurfaceColor3, elevation, schemeType)
 	local selectionOnSurfaceColor3 =
