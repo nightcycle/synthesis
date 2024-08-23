@@ -36,6 +36,7 @@ type BaseTextFieldProperties = RobloxTypes.FrameProperties & {
 	SupportingText: string?,
 	ClearTextOnFocus: boolean?,
 	Icon: ImageData?,
+	Elevation: number?,
 }
 export type TextFieldProperties = BaseTextFieldProperties & {
 	BorderHightlightColor3: Color3?,
@@ -45,10 +46,11 @@ export type TextFieldProperties = BaseTextFieldProperties & {
 	TextColor3: Color3?,
 	LabelColor3: Color3?,
 	SupportingTextColor3: Color3?,
-	Elevation: number?,
 	SchemeType: Enums.SchemeType?,
 	BodyFontData: FontData?,
 	SupportFontData: FontData?,
+	DropDownShadowColor3: Color3?,
+	DropDownShadowTransparency: number?,
 	Scale: number?,
 	SoundVolume: number?,
 }
@@ -113,6 +115,8 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	local rawLabelColor3: Color3 = props.LabelColor3 or Defaults.LabelColor3
 	local rawSupportTextColor3: Color3 = props.SupportingTextColor3
 		or Defaults.SupportingTextColor3
+	local rawDropDownShadowColor3: Color3? = props.DropDownShadowColor3
+	local dropShadowTransparency: number? = props.DropDownShadowTransparency
 	local elevation: number = props.Elevation or Defaults.Elevation
 	local schemeType: Enums.SchemeType = props.SchemeType or Defaults.SchemeType
 	local bodyFontData: FontData = props.BodyFontData or Defaults.BodyFontData
@@ -372,6 +376,8 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					Elevation = elevation,
 					SchemeType = schemeType,
 					SoundVolume = soundVolume,
+					DropDownShadowColor3 = rawDropDownShadowColor3,
+					DropDownShadowTransparency = dropShadowTransparency,
 					OnCursorExit = function()
 						setIsDropDownOpen(false)
 					end,
@@ -861,6 +867,44 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			props
 		)
 	)
+end
+
+function Library._OnSurfaceHighlightColor(
+	props: StyleTextFieldProperties,
+	colorRole: Enums.ColorRoleType
+): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: TextFieldProperties;
+	(newProps :: any).Style = nil
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+	newProps.BorderHightlightColor3 = style:GetColor(colorRole)
+	newProps.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainer)
+	newProps.ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error)
+	newProps.BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.SupportingTextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.BodyFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.SupportFontData = style:GetFontData(Enums.FontType.LabelSmall)
+	newProps.DropDownShadowColor3 = style:GetColor(Enums.ColorRoleType.Shadow)
+	newProps.DropDownShadowTransparency = nil
+	newProps.SoundVolume = style.Volume
+
+	return React.createElement(Library.Full, newProps)
+end
+
+function Library.OnSurfacePrimary(props: StyleTextFieldProperties): React.ReactNode
+	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Primary)
+end
+
+function Library.OnSurfaceSecondary(props: StyleTextFieldProperties): React.ReactNode
+	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Secondary)
+end
+
+function Library.OnSurfaceTertiary(props: StyleTextFieldProperties): React.ReactNode
+	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Tertiary)
 end
 
 return Library
