@@ -2,7 +2,7 @@
 	"name": "synthetic",
 	"tree": {
 		"$className": "Folder",
-		"Wally2": {
+		"Wally": {
 			"$path": "Packages",
 			"Main": {
 				"$path": "src"
