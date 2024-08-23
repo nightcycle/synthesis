@@ -200,16 +200,15 @@ Library.Full = function(props: CircularProgressIndicatorProperties): React.React
 				startSpring:Step(deltaTime)
 				widthSpring:Step(deltaTime)
 
-				setStartSpring(startSpring)
-				setWidthSpring(widthSpring)
-
 				local newProgressStart = startSpring:Get() % 360
 				if newProgressStart ~= progressStart then
 					setProgressStart(newProgressStart)
+					setStartSpring(startSpring)
 				end
 				local newProgressWidth = widthSpring:Get() % 360
 				if newProgressWidth ~= progressWidth then
 					setProgressWidth(newProgressWidth)
+					setWidthSpring(widthSpring)
 				end
 			end)
 
