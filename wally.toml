@@ -1,6 +1,6 @@
 [package]
-name = "nightcycle/synthetic"
-description = "Material UI inspired elements made with Cold-Fusion"
+name = "nightcycle/synthetic-react"
+description = "Material UI inspired elements made in React"
 version = "10.0.0"
 authors = ["CJ Oyer <coyer@nightcycle.us>"]
 realm = "shared"

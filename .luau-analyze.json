@@ -1,0 +1,18 @@
+{
+	"luau-lsp.require.mode": "relativeToFile",
+	"luau-lsp.require.directoryAliases": {
+		"@proj": "src",
+		"@wally": "Packages",
+		"@comp": "src/Component"
+	},
+	"luau-lsp.diagnostics.strictDatamodelTypes": true,
+	"luau-lsp.types.robloxSecurityLevel": "LocalUserSecurity",
+	"luau-lsp.fflags.override": {
+		"LuauTypeInferIterationLimit": "0",
+		"LuauCheckRecursionLimit": "0",
+		"LuauTypeInferRecursionLimit": "0",
+		"LuauTarjanChildLimit": "0",
+		"LuauTypeInferTypePackLoopLimit": "0",
+		"LuauVisitRecursionLimit": "0"
+	}
+ }

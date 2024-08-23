@@ -1,11 +1,9 @@
 --!strict
-local _Package = script.Parent
-local _Packages = _Package.Parent
 -- Services
 local SoundService = game:GetService("SoundService")
 -- Packages
 -- Modules
-local Enums = require(_Package:WaitForChild("Enums"))
+local Enums = require("@proj/Enums")
 -- Types
 -- Constants
 local LIBRARY: { [Enums.SoundType]: string } = table.freeze({

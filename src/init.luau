@@ -77,13 +77,13 @@ export type StyleTextFieldProperties = TextField.StyleTextFieldProperties
 local Synthetic = {}
 
 Synthetic.Enums = Enums
-Synthetic.Sounds = require("Sounds")
+Synthetic.Sounds = require("./Sounds")
 
-Synthetic.Transition = require("Transition")
+Synthetic.Transition = require("./Transition")
 Synthetic.Types = Types
 Synthetic.Style = Style
-Synthetic.Theme = require("Theme")
-Synthetic.Typography = require("Typography")
+Synthetic.Theme = require("./Theme")
+Synthetic.Typography = require("./Typography")
 Synthetic.Component = {
 	Button = Button,
 	ButtonContainer = ButtonContainer,

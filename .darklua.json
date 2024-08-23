@@ -7,15 +7,13 @@
 			  "sources": {
 				"@proj": "./src",
 				"@wally": "./Packages",
-				"@comp": "./src/Component",
-				"@node": "./node_modules/.luau-aliases",
-				"@pkg": "node_modules/.luau-aliases"
+				"@comp": "./src/Component"
 			}
 		   },
 		   "target": {
 			  "name": "roblox",
 			  "rojo_sourcemap": "darklua-sourcemap.json",
-			  "indexing_style": "find_first_child"
+			  "indexing_style": "wait_for_child"
 		   }
 	    }
 	]
