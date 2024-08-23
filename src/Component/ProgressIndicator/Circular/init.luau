@@ -172,40 +172,52 @@ Library.Full = function(props: CircularProgressIndicatorProperties): React.React
 	local fillColor3 = Theme.getElevatedColor(rawFillColor3, elevation, schemeType)
 	local emptyColor3 = Theme.getElevatedColor(rawEmptyColor3, elevation, schemeType)
 	local transparency = if isEnabled then 0 else 1
+	local isActive = not progress or progress ~= progressWidth
 
 	-- update state
 	React.useEffect(function()
-		local connection: RBXScriptConnection
-		connection = RunService.RenderStepped:Connect(function(deltaTime: number)
-			if progress ~= nil then
-				assert(progress)
-				startSpring:Set(0)
-				widthSpring:Set(progress * 360)
-			else
-				local start = (360 * tickAlpha(2)) % 360
-				local width = (180 + 140 * tickCycle(5)) % 360
+		if isActive then
+			local connection: RBXScriptConnection
+			connection = RunService.RenderStepped:Connect(function(deltaTime: number)
+				if progress ~= nil then
+					assert(progress)
+					startSpring:Set(0)
+					widthSpring:Set(progress * 360)
+				else
+					local start = (360 * tickAlpha(2)) % 360
+					local width = (180 + 140 * tickCycle(5)) % 360
 
-				startSpring:Set(start)
-				widthSpring:Set(width)
+					startSpring:Set(start)
+					widthSpring:Set(width)
+				end
+
+				if startSpring.Position - 180 > startSpring.Goal then
+					startSpring.Position -= 360
+				elseif startSpring.Position + 180 < startSpring.Goal then
+					startSpring.Position += 360
+				end
+
+				startSpring:Step(deltaTime)
+				widthSpring:Step(deltaTime)
+
+				setStartSpring(startSpring)
+				setWidthSpring(widthSpring)
+
+				local newProgressStart = startSpring:Get() % 360
+				if newProgressStart ~= progressStart then
+					setProgressStart(newProgressStart)
+				end
+				local newProgressWidth = widthSpring:Get() % 360
+				if newProgressWidth ~= progressWidth then
+					setProgressWidth(newProgressWidth)
+				end
+			end)
+
+			return function()
+				connection:Disconnect()
 			end
-
-			if startSpring.Position - 180 > startSpring.Goal then
-				startSpring.Position -= 360
-			elseif startSpring.Position + 180 < startSpring.Goal then
-				startSpring.Position += 360
-			end
-
-			startSpring:Step(deltaTime)
-			widthSpring:Step(deltaTime)
-
-			setStartSpring(startSpring)
-			setWidthSpring(widthSpring)
-			setProgressStart(startSpring:Get() % 360)
-			setProgressWidth(widthSpring:Get() % 360)
-		end)
-
-		return function()
-			connection:Disconnect()
+		else
+			return function() end
 		end
 	end)
 
