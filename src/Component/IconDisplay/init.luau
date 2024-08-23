@@ -12,6 +12,7 @@ export type IconDisplayProperties = RobloxTypes.ImageLabelProperties & {
 	Icon: ImageData?,
 	IconColor3: Color3?,
 	IconTransparency: number?,
+	AspectType: Enum.AspectType?,
 }
 -- Constants
 -- Variables
@@ -35,7 +36,9 @@ return function(props: IconDisplayProperties): React.ReactNode
 					"UIAspectRatioConstraint",
 					{
 						AspectRatio = 1,
-						AspectType = Enum.AspectType.ScaleWithParentSize,
+						AspectType = if props.AspectType
+							then props.AspectType
+							else Enum.AspectType.ScaleWithParentSize,
 						DominantAxis = Enum.DominantAxis.Height,
 					} :: RobloxTypes.UIAspectRatioConstraintProperties
 				),

@@ -128,6 +128,7 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 						IconColor3 = contentProps.Color3,
 						IconTransparency = contentProps.Transparency,
 						Size = UDim2.fromOffset(iconDim, iconDim),
+						AspectType = Enum.AspectType.FitWithinMaxSize,
 					} :: IconDisplay.IconDisplayProperties
 				)
 				else nil,
