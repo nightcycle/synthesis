@@ -45,7 +45,9 @@ return function(target: Frame)
 				{
 					Text = "Test",
 					Size = UDim2.new(0, 200, 0, 40),
-					Position = UDim2.fromScale(0.3, 0.3),
+					Position = UDim2.fromScale(0.4, 0.5),
+					BackgroundTransparency = 0.5,
+
 					BackgroundColor3 = style:GetColor(
 						Enums.ColorRoleType.PrimaryContainer
 					),
@@ -63,7 +65,9 @@ return function(target: Frame)
 						{
 							TargetAbsolutePosition = popUpPosition,
 							TargetAbsoluteWidth = absoluteSize.X,
-							SurfaceColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+							SurfaceColor3 = style:GetColor(
+								Enums.ColorRoleType.SurfaceContainerHigh
+							),
 							OnSurfaceColor3 = style:GetColor(
 								Enums.ColorRoleType.OnSurface
 							),

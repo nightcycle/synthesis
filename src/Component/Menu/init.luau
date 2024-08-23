@@ -20,6 +20,7 @@ local TextDisplay = require("@comp/TextDisplay")
 local IconDisplay = require("@comp/IconDisplay")
 local Container = require("@comp/Container")
 local PopUp = require("@comp/PopUp")
+local ScrollingContainer = require("@comp/ScrollingContainer")
 -- Types
 type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
@@ -54,7 +55,9 @@ local ICON_PADDING_DP = 12
 local BUTTON_PADDING_DP = 1
 local MENU_LR_PADDING_DP = 12
 local MENU_TB_PADDING_DP = 8
+local EDGE_PADDING_DP = 8
 local SHADOW_OFFSET_DP = Vector2.new(2, 2) * 2
+local MIN_HEIGHT_DP = 150
 local DIVIDER_THICKNESS_DP = 1
 local DIVIDER_PAD_TOP_DP = 7
 local DIVIDER_PAD_BOTTOM_DP = 8
@@ -95,9 +98,30 @@ return function(props: MenuProperties): React.ReactNode
 	local soundVolume: number = props.SoundVolume or 1
 	local elevation: number = props.Elevation or Defaults.Elevation
 
+	-- set up state
+	local viewportSize, setViewportSize =
+		React.useState(workspace.CurrentCamera.ViewportSize)
+	local menuAbsoluteSize, menuSetAbsoluteSize = React.useState(Vector2.new(0, 0))
+
 	-- process state / props
-	-- local iconWidth = UDim.new(0, math.ceil(scale * ICON_SIZE_DP))
-	-- local iconSize = UDim2.new(iconWidth, iconWidth)
+	local minHeightPx = math.ceil(MIN_HEIGHT_DP * scale)
+
+	local vLimit = viewportSize.Y - math.ceil(EDGE_PADDING_DP * scale)
+	local heightOffsetPx = math.max(minHeightPx - (vLimit - targetAbsolutePosition.Y), 0)
+	if heightOffsetPx > 0 and targetAbsolutePosition.Y + menuAbsoluteSize.Y > vLimit then
+		targetAbsolutePosition = targetAbsolutePosition - Vector2.new(0, heightOffsetPx)
+	end
+	do
+		local xLimit = viewportSize.X - math.ceil(EDGE_PADDING_DP * scale)
+		local xCur = targetAbsolutePosition.X + menuAbsoluteSize.X
+		if xCur > xLimit then
+			targetAbsolutePosition = targetAbsolutePosition
+				- Vector2.new(xCur - xLimit, 0)
+		end
+	end
+
+	local isClipping = targetAbsolutePosition.Y + menuAbsoluteSize.Y > vLimit
+
 	local cornerRadius = UDim.new(0, math.ceil(CORNER_RADIUS_DP * scale))
 	local surfaceColor3 = Theme.getElevatedColor(rawSurfaceColor3, elevation, schemeType)
 	local onSurfaceColor3 =
@@ -112,6 +136,20 @@ return function(props: MenuProperties): React.ReactNode
 		Theme.getElevatedColor(rawDisabledSurfaceColor3, elevation, schemeType)
 	local disabledOnSurfaceColor3 =
 		Theme.getElevatedColor(rawDisabledOnSurfaceColor3, elevation, schemeType)
+
+	-- effects
+	React.useEffect(function()
+		local connection: RBXScriptConnection
+		connection = workspace.CurrentCamera
+			:GetPropertyChangedSignal("ViewportSize")
+			:Connect(function()
+				setViewportSize(workspace.CurrentCamera.ViewportSize)
+			end)
+		return function()
+			connection:Disconnect()
+		end
+	end, {})
+
 	-- components
 	local function newButton(
 		layoutOrder: number,
@@ -330,53 +368,115 @@ return function(props: MenuProperties): React.ReactNode
 		end
 	end
 
+	local menuContents = React.createElement(React.Fragment, {}, {
+		UIListLayout = React.createElement(
+			"UIListLayout",
+			{
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				FillDirection = Enum.FillDirection.Vertical,
+				VerticalAlignment = Enum.VerticalAlignment.Top,
+				HorizontalAlignment = Enum.HorizontalAlignment.Left,
+				Padding = UDim.new(0, math.ceil(BUTTON_PADDING_DP * scale)),
+				HorizontalFlex = if targetAbsoluteWidth
+					then Enum.UIFlexAlignment.Fill
+					else Enum.UIFlexAlignment.None,
+				ItemLineAlignment = if targetAbsoluteWidth
+					then Enum.ItemLineAlignment.Stretch
+					else Enum.ItemLineAlignment.Automatic,
+				VerticalFlex = Enum.UIFlexAlignment.None,
+				Wraps = false,
+			} :: RobloxTypes.UIListLayoutProperties
+		),
+		UIPadding = React.createElement(
+			"UIPadding",
+			{
+				PaddingTop = UDim.new(0, math.ceil(MENU_TB_PADDING_DP * scale)),
+				PaddingBottom = UDim.new(0, math.ceil(MENU_TB_PADDING_DP * scale)),
+			} :: RobloxTypes.UIPaddingProperties
+		),
+
+		Buttons = React.createElement(React.Fragment, {}, buttons),
+	})
+
+	local xSize = if targetAbsoluteWidth then targetAbsoluteWidth else 0
+	local ySize = if isClipping then vLimit - targetAbsolutePosition.Y + 1 else 0
 	local menuContainer = React.createElement(
 		Container,
 		{
-			Size = if targetAbsoluteWidth
-				then UDim2.fromOffset(targetAbsoluteWidth, 0)
-				else nil,
-			AutomaticSize = if targetAbsoluteWidth
-				then Enum.AutomaticSize.Y
-				else Enum.AutomaticSize.XY,
+			Size = UDim2.fromOffset(xSize, ySize),
+			AutomaticSize = if not isClipping
+				then if targetAbsoluteWidth
+					then Enum.AutomaticSize.Y
+					else Enum.AutomaticSize.XY
+				elseif targetAbsoluteWidth then Enum.AutomaticSize.None
+				else Enum.AutomaticSize.X,
 			BackgroundTransparency = 0,
 			BackgroundColor3 = surfaceColor3,
+			[React.Change.AbsoluteSize] = function(inst: GuiObject)
+				menuSetAbsoluteSize(inst.AbsoluteSize)
+			end :: any,
 			children = {
-				UIListLayout = React.createElement(
-					"UIListLayout",
-					{
-						SortOrder = Enum.SortOrder.LayoutOrder,
-						FillDirection = Enum.FillDirection.Vertical,
-						VerticalAlignment = Enum.VerticalAlignment.Top,
-						HorizontalAlignment = Enum.HorizontalAlignment.Left,
-						Padding = UDim.new(0, math.ceil(BUTTON_PADDING_DP * scale)),
-						HorizontalFlex = if targetAbsoluteWidth
-							then Enum.UIFlexAlignment.Fill
-							else Enum.UIFlexAlignment.None,
-						ItemLineAlignment = if targetAbsoluteWidth
-							then Enum.ItemLineAlignment.Stretch
-							else Enum.ItemLineAlignment.Automatic,
-						VerticalFlex = Enum.UIFlexAlignment.None,
-						Wraps = false,
-					} :: RobloxTypes.UIListLayoutProperties
-				),
-				UIPadding = React.createElement(
-					"UIPadding",
-					{
-						PaddingTop = UDim.new(0, math.ceil(MENU_TB_PADDING_DP * scale)),
-						PaddingBottom = UDim.new(
-							0,
-							math.ceil(MENU_TB_PADDING_DP * scale)
-						),
-					} :: RobloxTypes.UIPaddingProperties
-				),
 				UICorner = React.createElement(
 					"UICorner",
 					{
 						CornerRadius = cornerRadius,
 					} :: RobloxTypes.UICornerProperties
 				),
-				Buttons = React.createElement(React.Fragment, {}, buttons),
+				UIClipPadding = if isClipping
+					then React.createElement(
+						"UIPadding",
+						{
+							-- PaddingRight = cornerRadius,
+							-- PaddingLeft = cornerRadius,
+							PaddingTop = cornerRadius,
+							PaddingBottom = cornerRadius,
+						} :: RobloxTypes.UIPaddingProperties
+					)
+					else nil,
+				ScrollingListLayout = if isClipping
+					then React.createElement(
+						"UIListLayout",
+						{
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							FillDirection = Enum.FillDirection.Vertical,
+							VerticalAlignment = Enum.VerticalAlignment.Top,
+							HorizontalAlignment = Enum.HorizontalAlignment.Left,
+							Padding = UDim.new(0, 0),
+							HorizontalFlex = Enum.UIFlexAlignment.None,
+							ItemLineAlignment = Enum.ItemLineAlignment.Automatic,
+							VerticalFlex = Enum.UIFlexAlignment.None,
+							Wraps = false,
+						} :: RobloxTypes.UIListLayoutProperties
+					)
+					else nil,
+				ScrollingContainer = if isClipping
+					then React.createElement(
+						ScrollingContainer,
+						{
+							BackgroundTransparency = 1,
+							BorderSizePixel = 0,
+							ScrollBarThickness = math.ceil(12 * scale),
+							ScrollBarImageColor3 = Theme.getElevatedColor(
+								rawSurfaceColor3,
+								elevation + 2,
+								schemeType
+							),
+							AutomaticSize = if targetAbsoluteWidth
+								then Enum.AutomaticSize.None
+								else Enum.AutomaticSize.X,
+							Size = UDim2.fromScale(
+								if targetAbsoluteWidth then 1 else 0,
+								1
+							),
+							CanvasSize = UDim2.fromScale(0, 0),
+							AutomaticCanvasSize = Enum.AutomaticSize.Y,
+
+							children = {
+								Content = menuContents,
+							},
+						} :: RobloxTypes.ScrollingFrameProperties
+					)
+					else menuContents,
 			},
 		} :: RobloxTypes.FrameProperties
 	)
