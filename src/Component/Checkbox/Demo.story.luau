@@ -13,7 +13,8 @@ local RobloxTypes = require("@proj/RobloxTypes")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -37,7 +38,7 @@ return function(target: Frame)
 			local noIconSelection, setNoIconSelection = React.useState(true)
 			local disabledSelection, setDisabledSelection =
 				React.useState(math.random() > 0.5)
-			return React.createElement(
+			return e(
 				"Frame",
 				{
 					Name = "HalfFrame",
@@ -47,7 +48,7 @@ return function(target: Frame)
 					Position = props.Position,
 				} :: RobloxTypes.FrameProperties,
 				{
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -74,7 +75,7 @@ return function(target: Frame)
 					-- disabledColor: Enums.ColorRoleType,
 					-- onDisabledColor: Enums.ColorRoleType,
 
-					Default = React.createElement(
+					Default = e(
 						Interface.Full,
 						{
 							LayoutOrder = 1,
@@ -102,7 +103,7 @@ return function(target: Frame)
 						} :: Interface.CheckboxProperties
 					),
 
-					Inanimate = React.createElement(Interface.Full, {
+					Inanimate = e(Interface.Full, {
 						LayoutOrder = 1,
 						Value = inanimateSelection,
 						OnChange = function(value: boolean)
@@ -123,7 +124,7 @@ return function(target: Frame)
 						Scale = 1,
 					}),
 
-					NoIcons = React.createElement(Interface.Full, {
+					NoIcons = e(Interface.Full, {
 						LayoutOrder = 2,
 						Value = noIconSelection,
 						OnChange = function(value: boolean)
@@ -144,7 +145,7 @@ return function(target: Frame)
 						Scale = 1,
 					}),
 
-					Disabled = React.createElement(Interface.Full, {
+					Disabled = e(Interface.Full, {
 						LayoutOrder = 3,
 						Value = disabledSelection,
 						OnChange = function(value: boolean)
@@ -177,7 +178,7 @@ return function(target: Frame)
 			-- Color3.fromHSV(0.1, 0.9, 0.7),
 		}
 
-		local element = React.createElement(
+		local element = e(
 			"Frame",
 			{
 				Size = UDim2.fromScale(1, 1),
@@ -191,14 +192,14 @@ return function(target: Frame)
 					local x = (i - 1) / #COLORS
 					local width = 1 / #COLORS
 
-					children[`Dark{i}`] = React.createElement(halfFrame, {
+					children[`Dark{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = true,
 						Size = UDim2.fromScale(width, 0.5),
 						Position = UDim2.fromScale(x, 0.5),
 					})
 
-					children[`Light{i}`] = React.createElement(halfFrame, {
+					children[`Light{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = false,
 						Size = UDim2.fromScale(width, 0.5),

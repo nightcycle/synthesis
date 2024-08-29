@@ -77,6 +77,7 @@ local ERROR_ICON = MaterialIcons.error
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 local Library = {}
 
@@ -225,12 +226,12 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	end)
 
 	-- sub elements
-	local upperLabelContainer = React.createElement(
+	local upperLabelContainer = e(
 		Container,
 		{
 			LayoutOrder = 1,
 			children = {
-				UIListLayout = React.createElement(
+				UIListLayout = e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -251,7 +252,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					if not leftIcon then
 						local pad =
 							UDim.new(0, math.ceil(scale * LEFT_RIGHT_NO_ICONS_PADDING_DP))
-						return React.createElement(
+						return e(
 							"UIPadding",
 							{
 								PaddingLeft = pad,
@@ -265,7 +266,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 							0,
 							math.ceil(scale * LEFT_RIGHT_YES_ICONS_PADDING_DP)
 						)
-						return React.createElement(
+						return e(
 							"UIPadding",
 							{
 								PaddingLeft = pad,
@@ -277,7 +278,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					end
 				end)(),
 				Label = if not isFilled
-					then React.createElement(
+					then e(
 						TextDisplay.Full,
 						{
 							TextColor3 = if isTextBoxFocused
@@ -298,7 +299,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 	)
 
 	local mainButtonTextBox = if isTextBoxFocused or (value and value:len() > 0)
-		then React.createElement(
+		then e(
 			"TextBox",
 			{
 				ref = textBoxRef,
@@ -359,9 +360,9 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		)
 		else nil
 
-	local buttonInternals = React.createElement(React.Fragment, {}, {
+	local buttonInternals = e(React.Fragment, {}, {
 		DropDown = if dropDownOptions and isDropDownOpen
-			then React.createElement(
+			then e(
 				Menu,
 				{
 					TargetAbsolutePosition = absolutePosition
@@ -399,7 +400,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				} :: Menu.MenuProperties
 			)
 			else nil,
-		CenterContainer = React.createElement(
+		CenterContainer = e(
 			Container,
 			{
 				LayoutOrder = 2,
@@ -409,7 +410,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				children = {
 					InputTextBox = mainButtonTextBox,
 					Label = if isFilled or not isLabelMinized
-						then React.createElement(
+						then e(
 							TextDisplay.Full,
 							{
 								TextColor3 = if isLabelMinized and isFilled
@@ -430,7 +431,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 							} :: TextDisplay.TextDisplayProperties
 						)
 						else nil,
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -444,7 +445,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					-- UIFlexItem = React.createElement(
+					-- UIFlexItem = e(
 					-- 	"UIFlexItem",
 					-- 	{
 					-- 		FlexMode = Enum.UIFlexMode.Fill,
@@ -455,7 +456,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			} :: RobloxTypes.FrameProperties
 		),
 		DropDownIconButton = if rightIconImage == DROP_DOWN_ICON
-			then React.createElement("ImageButton", {
+			then e("ImageButton", {
 				LayoutOrder = 3,
 				BackgroundTransparency = 1,
 
@@ -465,7 +466,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				end :: any,
 			}, {
 
-				UIListLayout = React.createElement(
+				UIListLayout = e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -479,7 +480,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 						Wraps = false,
 					} :: RobloxTypes.UIListLayoutProperties
 				),
-				UIAspectRatioConstraint = React.createElement(
+				UIAspectRatioConstraint = e(
 					"UIAspectRatioConstraint",
 					{
 						AspectRatio = 1,
@@ -488,7 +489,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					} :: RobloxTypes.UIAspectRatioConstraintProperties
 				),
 				Icon = if rightIconImage
-					then React.createElement(
+					then e(
 						IconDisplay,
 						{
 							Icon = rightIconImage,
@@ -504,7 +505,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			})
 			else nil,
 		ClearIconButton = if rightIconImage == CANCEL_ICON
-			then React.createElement("ImageButton", {
+			then e("ImageButton", {
 				LayoutOrder = 3,
 				BackgroundTransparency = 1,
 
@@ -516,7 +517,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				end :: any,
 			}, {
 
-				UIListLayout = React.createElement(
+				UIListLayout = e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -530,7 +531,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 						Wraps = false,
 					} :: RobloxTypes.UIListLayoutProperties
 				),
-				UIAspectRatioConstraint = React.createElement(
+				UIAspectRatioConstraint = e(
 					"UIAspectRatioConstraint",
 					{
 						AspectRatio = 1,
@@ -539,7 +540,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					} :: RobloxTypes.UIAspectRatioConstraintProperties
 				),
 				Icon = if rightIconImage
-					then React.createElement(
+					then e(
 						IconDisplay,
 						{
 							Icon = rightIconImage,
@@ -555,7 +556,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			})
 			else nil,
 		ErrorIcon = if rightIconImage == ERROR_ICON
-			then React.createElement(
+			then e(
 				IconDisplay,
 				{
 					LayoutOrder = 3,
@@ -570,7 +571,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			)
 			else nil,
 		LeftIcon = if leftIcon
-			then React.createElement(
+			then e(
 				IconDisplay,
 				{
 					LayoutOrder = 0,
@@ -584,7 +585,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				} :: IconDisplay.IconDisplayProperties
 			)
 			else nil,
-		UIListLayout = React.createElement(
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -601,7 +602,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		UIPadding = (function(): React.ReactNode
 			local pad = UDim.new(0, math.ceil(scale * TEXT_AND_ICON_PADDING_DP))
 			local zero = UDim.new(0, 0)
-			return React.createElement(
+			return e(
 				"UIPadding",
 				{
 					PaddingLeft = pad,
@@ -613,7 +614,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		end)(),
 	})
 
-	local mainButton = React.createElement(
+	local mainButton = e(
 		"TextButton",
 		{
 			LayoutOrder = 2,
@@ -684,7 +685,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				else nil,
 		} :: RobloxTypes.TextButtonProperties,
 		{
-			UIStroke = React.createElement(
+			UIStroke = e(
 				"UIStroke",
 				{
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -698,13 +699,13 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					Thickness = outlineThickness,
 				} :: RobloxTypes.UIStrokeProperties
 			),
-			UICorner = React.createElement(
+			UICorner = e(
 				"UICorner",
 				{
 					CornerRadius = UDim.new(0, math.ceil(scale * RADIUS_DP)),
 				} :: RobloxTypes.UICornerProperties
 			),
-			UISizeConstraint = React.createElement(
+			UISizeConstraint = e(
 				"UISizeConstraint",
 				{
 					MinSize = Vector2.new(
@@ -715,14 +716,14 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			),
 			Internals = if not isFilled
 				then buttonInternals
-				else React.createElement(
+				else e(
 					Container,
 					{
 						LayoutOrder = 1,
 						AutomaticSize = Enum.AutomaticSize.Y,
 						children = {
 							OutlineInternals = buttonInternals,
-							UIFlexItem = React.createElement(
+							UIFlexItem = e(
 								"UIFlexItem",
 								{
 									FlexMode = Enum.UIFlexMode.Fill,
@@ -733,7 +734,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					} :: RobloxTypes.FrameProperties
 				),
 			FilledButtonListLayout = if isFilled
-				then React.createElement(
+				then e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -749,7 +750,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				)
 				else nil,
 			BottomLine = if isFilled
-				then React.createElement(
+				then e(
 					"Frame",
 					{
 						BorderSizePixel = 0,
@@ -764,7 +765,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 				)
 				else nil,
 			-- TopLine = if isFilled
-			-- 	then React.createElement(
+			-- 	then e(
 			-- 		"Frame",
 			-- 		{
 			-- 			BorderSizePixel = 0,
@@ -779,13 +780,13 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 		}
 	)
 
-	return React.createElement(
+	return e(
 		Container,
 		PropUtil.mergeFrame(
 			{
 
 				children = {
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -804,10 +805,10 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					),
 					UpperLabelContainer = upperLabelContainer,
 					MainButton = mainButton,
-					LowerContextContainer = React.createElement(Container, {
+					LowerContextContainer = e(Container, {
 						LayoutOrder = 3,
 						children = {
-							UIListLayout = React.createElement(
+							UIListLayout = e(
 								"UIListLayout",
 								{
 									SortOrder = Enum.SortOrder.LayoutOrder,
@@ -821,7 +822,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 									Wraps = false,
 								} :: RobloxTypes.UIListLayoutProperties
 							),
-							CharacterCount = React.createElement(
+							CharacterCount = e(
 								TextDisplay.Full,
 								{
 									LayoutOrder = 2,
@@ -841,7 +842,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 										else "",
 								} :: TextDisplay.TextDisplayProperties
 							),
-							SupportingText = React.createElement(
+							SupportingText = e(
 								TextDisplay.Full,
 								{
 									LayoutOrder = 1,
@@ -891,18 +892,18 @@ function Library._OnSurfaceHighlightColor(
 	newProps.DropDownShadowTransparency = nil
 	newProps.SoundVolume = style.Volume
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-function Library.OnSurfacePrimary(props: StyleTextFieldProperties): React.ReactNode
+function Library.Primary(props: StyleTextFieldProperties): React.ReactNode
 	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Primary)
 end
 
-function Library.OnSurfaceSecondary(props: StyleTextFieldProperties): React.ReactNode
+function Library.Secondary(props: StyleTextFieldProperties): React.ReactNode
 	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Secondary)
 end
 
-function Library.OnSurfaceTertiary(props: StyleTextFieldProperties): React.ReactNode
+function Library.Tertiary(props: StyleTextFieldProperties): React.ReactNode
 	return Library._OnSurfaceHighlightColor(props, Enums.ColorRoleType.Tertiary)
 end
 

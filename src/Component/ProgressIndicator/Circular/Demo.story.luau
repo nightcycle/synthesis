@@ -12,7 +12,8 @@ local Enums = require("@proj/Enums")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -23,7 +24,7 @@ return function(target: Frame)
 	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
 
 	local function newButton(progress: number?)
-		return React.createElement(
+		return e(
 			Circular.Full,
 			{
 				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
@@ -37,26 +38,31 @@ return function(target: Frame)
 		)
 	end
 
-	local element = React.createElement("Frame", {
-		Size = UDim2.new(1, 0, 1, 0),
-		BorderSizePixel = 0,
-		BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
-	}, {
+	local element = e(
+		"Frame",
+		{
+			Size = UDim2.new(1, 0, 1, 0),
+			BorderSizePixel = 0,
+			BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+			BackgroundTransparency = 0,
+		} :: RobloxTypes.FrameProperties,
+		{
 
-		P25 = newButton(0.25),
-		P66 = newButton(0.66),
-		PINF = newButton(nil),
-		UIListLayout = React.createElement(
-			"UIListLayout",
-			{
-				SortOrder = Enum.SortOrder.LayoutOrder,
-				FillDirection = Enum.FillDirection.Horizontal,
-				VerticalAlignment = Enum.VerticalAlignment.Center,
-				HorizontalAlignment = Enum.HorizontalAlignment.Center,
-				Padding = UDim.new(0, math.round(30 * style.Scale)),
-			} :: RobloxTypes.UIListLayoutProperties
-		),
-	})
+			P25 = newButton(0.25),
+			-- P66 = newButton(0.66),
+			-- PINF = newButton(nil),
+			UIListLayout = e(
+				"UIListLayout",
+				{
+					SortOrder = Enum.SortOrder.LayoutOrder,
+					FillDirection = Enum.FillDirection.Horizontal,
+					VerticalAlignment = Enum.VerticalAlignment.Center,
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+					Padding = UDim.new(0, math.round(30 * style.Scale)),
+				} :: RobloxTypes.UIListLayoutProperties
+			),
+		}
+	)
 
 	local portal = ReactRoblox.createPortal(element, target)
 	root:render(portal)

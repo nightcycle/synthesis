@@ -1,4 +1,5 @@
 --!strict
+--!native
 -- Services
 -- Packages
 -- Modules
@@ -8,10 +9,7 @@
 -- References
 -- Private Functions
 -- Class
--- Types
--- Class
-local Util = {}
-Util.Easing = require("./Easing")
-Util.Duration = require("./Duration")
-
-return Util
+return {
+	useLerp = require("./useLerp"),
+	useSpring = require("./useSpring"),
+}

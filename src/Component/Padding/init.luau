@@ -22,6 +22,7 @@ export type StylePaddingSimpleProperties = {
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 local Util = {}
 
@@ -29,7 +30,7 @@ function Util.Style(props: StylePaddingProperties): React.ReactNode
 	local leftRight = UDim.new(0, math.round(props.LeftRightDp * props.Style.Scale))
 	local topBottom = UDim.new(0, math.round(props.TopBottomDp * props.Style.Scale))
 
-	return React.createElement(
+	return e(
 		"UIPadding",
 		{
 			PaddingTop = topBottom,
@@ -43,7 +44,7 @@ end
 function Util.StyleSimple(props: StylePaddingSimpleProperties): React.ReactNode
 	local padding = UDim.new(0, math.round(props.PaddingDp * props.Style.Scale))
 
-	return React.createElement(
+	return e(
 		"UIPadding",
 		{
 			PaddingTop = padding,

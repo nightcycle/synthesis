@@ -49,7 +49,7 @@ local TEXT_PAD_LEFTRIGHT_DP = 6
 -- Variables
 -- References
 -- Private Functions
-
+local e = React.createElement
 -- Class
 local Library = {}
 Library.Full = function(props: ButtonProperties): React.ReactNode
@@ -100,13 +100,13 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 	mergeProps.SoundVolume = soundVolume
 	mergeProps.TargetPaddingDp = TARGET_PAD_DP
 	mergeProps.children = {
-		UICorners = React.createElement(
+		UICorners = e(
 			"UICorner",
 			{
 				CornerRadius = UDim.new(0.5, 0),
 			} :: RobloxTypes.UICornerProperties
 		),
-		UIPadding = React.createElement(
+		UIPadding = e(
 			"UIPadding",
 			{
 				PaddingLeft = UDim.new(0, iconPad),
@@ -119,9 +119,9 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 	mergeProps.Content = function(
 		contentProps: ButtonContainer.ButtonContainerContentProperties
 	)
-		return React.createElement(React.Fragment, {}, {
+		return e(React.Fragment, {}, {
 			Icon = if not text and icon
-				then React.createElement(
+				then e(
 					IconDisplay,
 					{
 						Icon = icon,
@@ -133,7 +133,7 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 				)
 				else nil,
 			Label = if text
-				then React.createElement(
+				then e(
 					TextDisplay.Full,
 					{
 						Text = text,
@@ -148,7 +148,7 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 						IgnoreLineHeight = true,
 						TextXAlignment = Enum.TextXAlignment.Left,
 						children = {
-							UIPadding = React.createElement(
+							UIPadding = e(
 								"UIPadding",
 								{
 									PaddingLeft = UDim.new(
@@ -175,13 +175,10 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 				else nil,
 		})
 	end
-	return React.createElement(
-		ButtonContainer,
-		mergeProps :: ButtonContainer.ButtonContainerProperties
-	)
+	return e(ButtonContainer, mergeProps :: ButtonContainer.ButtonContainerProperties)
 end
 
-Library.OnSurfacePrimary = function(props: StyleButtonProperties)
+Library.Primary = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -206,10 +203,10 @@ Library.OnSurfacePrimary = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfacePrimaryContainer = function(props: StyleButtonProperties)
+Library.PrimaryContainer = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -234,10 +231,10 @@ Library.OnSurfacePrimaryContainer = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceSecondary = function(props: StyleButtonProperties)
+Library.Secondary = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -262,10 +259,10 @@ Library.OnSurfaceSecondary = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceSecondaryContainer = function(props: StyleButtonProperties)
+Library.SecondaryContainer = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -290,10 +287,10 @@ Library.OnSurfaceSecondaryContainer = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceTertiary = function(props: StyleButtonProperties)
+Library.Tertiary = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -309,7 +306,6 @@ Library.OnSurfaceTertiary = function(props: StyleButtonProperties)
 	then
 		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
 		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-		print(newProps.TextColor3:ToHex())
 	else
 		error(`bad type: {newProps.Type}`)
 	end
@@ -320,10 +316,10 @@ Library.OnSurfaceTertiary = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceTertiaryContainer = function(props: StyleButtonProperties)
+Library.TertiaryContainer = function(props: StyleButtonProperties)
 	local style = props.Style
 
 	local newProps = table.clone(props) :: ButtonProperties;
@@ -348,7 +344,7 @@ Library.OnSurfaceTertiaryContainer = function(props: StyleButtonProperties)
 	newProps.SoundVolume = style.Volume
 	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
 return Library

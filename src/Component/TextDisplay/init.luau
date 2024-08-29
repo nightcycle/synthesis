@@ -36,6 +36,7 @@ export type StyleTextDisplayProperties = RobloxTypes.TextLabelProperties & {
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 function newTextIcon(
 	icon: ImageData,
 	layoutOrder: number,
@@ -43,7 +44,7 @@ function newTextIcon(
 	color3: Color3,
 	transparency: number
 ): React.ReactNode
-	return React.createElement(
+	return e(
 		"ImageLabel",
 		{
 			LayoutOrder = layoutOrder,
@@ -118,14 +119,14 @@ function Library.Full(props: TextDisplayProperties): React.ReactNode
 	} :: RobloxTypes.TextLabelProperties
 
 	return if leftIcon or rightIcon
-		then React.createElement(
+		then e(
 			"Frame",
 			PropUtil.mergeGuiObject(
 				{
 					BorderSizePixel = 0,
 					BackgroundTransparency = 1,
 					children = {
-						UIListLayout = React.createElement(
+						UIListLayout = e(
 							"UIListLayout",
 							{
 								Padding = UDim.new(0, paddingDp * scale),
@@ -137,7 +138,7 @@ function Library.Full(props: TextDisplayProperties): React.ReactNode
 								HorizontalFlex = Enum.UIFlexAlignment.Fill,
 							} :: RobloxTypes.UIListLayoutProperties
 						),
-						Label = React.createElement("TextLabel", labelProps),
+						Label = e("TextLabel", labelProps),
 						LeftIcon = if leftIcon
 							then newTextIcon(
 								leftIcon,
@@ -161,17 +162,14 @@ function Library.Full(props: TextDisplayProperties): React.ReactNode
 				props
 			)
 		)
-		else React.createElement(
-			"TextLabel",
-			PropUtil.mergeTextLabel(labelProps, props :: any) :: any
-		)
+		else e("TextLabel", PropUtil.mergeTextLabel(labelProps, props :: any) :: any)
 end
 
 function Library.StyleSimple(props: StyleTextDisplayProperties): React.ReactNode
 	local fontType: Enums.FontType = props.FontType
 	local fontData = props.Style:GetFontData(fontType)
 	local scale = props.Style.Scale
-	return React.createElement(
+	return e(
 		"TextLabel",
 		PropUtil.mergeTextLabel(
 			{

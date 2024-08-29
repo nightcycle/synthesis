@@ -1,7 +1,7 @@
 [package]
 name = "nightcycle/synthetic-react"
 description = "Material UI inspired elements made in React"
-version = "10.0.1"
+version = "10.1.0"
 authors = ["CJ Oyer <coyer@nightcycle.us>"]
 realm = "shared"
 registry = "https://github.com/upliftgames/wally-index"

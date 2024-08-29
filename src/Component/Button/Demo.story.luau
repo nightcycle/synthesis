@@ -13,7 +13,8 @@ local Enums = require("@proj/Enums")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -27,14 +28,14 @@ return function(target: Frame)
 		local lineColorRole = if renderType == Enums.ButtonRenderType.Filled
 			then Enums.ColorRoleType.OnPrimary
 			else Enums.ColorRoleType.OnSurface
-		return React.createElement(
+		return e(
 			IconButton.Full,
 			{
 				AutomaticSize = Enum.AutomaticSize.XY,
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Type = renderType,
-				
+
 				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
 				IconColor3 = style:GetColor(lineColorRole),
 				Icon = MaterialIcons.watch_later,
@@ -46,7 +47,7 @@ return function(target: Frame)
 		)
 	end
 
-	local element = React.createElement("Frame", {
+	local element = e("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
 		BorderSizePixel = 0,
 		BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
@@ -55,7 +56,7 @@ return function(target: Frame)
 		FilledButton = newButton(Enums.ButtonRenderType.Filled),
 		OutlinedButton = newButton(Enums.ButtonRenderType.Outlined),
 		TextButton = newButton(Enums.ButtonRenderType.TextIcon),
-		UIListLayout = React.createElement(
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,

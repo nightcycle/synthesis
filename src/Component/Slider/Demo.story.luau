@@ -13,7 +13,8 @@ local RobloxTypes = require("@proj/RobloxTypes")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -39,7 +40,7 @@ return function(target: Frame)
 				React.useState(NumberRange.new(5, 50) :: number | NumberRange)
 			local disableValue, setDisableValue =
 				React.useState(NumberRange.new(5, 50) :: number | NumberRange)
-			return React.createElement(
+			return e(
 				"Frame",
 				{
 					Name = "HalfFrame",
@@ -49,7 +50,7 @@ return function(target: Frame)
 					Position = props.Position,
 				} :: RobloxTypes.FrameProperties,
 				{
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -59,7 +60,7 @@ return function(target: Frame)
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					Default = React.createElement(
+					Default = e(
 						Interface.Full,
 						{
 							LayoutOrder = 1,
@@ -92,7 +93,7 @@ return function(target: Frame)
 							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
 						} :: Interface.SliderProperties
 					),
-					NoSnap = React.createElement(
+					NoSnap = e(
 						Interface.Full,
 						{
 							LayoutOrder = 2,
@@ -124,7 +125,7 @@ return function(target: Frame)
 							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
 						} :: Interface.SliderProperties
 					),
-					DoubleSlider = React.createElement(
+					DoubleSlider = e(
 						Interface.Full,
 						{
 							LayoutOrder = 3,
@@ -156,7 +157,7 @@ return function(target: Frame)
 							LabelFontData = style:GetFontData(Enums.FontType.BodyLarge),
 						} :: Interface.SliderProperties
 					),
-					Disable = React.createElement(
+					Disable = e(
 						Interface.Full,
 						{
 							LayoutOrder = 4,
@@ -198,7 +199,7 @@ return function(target: Frame)
 			Color3.fromHSV(0.35, 0.9, 0.7),
 		}
 
-		local element = React.createElement(
+		local element = e(
 			"Frame",
 			{
 				Size = UDim2.fromScale(1, 1),
@@ -212,14 +213,14 @@ return function(target: Frame)
 					local x = (i - 1) / #COLORS
 					local width = 1 / #COLORS
 
-					children[`Dark{i}`] = React.createElement(halfFrame, {
+					children[`Dark{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = true,
 						Size = UDim2.fromScale(width, 0.5),
 						Position = UDim2.fromScale(x, 0.5),
 					})
 
-					children[`Light{i}`] = React.createElement(halfFrame, {
+					children[`Light{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = false,
 						Size = UDim2.fromScale(width, 0.5),

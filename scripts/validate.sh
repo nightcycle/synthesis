@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 sh scripts/download-types.sh
 sh scripts/build.sh
 cd "build"

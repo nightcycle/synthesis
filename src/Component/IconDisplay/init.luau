@@ -18,11 +18,12 @@ export type IconDisplayProperties = RobloxTypes.ImageLabelProperties & {
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 return function(props: IconDisplayProperties): React.ReactNode
 	local i = props.Icon
 
-	return React.createElement(
+	return e(
 		"ImageLabel",
 		PropUtil.mergeImageLabel({
 			Image = if i then i.Image else nil,
@@ -32,7 +33,7 @@ return function(props: IconDisplayProperties): React.ReactNode
 			ImageColor3 = props.IconColor3,
 			ImageTransparency = props.IconTransparency,
 			children = {
-				UIAspectRatioConstraint = React.createElement(
+				UIAspectRatioConstraint = e(
 					"UIAspectRatioConstraint",
 					{
 						AspectRatio = 1,

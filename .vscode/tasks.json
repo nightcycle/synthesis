@@ -13,7 +13,7 @@
 		{
 			"label": "download types",
 			"type": "shell",
-			"command": "sh scripts/validate/download-types.sh",
+			"command": "sh scripts/download-types.sh",
 			"problemMatcher": [],
 			"runOptions": {
 				"runOn": "folderOpen"

@@ -8,6 +8,7 @@
 		"@proj": "src",
 		"@wally": "Packages",
 		"@comp": "src/Component",
+		"@hook": "src/Hook",
 	},
 	"luau-lsp.fflags.override": {
 		"LuauTypeInferIterationLimit": "0",

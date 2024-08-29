@@ -24,8 +24,8 @@ local HALF_IMAGE_SIZE = IMAGE_SIZE / 2
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
-
 return function(props: ShadowFrameProperties): React.ReactNode
 	local shadowColor3: Color3 = props.ShadowColor3 or Color3.new(0, 0, 0)
 	local shadowCornerRadius: UDim = props.ShadowCornerRadius or UDim.new(0.5, 0)
@@ -43,13 +43,13 @@ return function(props: ShadowFrameProperties): React.ReactNode
 		math.floor(minDim / 2)
 	)
 
-	return React.createElement(
+	return e(
 		"ImageLabel",
 		PropUtil.mergeImageLabel(
 			{
 				Image = if pxRadiusSize > 0 then "rbxassetid://15549395120" else "",
 				ImageColor3 = Theme.getElevatedColor(shadowColor3, elevation, schemeType),
-				BackgroundTransparency = if pxRadiusSize > 0
+				BackgroundTransparency = if pxRadiusSize > 0 or minDim <= 0
 					then 1
 					else shadowTransparency,
 				BackgroundColor3 = Theme.getElevatedColor(
@@ -59,7 +59,7 @@ return function(props: ShadowFrameProperties): React.ReactNode
 				),
 				ImageTransparency = if pxRadiusSize > 0 then shadowTransparency else 1,
 				ScaleType = Enum.ScaleType.Slice,
-				AutomaticSize = Enum.AutomaticSize.XY,
+				AutomaticSize = props.AutomaticSize or Enum.AutomaticSize.XY,
 				BorderSizePixel = 0,
 				SliceCenter = Rect.new(
 					HALF_IMAGE_SIZE,

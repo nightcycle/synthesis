@@ -9,7 +9,8 @@ local ReactRoblox = require("@wally/ReactRoblox")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -17,7 +18,7 @@ return function(target: Frame)
 
 	local ShadowFrame = require("../ShadowFrame")
 
-	local element = React.createElement(
+	local element = e(
 		ShadowFrame,
 		{
 			Size = UDim2.new(0, 200, 0, 200),

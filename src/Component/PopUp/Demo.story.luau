@@ -10,7 +10,8 @@ local RobloxTypes = require("@proj/RobloxTypes")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -23,7 +24,7 @@ return function(target: Frame)
 		local absoluteSize, setAbsoluteSize = React.useState(Vector2.new(0, 0))
 		local popUpPosition = absolutePosition + absoluteSize * Vector2.new(0.5, 1)
 		return ReactRoblox.createPortal(
-			React.createElement(
+			e(
 				"TextButton",
 				{
 					Text = "Test",
@@ -38,13 +39,13 @@ return function(target: Frame)
 					end :: any,
 				} :: RobloxTypes.TextButtonProperties,
 				{
-					PopUp = React.createElement(
+					PopUp = e(
 						PopUp,
 						{
 							TargetAbsolutePosition = popUpPosition,
 							DisplayAnchorPoint = Vector2.new(0.5, 0),
 							DisplayComponent = function(): React.ReactNode
-								return React.createElement(
+								return e(
 									"TextLabel",
 									{
 										Text = "Label",
@@ -62,7 +63,7 @@ return function(target: Frame)
 		)
 	end
 
-	root:render(React.createElement(newPopUp, {}))
+	root:render(e(newPopUp, {}))
 
 	return function()
 		root:unmount()

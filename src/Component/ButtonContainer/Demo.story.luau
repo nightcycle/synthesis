@@ -12,7 +12,8 @@ local Enums = require("@proj/Enums")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -28,7 +29,7 @@ return function(target: Frame)
 		local lineColorRole = if renderType == Enums.ButtonRenderType.Filled
 			then Enums.ColorRoleType.OnPrimary
 			else Enums.ColorRoleType.OnSurface
-		return React.createElement(
+		return e(
 			ButtonContainer,
 			{
 				AutomaticSize = Enum.AutomaticSize.XY,
@@ -39,7 +40,7 @@ return function(target: Frame)
 				Content = function(
 					props: ButtonContainer.ButtonContainerContentProperties
 				): React.ReactNode
-					return React.createElement(
+					return e(
 						TextDisplay.StyleSimple,
 						{
 							AutomaticSize = Enum.AutomaticSize.XY,
@@ -61,13 +62,13 @@ return function(target: Frame)
 					print(`click "{renderType}"`)
 				end :: any,
 				children = {
-					UICorners = React.createElement(
+					UICorners = e(
 						"UICorner",
 						{
 							CornerRadius = UDim.new(0.5, 0),
 						} :: RobloxTypes.UICornerProperties
 					),
-					UIPadding = React.createElement(
+					UIPadding = e(
 						UIPadding.StyleSimple,
 						{
 							Style = style,
@@ -79,7 +80,7 @@ return function(target: Frame)
 		)
 	end
 
-	local element = React.createElement("Frame", {
+	local element = e("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
 		BorderSizePixel = 0,
 		BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
@@ -88,7 +89,7 @@ return function(target: Frame)
 		FilledButton = newButton(Enums.ButtonRenderType.Filled),
 		OutlinedButton = newButton(Enums.ButtonRenderType.Outlined),
 		TextButton = newButton(Enums.ButtonRenderType.TextIcon),
-		UIListLayout = React.createElement(
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,

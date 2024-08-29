@@ -20,7 +20,9 @@ type PopUpContainerBaseProperties = {
 	TargetAbsolutePosition: Vector2,
 	TargetAbsoluteWidth: number?,
 	OnCursorExit: (() -> ())?,
+	DisplayOrder: number?,
 	Elevation: number?,
+	ZIndexBehavior: Enum.ZIndexBehavior?,
 	DisplayComponent: () -> React.ReactNode,
 }
 export type PopUpContainerProperties = PopUpContainerBaseProperties & {
@@ -41,7 +43,7 @@ local MIN_HEIGHT_DP = 150
 -- Variables
 -- References
 -- Private Functions
-
+local e = React.createElement
 -- Class
 return function(props: PopUpContainerProperties): React.ReactNode
 	-- unpack props
@@ -49,6 +51,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 	local targetAbsolutePosition: Vector2 = props.TargetAbsolutePosition
 	local targetAbsoluteWidth: number? = props.TargetAbsoluteWidth
 	local onCursorExit: (() -> ())? = props.OnCursorExit
+	local displayOrder: number = props.DisplayOrder or 0
 
 	local schemeType: Enums.SchemeType = props.SchemeType or Defaults.SchemeType
 	local scale: number = props.Scale or Defaults.Scale
@@ -59,6 +62,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 		or Defaults.DropShadowTransparency
 
 	local elevation: number = props.Elevation or Defaults.Elevation
+	local zIndexBehavior: Enum.ZIndexBehavior? = props.ZIndexBehavior
 
 	-- set up state
 	local viewportSize, setViewportSize =
@@ -106,8 +110,8 @@ return function(props: PopUpContainerProperties): React.ReactNode
 		end
 	end, {})
 
-	local popUpContainerContents = React.createElement(React.Fragment, {}, {
-		UIListLayout = React.createElement(
+	local popUpContainerContents = e(React.Fragment, {}, {
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -125,7 +129,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 				Wraps = false,
 			} :: RobloxTypes.UIListLayoutProperties
 		),
-		UIPadding = React.createElement(
+		UIPadding = e(
 			"UIPadding",
 			{
 				PaddingTop = UDim.new(0, math.ceil(MENU_TB_PADDING_DP * scale)),
@@ -138,7 +142,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 
 	local xSize = if targetAbsoluteWidth then targetAbsoluteWidth else 0
 	local ySize = if isClipping then vLimit - targetAbsolutePosition.Y + 1 else 0
-	local popUpContainerContainer = React.createElement(
+	local popUpContainerContainer = e(
 		Container,
 		{
 			Size = UDim2.fromOffset(xSize, ySize),
@@ -161,14 +165,14 @@ return function(props: PopUpContainerProperties): React.ReactNode
 				end
 				else nil,
 			children = {
-				UICorner = React.createElement(
+				UICorner = e(
 					"UICorner",
 					{
 						CornerRadius = cornerRadius,
 					} :: RobloxTypes.UICornerProperties
 				),
 				UIClipPadding = if isClipping
-					then React.createElement(
+					then e(
 						"UIPadding",
 						{
 							-- PaddingRight = cornerRadius,
@@ -179,7 +183,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 					)
 					else nil,
 				ScrollingListLayout = if isClipping
-					then React.createElement(
+					then e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -195,7 +199,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 					)
 					else nil,
 				ScrollingContainer = if isClipping
-					then React.createElement(
+					then e(
 						ScrollingContainer,
 						{
 							BackgroundTransparency = 1,
@@ -226,7 +230,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 		} :: RobloxTypes.FrameProperties
 	)
 
-	local shadowFrame = React.createElement(
+	local shadowFrame = e(
 		ShadowFrame,
 		{
 			Name = "ShadowFrame",
@@ -239,7 +243,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 			AutomaticSize = Enum.AutomaticSize.XY,
 
 			children = {
-				UIListLayout = React.createElement(
+				UIListLayout = e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -253,7 +257,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 						Wraps = false,
 					} :: RobloxTypes.UIListLayoutProperties
 				),
-				UIPadding = React.createElement(
+				UIPadding = e(
 					"UIPadding",
 					{
 						PaddingRight = UDim.new(0, math.ceil(SHADOW_OFFSET_DP.X * scale)),
@@ -268,10 +272,12 @@ return function(props: PopUpContainerProperties): React.ReactNode
 		} :: ShadowFrame.ShadowFrameProperties
 	)
 
-	return React.createElement(
+	return e(
 		PopUp,
 		{
 			DisplayAnchorPoint = Vector2.new(0, 0),
+			DisplayOrder = displayOrder,
+			ZIndexBehavior = zIndexBehavior,
 			TargetAbsolutePosition = targetAbsolutePosition,
 			DisplayComponent = function(): React.ReactNode
 				return shadowFrame

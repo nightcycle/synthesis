@@ -10,6 +10,7 @@ local PropUtil = require("@proj/PropUtil")
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 return function(props: RobloxTypes.FrameProperties): React.ReactNode
 	local newProps = PropUtil.mergeFrame({
@@ -30,5 +31,5 @@ return function(props: RobloxTypes.FrameProperties): React.ReactNode
 	if props.AutomaticSize then
 		newProps.AutomaticSize = props.AutomaticSize
 	end
-	return React.createElement("Frame", newProps)
+	return e("Frame", newProps)
 end

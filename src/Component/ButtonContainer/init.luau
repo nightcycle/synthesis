@@ -42,7 +42,7 @@ local BORDER_THICKNESS_DP = 1
 -- Variables
 -- References
 -- Private Functions
-
+local e = React.createElement
 -- Class
 
 return function(props: ButtonContainerProperties): React.ReactNode
@@ -199,7 +199,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 	local borderThicknessPx = math.ceil(scale * BORDER_THICKNESS_DP)
 	local buttonContents = {
 		UIGradient = if isRippleEnabled and backgroundData
-			then React.createElement(
+			then e(
 				"UIGradient",
 				{
 					Color = rippleSequence,
@@ -211,7 +211,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 			Color3 = textColor3,
 			Transparency = textTransparency,
 		}),
-		UIListLayout = React.createElement(
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -226,14 +226,14 @@ return function(props: ButtonContainerProperties): React.ReactNode
 			} :: RobloxTypes.UIListLayoutProperties
 		),
 		Border = if borderData
-			then React.createElement("UIStroke", {
+			then e("UIStroke", {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = borderColor3,
 				LineJoinMode = Enum.LineJoinMode.Round,
 				Thickness = borderThicknessPx,
 				Transparency = borderData.Transparency,
 			})
-			else React.createElement(
+			else e(
 				"UIPadding",
 				{
 					PaddingLeft = UDim.new(0, borderThicknessPx),
@@ -252,7 +252,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 		end
 		propCopy.children = nil
 	end
-	return React.createElement(
+	return e(
 		"ImageButton",
 		PropUtil.mergeGuiButton(
 			{
@@ -326,7 +326,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 					else nil,
 				children = {
 					TargetPadding = if targetPaddingDp ~= 0
-						then React.createElement(
+						then e(
 							"UIPadding",
 							{
 								PaddingLeft = UDim.new(0, targetPadPx),
@@ -336,7 +336,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 							} :: RobloxTypes.UIPaddingProperties
 						)
 						else nil,
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -351,10 +351,10 @@ return function(props: ButtonContainerProperties): React.ReactNode
 						} :: RobloxTypes.UIListLayoutProperties
 					),
 					ButtonContents = if targetPaddingDp == 0
-						then React.createElement(React.Fragment, {}, buttonContents)
+						then e(React.Fragment, {}, buttonContents)
 						else nil,
 					InnerButton = if targetPaddingDp ~= 0
-						then React.createElement(
+						then e(
 							"Frame",
 							{
 								AutomaticSize = Enum.AutomaticSize.XY,

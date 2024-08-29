@@ -14,7 +14,8 @@ local RobloxTypes = require("@proj/RobloxTypes")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -40,7 +41,7 @@ return function(target: Frame)
 			local dropDownOutlinedValue, setDropDownOutlinedValue =
 				React.useState(nil :: string?)
 
-			return React.createElement(
+			return e(
 				"Frame",
 				{
 					Name = "HalfFrame",
@@ -50,7 +51,7 @@ return function(target: Frame)
 					Position = props.Position,
 				} :: RobloxTypes.FrameProperties,
 				{
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -60,7 +61,7 @@ return function(target: Frame)
 							HorizontalAlignment = Enum.HorizontalAlignment.Center,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					DefaultFilled = React.createElement(
+					DefaultFilled = e(
 						Interface.Full,
 						{
 							Value = defaultFilledValue,
@@ -100,7 +101,7 @@ return function(target: Frame)
 							Scale = 1,
 						} :: any
 					),
-					DefaultOutlined = React.createElement(
+					DefaultOutlined = e(
 						Interface.Full,
 						{
 							Value = defaultOutlinedValue,
@@ -142,7 +143,7 @@ return function(target: Frame)
 							Scale = 1,
 						} :: Interface.TextFieldProperties
 					),
-					DropdownOutlined = React.createElement(
+					DropdownOutlined = e(
 						Interface.Full,
 						{
 							Value = dropDownOutlinedValue,
@@ -202,7 +203,7 @@ return function(target: Frame)
 			Color3.fromHSV(0.35, 0.9, 0.7),
 		}
 
-		local element = React.createElement(
+		local element = e(
 			"Frame",
 			{
 				Size = UDim2.fromScale(1, 1),
@@ -216,14 +217,14 @@ return function(target: Frame)
 					local x = (i - 1) / #COLORS
 					local width = 1 / #COLORS
 
-					children[`Dark{i}`] = React.createElement(halfFrame, {
+					children[`Dark{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = true,
 						Size = UDim2.fromScale(width, 0.5),
 						Position = UDim2.fromScale(x, 0.5),
 					})
 
-					children[`Light{i}`] = React.createElement(halfFrame, {
+					children[`Light{i}`] = e(halfFrame, {
 						Color3 = color,
 						IsDarkMode = false,
 						Size = UDim2.fromScale(width, 0.5),

@@ -56,7 +56,7 @@ local RIGHT_ICON_SIZE_DP = 24
 -- Variables
 -- References
 -- Private Functions
-
+local e = React.createElement
 -- Class
 return function(props: MenuProperties): React.ReactNode
 	-- unpack props
@@ -109,7 +109,7 @@ return function(props: MenuProperties): React.ReactNode
 	): React.ReactNode
 		local value: boolean? = (optionData :: any)["Value"]
 		local textColor3 = if value then selectionOnSurfaceColor3 else onSurfaceColor3
-		return React.createElement(
+		return e(
 			ButtonContainer,
 			{
 				Type = Enums.ButtonRenderType.Filled,
@@ -140,9 +140,9 @@ return function(props: MenuProperties): React.ReactNode
 				Content = function(
 					contentProps: ButtonContainer.ButtonContainerContentProperties
 				): React.ReactNode
-					return React.createElement(Container, {
+					return e(Container, {
 						children = {
-							UIPadding = React.createElement(
+							UIPadding = e(
 								"UIPadding",
 								{
 									PaddingLeft = UDim.new(
@@ -155,7 +155,7 @@ return function(props: MenuProperties): React.ReactNode
 									),
 								} :: RobloxTypes.UIPaddingProperties
 							),
-							UIListLayout = React.createElement(
+							UIListLayout = e(
 								"UIListLayout",
 								{
 									SortOrder = Enum.SortOrder.LayoutOrder,
@@ -173,7 +173,7 @@ return function(props: MenuProperties): React.ReactNode
 								} :: RobloxTypes.UIListLayoutProperties
 							),
 							LeftIcon = if optionData.Icon
-								then React.createElement(
+								then e(
 									IconDisplay,
 									{
 										LayoutOrder = 1,
@@ -186,7 +186,7 @@ return function(props: MenuProperties): React.ReactNode
 										IconTransparency = contentProps.Transparency,
 									} :: IconDisplay.IconDisplayProperties
 								)
-								else React.createElement(
+								else e(
 									"Frame",
 									{
 										LayoutOrder = 1,
@@ -198,7 +198,7 @@ return function(props: MenuProperties): React.ReactNode
 									} :: IconDisplay.IconDisplayProperties
 								),
 							RightIcon = if value
-								then React.createElement(
+								then e(
 									IconDisplay,
 									{
 										LayoutOrder = 3,
@@ -213,7 +213,7 @@ return function(props: MenuProperties): React.ReactNode
 									} :: IconDisplay.IconDisplayProperties
 								)
 								else nil,
-							TextDisplay = React.createElement(
+							TextDisplay = e(
 								TextDisplay.Full,
 								{
 									LayoutOrder = 2,
@@ -228,7 +228,7 @@ return function(props: MenuProperties): React.ReactNode
 									IgnoreLineHeight = false,
 									TextXAlignment = Enum.TextXAlignment.Left,
 									children = {
-										UIFlexItem = React.createElement(
+										UIFlexItem = e(
 											"UIFlexItem",
 											{
 												FlexMode = Enum.UIFlexMode.Fill,
@@ -246,7 +246,7 @@ return function(props: MenuProperties): React.ReactNode
 	end
 
 	local function newDivider(layoutOrder: number)
-		return React.createElement(
+		return e(
 			"Frame",
 			{
 				LayoutOrder = layoutOrder,
@@ -256,7 +256,7 @@ return function(props: MenuProperties): React.ReactNode
 				AutomaticSize = Enum.AutomaticSize.XY,
 			} :: React.ReactNode,
 			{
-				UIListLayout = React.createElement(
+				UIListLayout = e(
 					"UIListLayout",
 					{
 						SortOrder = Enum.SortOrder.LayoutOrder,
@@ -270,14 +270,14 @@ return function(props: MenuProperties): React.ReactNode
 						Wraps = false,
 					} :: RobloxTypes.UIListLayoutProperties
 				),
-				UIFlexItem = React.createElement(
+				UIFlexItem = e(
 					"UIFlexItem",
 					{
 						FlexMode = Enum.UIFlexMode.Fill,
 						ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
 					} :: RobloxTypes.UIFlexItemProperties
 				),
-				UIPadding = React.createElement(
+				UIPadding = e(
 					"UIPadding",
 					{
 						PaddingTop = UDim.new(0, math.ceil(DIVIDER_PAD_TOP_DP * scale)),
@@ -287,7 +287,7 @@ return function(props: MenuProperties): React.ReactNode
 						),
 					} :: RobloxTypes.UIPaddingProperties
 				),
-				Line = React.createElement(
+				Line = e(
 					"Frame",
 					{
 						BackgroundTransparency = 0,
@@ -320,8 +320,8 @@ return function(props: MenuProperties): React.ReactNode
 		end
 	end
 
-	local menuContents = React.createElement(React.Fragment, {}, {
-		UIListLayout = React.createElement(
+	local menuContents = e(React.Fragment, {}, {
+		UIListLayout = e(
 			"UIListLayout",
 			{
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -339,7 +339,7 @@ return function(props: MenuProperties): React.ReactNode
 				Wraps = false,
 			} :: RobloxTypes.UIListLayoutProperties
 		),
-		UIPadding = React.createElement(
+		UIPadding = e(
 			"UIPadding",
 			{
 				PaddingTop = UDim.new(0, math.ceil(MENU_TB_PADDING_DP * scale)),
@@ -347,10 +347,10 @@ return function(props: MenuProperties): React.ReactNode
 			} :: RobloxTypes.UIPaddingProperties
 		),
 
-		Buttons = React.createElement(React.Fragment, {}, buttons),
+		Buttons = e(React.Fragment, {}, buttons),
 	})
 
-	return React.createElement(
+	return e(
 		PopUpContainer,
 		{
 			DisplayAnchorPoint = Vector2.new(0, 0),

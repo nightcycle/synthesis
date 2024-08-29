@@ -15,7 +15,8 @@ local TextDisplay = require("@comp/TextDisplay")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -39,15 +40,15 @@ return function(target: Frame)
 				name: string,
 				backgroundRole: Enums.ColorRoleType
 			)
-				local comp: typeof(Interface.OnSurfacePrimary) = Interface[name]
+				local comp: typeof(Interface.Primary) = Interface[name]
 				local value, setValue = React.useState(50 :: number | NumberRange)
-				return React.createElement(Container, {
+				return e(Container, {
 					BackgroundTransparency = 0,
 					BackgroundColor3 = style:GetColor(backgroundRole),
 					BorderSizePixel = 1,
 					BorderColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 				}, {
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -58,14 +59,14 @@ return function(target: Frame)
 							-- VerticalFlex = Enum.UIFlexAlignment.SpaceEvenly,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					-- Divider1 = React.createElement("Frame", {
+					-- Divider1 = e("Frame", {
 					-- 	BackgroundTransparency = 0,
 					-- 	LayoutOrder = 0,
 					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
 					-- 	BorderSizePixel = 0,
 					-- 	Size = UDim2.new(1, 0, 0, 1),
 					-- }),
-					Title = React.createElement(
+					Title = e(
 						TextDisplay.StyleSimple,
 						{
 							Text = name,
@@ -76,7 +77,7 @@ return function(target: Frame)
 							LayoutOrder = 1,
 						} :: TextDisplay.StyleTextDisplayProperties
 					),
-					Slider = React.createElement(
+					Slider = e(
 						comp,
 						{
 							LayoutOrder = 2,
@@ -89,7 +90,7 @@ return function(target: Frame)
 							Style = style,
 						} :: any
 					),
-					-- Divider2 = React.createElement("Frame", {
+					-- Divider2 = e("Frame", {
 					-- 	BackgroundTransparency = 0,
 					-- 	LayoutOrder = 3,
 					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
@@ -99,7 +100,7 @@ return function(target: Frame)
 				})
 			end
 
-			return React.createElement(
+			return e(
 				"Frame",
 				{
 					Name = "HalfFrame",
@@ -110,7 +111,7 @@ return function(target: Frame)
 					Position = props.Position,
 				} :: RobloxTypes.FrameProperties,
 				{
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.Name,
@@ -124,18 +125,10 @@ return function(target: Frame)
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					OnSurfacePrimary = newThemeBlock(
-						"OnSurfacePrimary",
-						Enums.ColorRoleType.Surface
-					),
-					OnSurfaceSecondary = newThemeBlock(
-						"OnSurfaceSecondary",
-						Enums.ColorRoleType.Surface
-					),
-					OnSurfaceTertiary = newThemeBlock(
-						"OnSurfaceTertiary",
-						Enums.ColorRoleType.Surface
-					),
+					Primary = newThemeBlock("Primary", Enums.ColorRoleType.Surface),
+					Secondary = newThemeBlock("Secondary", Enums.ColorRoleType.Surface),
+					Tertiary = newThemeBlock("Tertiary", Enums.ColorRoleType.Surface),
+					OnSurface = newThemeBlock("OnSurface", Enums.ColorRoleType.Surface),
 				}
 			)
 		end
@@ -147,7 +140,7 @@ return function(target: Frame)
 			Color3.fromHSV(0.6, 0.9, 0.7),
 		}
 
-		local element = React.createElement(
+		local element = e(
 			"Frame",
 			{
 				Size = UDim2.fromScale(1, 1),
@@ -162,14 +155,14 @@ return function(target: Frame)
 					local width = 1 / #COLORS
 
 					if i % 2 == 0 then
-						children[`Dark{i}`] = React.createElement(halfFrame, {
+						children[`Dark{i}`] = e(halfFrame, {
 							Color3 = color,
 							IsDarkMode = true,
 							Size = UDim2.fromScale(width, 1),
 							Position = UDim2.fromScale(x, 0),
 						})
 					else
-						children[`Light{i}`] = React.createElement(halfFrame, {
+						children[`Light{i}`] = e(halfFrame, {
 							Color3 = color,
 							IsDarkMode = false,
 							Size = UDim2.fromScale(width, 1),

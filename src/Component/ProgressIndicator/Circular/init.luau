@@ -13,7 +13,7 @@ local Types = require("@proj/Types")
 local Defaults = require("./Defaults")
 local Theme = require("@proj/Theme")
 local PropUtil = require("@proj/PropUtil")
-
+-- Hooks
 -- Types
 type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
@@ -45,6 +45,8 @@ local BUFFER = 10
 -- Variables
 -- References
 -- Private Functions
+-- Private Functions
+local e = React.createElement
 function tickAlpha(period: number, offset: number?): number
 	offset = offset or 0
 	assert(offset)
@@ -59,7 +61,7 @@ function newSemiRotaryElement(
 	color3: Color3,
 	transparency: number
 ): React.ReactNode
-	return React.createElement(
+	return e(
 		"CanvasGroup",
 		{
 			Size = UDim2.fromScale(1, 1),
@@ -68,7 +70,7 @@ function newSemiRotaryElement(
 			BackgroundTransparency = 1,
 		} :: RobloxTypes.CanvasGroupProperties,
 		{
-			UIGradient = React.createElement(
+			UIGradient = e(
 				"UIGradient",
 				{
 					Transparency = NumberSequence.new({
@@ -80,7 +82,7 @@ function newSemiRotaryElement(
 					Rotation = (progressStart + ROTATION_OFFSET) % 360,
 				} :: RobloxTypes.UIGradientProperties
 			),
-			ImageLabel = React.createElement(
+			ImageLabel = e(
 				"ImageLabel",
 				{
 					Image = RING_ASSET_URL,
@@ -92,7 +94,7 @@ function newSemiRotaryElement(
 					AnchorPoint = Vector2.new(0.5, 0.5),
 				} :: RobloxTypes.ImageLabelProperties,
 				{
-					UIGradient = React.createElement(
+					UIGradient = e(
 						"UIGradient",
 						{
 							Transparency = NumberSequence.new({
@@ -119,7 +121,7 @@ function newRotaryElement(props: RobloxTypes.GuiObjectProperties & {
 	local progressFinish = (props.ProgressStart + props.ProgressWidth) % 360
 	local progressMid = (props.ProgressStart + props.ProgressWidth * 0.5) % 360
 
-	return React.createElement(
+	return e(
 		"Frame",
 		PropUtil.mergeGuiObject(
 			{
@@ -218,9 +220,9 @@ Library.Full = function(props: ProgressIndicatorCircularProperties): React.React
 		else
 			return function() end
 		end
-	end)
+	end, { isActive })
 
-	return React.createElement(
+	return e(
 		"Frame",
 		PropUtil.mergeGuiObject(
 			{
@@ -253,9 +255,7 @@ Library.Full = function(props: ProgressIndicatorCircularProperties): React.React
 	)
 end
 
-function Library.OnSurfacePrimary(
-	props: StyleProgressIndicatorCircularProperties
-): React.ReactNode
+function Library.Primary(props: StyleProgressIndicatorCircularProperties): React.ReactNode
 	local style = props.Style
 	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
 	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
@@ -263,10 +263,10 @@ function Library.OnSurfacePrimary(
 	mergeProps.SchemeType = style.SchemeType
 	mergeProps.Scale = style.Scale
 
-	return React.createElement(Library.Full, mergeProps)
+	return e(Library.Full, mergeProps)
 end
 
-function Library.OnSurfaceSecondary(
+function Library.Secondary(
 	props: StyleProgressIndicatorCircularProperties
 ): React.ReactNode
 	local style = props.Style
@@ -276,10 +276,10 @@ function Library.OnSurfaceSecondary(
 	mergeProps.SchemeType = style.SchemeType
 	mergeProps.Scale = style.Scale
 
-	return React.createElement(Library.Full, mergeProps)
+	return e(Library.Full, mergeProps)
 end
 
-function Library.OnSurfaceTertiary(
+function Library.Tertiary(
 	props: StyleProgressIndicatorCircularProperties
 ): React.ReactNode
 	local style = props.Style
@@ -289,7 +289,7 @@ function Library.OnSurfaceTertiary(
 	mergeProps.SchemeType = style.SchemeType
 	mergeProps.Scale = style.Scale
 
-	return React.createElement(Library.Full, mergeProps)
+	return e(Library.Full, mergeProps)
 end
 
 return Library

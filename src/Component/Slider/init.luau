@@ -18,6 +18,8 @@ local PopUp = require("@comp/PopUp")
 local TextDisplay = require("@comp/TextDisplay")
 local Container = require("@comp/Container")
 local Transition = require("@proj/Transition")
+-- Hooks
+local useLerp = require("@hook/useLerp")
 -- Types
 type Style = Style.Style
 export type BaseSliderProperties = RobloxTypes.GuiButtonProperties & {
@@ -68,6 +70,7 @@ local UNGRAB_SOUND_TYPE = Enums.SoundType.navigation_backward_selection_minimal
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 local packSequence = function(sequence: {
 	[number]: Color3,
 } | {
@@ -227,45 +230,22 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		React.useState(Vector2.new(0, 0) :: Vector2?)
 	local absolutePosition: Vector2, setAbsolutePosition =
 		React.useState(Vector2.new(0, 0))
+
 	local selectionIndex: number?, setSelectionIndex = React.useState(nil :: number?)
 	local isHovered: boolean, setIsHovered = React.useState(false)
 	local isPressed: boolean, setIsPressed = React.useState(false)
 	local isFocused: boolean, setIsFocused = React.useState(false)
 
-	local isPressAlpha1: number, setIsPressAlpha1 = React.useState(0)
-	local isPressAlpha2: number, setIsPressAlpha2 = React.useState(0)
-	React.useEffect(function()
-		if isAnimated then
-			local runner1 = Transition.Runner(
-				function(alpha: number)
-					if alpha ~= isPressAlpha1 then
-						setIsPressAlpha1(alpha)
-					end
-				end,
-				isPressAlpha1,
-				Enums.TransitionType.Standard,
-				Enums.TransitionDuration.Short1
-			)
-			runner1:Set(selectionIndex == 1)
-			local runner2 = Transition.Runner(
-				function(alpha: number)
-					if alpha ~= isPressAlpha2 then
-						setIsPressAlpha2(alpha)
-					end
-				end,
-				isPressAlpha2,
-				Enums.TransitionType.Standard,
-				Enums.TransitionDuration.Short1
-			)
-			runner2:Set(selectionIndex == 2)
-			return function()
-				runner1:Disconnect()
-				runner2:Disconnect()
-			end
-		else
-			return function() end
-		end
-	end)
+	local goalAlpha1: number, _setGoalAlpha1 = React.useState(0)
+	local goalAlpha2: number, _setGoalAlpha2 = React.useState(0)
+
+	local rawAlpha1: number =
+		useLerp(0, goalAlpha1, Enums.TransitionDuration.Short1, isAnimated)
+	local rawAlpha2: number =
+		useLerp(0, goalAlpha2, Enums.TransitionDuration.Short1, isAnimated)
+
+	local alpha1 = Transition.Easing[Enums.TransitionType.Standard](rawAlpha1)
+	local alpha2 = Transition.Easing[Enums.TransitionType.Standard](rawAlpha2)
 
 	-- process value
 	local function formatScalarValue(scalarValue: number): number
@@ -353,16 +333,10 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 			local handleAlphaWidth2: number
 			local handleAlphaWidth1: number
 			if isAnimated then
-				handleAlphaWidth2 = CurveUtil.lerp(
-					defHandleAlphaWidth,
-					pressHandleAlphaWidth,
-					isPressAlpha2
-				)
-				handleAlphaWidth1 = CurveUtil.lerp(
-					defHandleAlphaWidth,
-					pressHandleAlphaWidth,
-					isPressAlpha1
-				)
+				handleAlphaWidth2 =
+					CurveUtil.lerp(defHandleAlphaWidth, pressHandleAlphaWidth, alpha2)
+				handleAlphaWidth1 =
+					CurveUtil.lerp(defHandleAlphaWidth, pressHandleAlphaWidth, alpha1)
 			else
 				if selectionIndex == 2 then
 					handleAlphaWidth2 = pressHandleAlphaWidth
@@ -441,7 +415,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		else
 			-- print("handleAlpha1", handleAlpha1)
 			local handleAlphaWidth =
-				CurveUtil.lerp(defHandleAlphaWidth, pressHandleAlphaWidth, isPressAlpha1)
+				CurveUtil.lerp(defHandleAlphaWidth, pressHandleAlphaWidth, alpha1)
 			local handleGapAlphaWidth = (
 				math.round(handleAlphaWidth * absoluteSize.X)
 				+ (2 * math.ceil(HANDLE_PAD_DP * scale))
@@ -617,7 +591,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		end
 	end
 
-	return React.createElement(
+	return e(
 		"ImageButton",
 		PropUtil.mergeGuiButton(
 			{
@@ -728,19 +702,19 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 			Label = if isLabelEnabled
 					and isPressed
 					and handlePosition
-				then React.createElement(
+				then e(
 					PopUp,
 					{
 						TargetAbsolutePosition = handlePosition,
 						DisplayAnchorPoint = Vector2.new(0.5, 1),
 						DisplayComponent = function(): React.ReactNode
-							return React.createElement(Container, {
+							return e(Container, {
 								BackgroundColor3 = labelColor3,
 								BackgroundTransparency = 0,
 								AutomaticSize = Enum.AutomaticSize.XY,
 								AnchorPoint = Vector2.new(0.5, 1),
 							}, {
-								UIListLayout = React.createElement(
+								UIListLayout = e(
 									"UIListLayout",
 									{
 										SortOrder = Enum.SortOrder.LayoutOrder,
@@ -750,7 +724,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 										HorizontalAlignment = Enum.HorizontalAlignment.Center,
 									} :: RobloxTypes.UIListLayoutProperties
 								),
-								UIPadding = React.createElement(
+								UIPadding = e(
 									"UIPadding",
 									{
 										PaddingTop = UDim.new(0, math.round(scale * 12)),
@@ -765,13 +739,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 										),
 									} :: RobloxTypes.UIPaddingProperties
 								),
-								UICorner = React.createElement(
+								UICorner = e(
 									"UICorner",
 									{
 										CornerRadius = UDim.new(0.5, 0),
 									} :: RobloxTypes.UICornerProperties
 								),
-								TextDisplay = React.createElement(
+								TextDisplay = e(
 									TextDisplay.Full,
 									{
 										AutomaticSize = Enum.AutomaticSize.XY,
@@ -795,13 +769,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					{}
 				)
 				else nil,
-			UISizeConstraint = React.createElement(
+			UISizeConstraint = e(
 				"UISizeConstraint",
 				{
 					MinSize = Vector2.new(math.ceil(absoluteSize.Y * 3), 0),
 				} :: RobloxTypes.UISizeConstraintProperties
 			),
-			UIListLayout = React.createElement(
+			UIListLayout = e(
 				"UIListLayout",
 				{
 					SortOrder = Enum.SortOrder.LayoutOrder,
@@ -815,7 +789,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					Wraps = false,
 				} :: RobloxTypes.UIListLayoutProperties
 			),
-			Handle = React.createElement(
+			Handle = e(
 				"Frame",
 				{
 					BackgroundColor3 = Color3.new(1, 1, 1),
@@ -823,14 +797,14 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					Size = UDim2.new(0, 0, 0, math.round(HANDLE_HEIGHT_DP * scale)),
 				} :: RobloxTypes.FrameProperties,
 				{
-					UIGradient = React.createElement(
+					UIGradient = e(
 						"UIGradient",
 						{
 							Color = ColorSequence.new(actualFillColor3),
 							Transparency = handleTransparencySequence,
 						} :: RobloxTypes.UIGradientProperties
 					),
-					UIListLayout = React.createElement(
+					UIListLayout = e(
 						"UIListLayout",
 						{
 							SortOrder = Enum.SortOrder.LayoutOrder,
@@ -844,7 +818,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 							Wraps = false,
 						} :: RobloxTypes.UIListLayoutProperties
 					),
-					Bar = React.createElement(
+					Bar = e(
 						"Frame",
 						{
 							BackgroundColor3 = Color3.new(1, 1, 1),
@@ -853,7 +827,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 						} :: RobloxTypes.FrameProperties,
 						{
 							UIListLayout = if snapCount
-								then React.createElement(
+								then e(
 									"UIListLayout",
 									{
 										SortOrder = Enum.SortOrder.LayoutOrder,
@@ -868,21 +842,21 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 									} :: RobloxTypes.UIListLayoutProperties
 								)
 								else nil,
-							UIGradient = React.createElement(
+							UIGradient = e(
 								"UIGradient",
 								{
 									Color = barFillColorSequence,
 									Transparency = barTransparencySequence,
 								} :: RobloxTypes.UIGradientProperties
 							),
-							UICorner = React.createElement(
+							UICorner = e(
 								"UICorner",
 								{
 									CornerRadius = UDim.new(0.5, 0),
 								} :: RobloxTypes.UICornerProperties
 							),
 							DotContainer = if snapCount
-								then React.createElement(
+								then e(
 									"Frame",
 									{
 										BackgroundTransparency = 1,
@@ -895,7 +869,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 										),
 									} :: RobloxTypes.FrameProperties,
 									{
-										UIListLayout = React.createElement(
+										UIListLayout = e(
 											"UIListLayout",
 											{
 												SortOrder = Enum.SortOrder.LayoutOrder,
@@ -909,13 +883,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 												Wraps = false,
 											} :: RobloxTypes.UIListLayoutProperties
 										),
-										Dots = React.createElement(
+										Dots = e(
 											React.Fragment,
 											{},
 											(function(): { [string]: React.ReactNode }
 												local out: { [string]: React.ReactNode } =
 													{
-														UIPadding = React.createElement(
+														UIPadding = e(
 															"UIPadding",
 															{
 																PaddingLeft = UDim.new(
@@ -936,7 +910,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 														then actualOnFillColor3
 														else actualOnContainerColor3
 
-													out["Dot" .. i] = React.createElement(
+													out["Dot" .. i] = e(
 														"Frame",
 														{
 															BackgroundColor3 = color,
@@ -963,7 +937,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 															),
 														} :: RobloxTypes.FrameProperties,
 														{
-															UICorner = React.createElement(
+															UICorner = e(
 																"UICorner",
 																{
 																	CornerRadius = UDim.new(
@@ -989,7 +963,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	)
 end
 
-Library.OnSurfacePrimary = function(props: StyleSliderProperties): React.ReactNode
+Library.Primary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
 	local newProps = table.clone(props) :: SliderProperties;
@@ -1012,10 +986,10 @@ Library.OnSurfacePrimary = function(props: StyleSliderProperties): React.ReactNo
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceSecondary = function(props: StyleSliderProperties): React.ReactNode
+Library.Secondary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
 	local newProps = table.clone(props) :: SliderProperties;
@@ -1038,10 +1012,10 @@ Library.OnSurfaceSecondary = function(props: StyleSliderProperties): React.React
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
 
-Library.OnSurfaceTertiary = function(props: StyleSliderProperties): React.ReactNode
+Library.Tertiary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
 	local newProps = table.clone(props) :: SliderProperties;
@@ -1064,6 +1038,33 @@ Library.OnSurfaceTertiary = function(props: StyleSliderProperties): React.ReactN
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return React.createElement(Library.Full, newProps)
+	return e(Library.Full, newProps)
 end
+
+Library.OnSurface = function(props: StyleSliderProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: SliderProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.InverseOnSurface)
+	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHigh)
+	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.SurfaceVariant)
+	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.DisabledContainerColor3 =
+		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
+	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.SoundVolume = style.Volume
+
+	return e(Library.Full, newProps)
+end
+
 return Library

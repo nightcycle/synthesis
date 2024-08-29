@@ -13,6 +13,8 @@ type ImageData = Types.ImageData
 export type PopUpProperties = RobloxTypes.FrameProperties & {
 	-- OriginAnchorPoint: Vector2?,
 	DisplayAnchorPoint: Vector2?,
+	DisplayOrder: number?,
+	ZIndexBehavior: Enum.ZIndexBehavior?,
 	TargetAbsolutePosition: Vector2,
 	DisplayComponent: () -> React.ReactNode,
 }
@@ -20,12 +22,14 @@ export type PopUpProperties = RobloxTypes.FrameProperties & {
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 return function(props: PopUpProperties): React.ReactNode
 	-- local originAnchorPoint: Vector2 = props.OriginAnchorPoint or Vector2.new(0, 0)
 	local displayAnchorPoint: Vector2 = props.DisplayAnchorPoint or Vector2.new(0, 0)
-
+	local displayOrder: number = props.DisplayOrder or 0
 	local absolutePosition: Vector2 = props.TargetAbsolutePosition
+	local zIndexBehavior: Enum.ZIndexBehavior? = props.ZIndexBehavior
 	-- local renderPosition, setRenderPosition = React.useState(Vector2.new(0, 0))
 	-- local absoluteSize = Vector2.new(0, 0)
 
@@ -51,14 +55,16 @@ return function(props: PopUpProperties): React.ReactNode
 	-- end
 
 	-- update()
-	return React.createElement(
+	return e(
 		"ScreenGui",
 		{
 			ResetOnSpawn = false,
+			DisplayOrder = displayOrder,
+			ZIndexBehavior = zIndexBehavior or Enum.ZIndexBehavior.Sibling,
 			Enabled = true,
 		} :: RobloxTypes.ScreenGuiProperties,
 		{
-			Container = React.createElement(
+			Container = e(
 				Container,
 				PropUtil.mergeFrame({
 					Position = UDim2.fromOffset(absolutePosition.X, absolutePosition.Y),
@@ -68,8 +74,8 @@ return function(props: PopUpProperties): React.ReactNode
 					-- 	update()
 					-- end :: any,
 					children = {
-						DisplayComponent = React.createElement(props.DisplayComponent),
-						UIListLayout = React.createElement(
+						DisplayComponent = e(props.DisplayComponent),
+						UIListLayout = e(
 							"UIListLayout",
 							{
 								SortOrder = Enum.SortOrder.LayoutOrder,

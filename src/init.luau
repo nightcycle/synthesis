@@ -84,6 +84,7 @@ Synthetic.Types = Types
 Synthetic.Style = Style
 Synthetic.Theme = require("./Theme")
 Synthetic.Typography = require("./Typography")
+Synthetic.Hook = require("./Hook")
 Synthetic.Component = {
 	Button = Button,
 	ButtonContainer = ButtonContainer,

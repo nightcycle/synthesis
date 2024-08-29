@@ -10,6 +10,7 @@ local RobloxTypes = require("@proj/RobloxTypes")
 -- Variables
 -- References
 -- Private Functions
+local e = React.createElement
 -- Class
 local Util = {}
 
@@ -22,12 +23,7 @@ function Util.mergeInstance(
 			then element.Archivable
 			else props.Archivable,
 		Name = element.Name or props.Name,
-		children = React.createElement(
-			React.Fragment,
-			{},
-			element.children or {},
-			props.children or {}
-		),
+		children = e(React.Fragment, {}, element.children or {}, props.children or {}),
 	}
 	for k, v in pairs(element) do
 		if typeof(k) ~= "string" then

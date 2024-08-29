@@ -13,9 +13,11 @@ local BOTTOM_IMAGE = "http://www.roblox.com/asset/?id=16331988989"
 -- Variables
 -- References
 -- Private Functions
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(props: RobloxTypes.ScrollingFrameProperties): React.ReactNode
-	return React.createElement(
+	return e(
 		"ScrollingFrame",
 		PropUtil.mergeScrollingFrame(
 			{

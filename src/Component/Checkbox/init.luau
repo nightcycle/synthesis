@@ -15,7 +15,8 @@ local PropUtil = require("@proj/PropUtil")
 local Defaults = require("./Defaults")
 local Transition = require("@proj/Transition")
 local PopUp = require("@comp/PopUp")
-
+-- Hooks
+local useLerp = require("@hook/useLerp")
 -- Types
 type Maid = Maid.Maid
 type AppearanceData = Types.AppearanceData
@@ -47,9 +48,7 @@ export type StyleCheckboxProperties = BaseCheckboxProperties & {
 -- Constants
 local BUTTON_SIZE_DP = 18
 local TRANSITION_TYPE = Enums.TransitionType.Emphasized
-local TRANSITION_DURATION = Enums.TransitionDuration.Long1
-local ALPHA_RUNNER_KEY = "AlphaRunner"
-local RIPPLE_ALPHA_RUNNER_KEY = "BubbleAlphaRunner"
+local TRANSITION_DURATION = Enums.TransitionDuration.Short4
 local CHECK_ICON = Icons.check
 local DASH_ICON = Icons.remove
 local LAYER_SIZE_DP = 40
@@ -59,77 +58,43 @@ local UNSELECT_OUTLINE_WIDTH_DP = 2
 -- Variables
 -- References
 -- Private Functions
-function getAlphaRunner(
-	self: React.ComponentClass<CheckboxProperties>
-): Transition.TransitionRunner
-	return self[ALPHA_RUNNER_KEY]
-end
-function getBubbleAlphaRunner(
-	self: React.ComponentClass<CheckboxProperties>
-): Transition.TransitionRunner
-	return self[RIPPLE_ALPHA_RUNNER_KEY]
-end
+local e = React.createElement
+
 -- Class
-local Component: React.ComponentClass<CheckboxProperties> =
-	React.Component:extend("Checkbox")
-
-function Component:init(initialProps: CheckboxProperties): ()
-	self[ALPHA_RUNNER_KEY] = Transition.Runner(function(alpha: number)
-		if self.state["Alpha"] ~= alpha then
-			self:setState({
-				Alpha = alpha,
-			})
-		end
-	end, initialProps.Value and 1 or 0, TRANSITION_TYPE, TRANSITION_DURATION)
-	self[RIPPLE_ALPHA_RUNNER_KEY] = Transition.Runner(function(alpha: number)
-		if self.state["BubbleAlpha"] ~= alpha then
-			self:setState({
-				BubbleAlpha = alpha,
-			})
-		end
-	end, 0, TRANSITION_TYPE, Enums.TransitionDuration.Medium4)
-	self:setState({
-		IsHovered = false,
-		IsPressed = false,
-		IsFocused = false,
-		TargetValue = initialProps.Value,
-		BubbleAlpha = getBubbleAlphaRunner(self):Get(),
-		Alpha = getAlphaRunner(self):Get(),
-		KnobAbsolutePosition = Vector2.new(0, 0),
-		KnobAbsoluteSize = Vector2.new(0, 0),
-	})
-end
-
-function Component:render(): React.ReactNode
-	-- unpack state
-	local isHovered: boolean = self.state.IsHovered
-	local isPressed: boolean = self.state.IsPressed
-	local isFocused: boolean = self.state.IsFocused
-
+local Library = {}
+Library.Full = function(props: CheckboxProperties): React.ReactNode
 	-- unpack properties
-	local value: boolean = self.props.Value
-	local onChanged: (newValue: boolean) -> () = self.props.OnChange
-	local elevation: number = self.props.Elevation :: number? or Defaults.Elevation
-	local schemeType: Enums.SchemeType = self.props.SchemeType :: Enums.SchemeType?
+	local value: boolean = props.Value
+	local onChanged: (newValue: boolean) -> () = props.OnChange
+	local elevation: number = props.Elevation :: number? or Defaults.Elevation
+	local schemeType: Enums.SchemeType = props.SchemeType :: Enums.SchemeType?
 		or Defaults.SchemeType
-	local soundVolume: number? = self.props.SoundVolume or Defaults.SoundVolume
-	local disabledColor3: Color3 = self.props.DisabledColor3 :: Color3?
+	local soundVolume: number? = props.SoundVolume or Defaults.SoundVolume
+	local disabledColor3: Color3 = props.DisabledColor3 :: Color3?
 		or Defaults.DisabledColor3
-	local onDisabledColor3: Color3 = self.props.OnDisabledColor3 :: Color3?
+	local onDisabledColor3: Color3 = props.OnDisabledColor3 :: Color3?
 		or Defaults.OnDisabledColor3
-	local fillColor3: Color3 = self.props.FillColor3 :: Color3? or Defaults.FillColor3
-	local iconColor3: Color3 = self.props.IconColor3 :: Color3? or Defaults.IconColor3
-	local outlineColor3: Color3 = self.props.OutlineColor3 :: Color3?
-		or Defaults.OutlineColor3
+	local fillColor3: Color3 = props.FillColor3 :: Color3? or Defaults.FillColor3
+	local iconColor3: Color3 = props.IconColor3 :: Color3? or Defaults.IconColor3
+	local outlineColor3: Color3 = props.OutlineColor3 :: Color3? or Defaults.OutlineColor3
 
-	local scale = (self.props.Scale :: number?) or Defaults.Scale
-	local isAnimated = if self.props.IsAnimated ~= nil
-		then self.props.IsAnimated
+	local scale = (props.Scale :: number?) or Defaults.Scale
+	local isAnimated = if props.IsAnimated ~= nil
+		then props.IsAnimated
 		else Defaults.IsAnimated
-	local isEnabled = if self.props.IsEnabled ~= nil
-		then self.props.IsEnabled
+	local isEnabled = if props.IsEnabled ~= nil
+		then props.IsEnabled
 		else Defaults.IsEnabled
 
+	-- unpack state
+	local isHovered, setIsHovered = React.useState(false)
+	local isPressed, setIsPressed = React.useState(false)
+	local isFocused, setIsFocused = React.useState(false)
+	local knobAbsoluteSize, setKnobAbsoluteSize = React.useState(Vector2.new(0, 0))
+	local knobAbsolutePosition, setKnobAbsolutePosition =
+		React.useState(Vector2.new(0, 0))
+
+	-- processing
 	local state: Enums.ButtonStateType
 	if isEnabled then
 		if isPressed then
@@ -145,11 +110,6 @@ function Component:render(): React.ReactNode
 		state = Enums.ButtonStateType.Disabled
 	end
 
-	if not isAnimated then
-		getAlphaRunner(self):Stop()
-	else
-		getAlphaRunner(self):Update(value)
-	end
 	local function playSound()
 		if soundVolume <= 0 then
 			return
@@ -161,17 +121,28 @@ function Component:render(): React.ReactNode
 		Sounds.play(soundType, soundVolume)
 	end
 
-	local isBubbleEnabled = (isHovered or isPressed or isFocused) and isEnabled
+	local isBubbleEnabled = (isHovered or isPressed or isFocused)
+		and isEnabled
+		and isAnimated
 
-	if isAnimated then
-		getAlphaRunner(self):Set(value, playSound)
-		getBubbleAlphaRunner(self):Set(isBubbleEnabled)
-	else
-		isBubbleEnabled = false
+	local goalAlpha, setGoalAlpha = React.useState(if value then 1 else 0)
+	if value and goalAlpha ~= 1 then
+		setGoalAlpha(1)
+	elseif not value and goalAlpha ~= 0 then
+		setGoalAlpha(0)
 	end
 
-	local alpha = if isAnimated then getAlphaRunner(self):Get() elseif value then 1 else 0
-	local bubbleAlpha = if isAnimated then getBubbleAlphaRunner(self):Get() else 0
+	local goalBubbleAlpha, setGoalBubbleAlpha = React.useState(0)
+	if isBubbleEnabled and goalBubbleAlpha ~= 1 then
+		setGoalBubbleAlpha(1)
+	elseif not isBubbleEnabled and goalBubbleAlpha ~= 0 then
+		setGoalBubbleAlpha(0)
+	end
+	local rawAlpha = useLerp(goalAlpha, goalAlpha, TRANSITION_DURATION, isAnimated)
+	local rawBubbleAlpha = useLerp(0, goalBubbleAlpha, TRANSITION_DURATION, isAnimated)
+
+	local alpha = Transition.Easing[TRANSITION_TYPE](rawAlpha)
+	local bubbleAlpha = Transition.Easing[TRANSITION_TYPE](rawBubbleAlpha)
 
 	local renderData: RenderData
 	if state == Enums.ButtonStateType.Enabled then
@@ -291,7 +262,7 @@ function Component:render(): React.ReactNode
 
 	local fillTransparency = 1 - (1 - borderData.Transparency) * alpha
 
-	return React.createElement(
+	return e(
 		"ImageButton",
 		PropUtil.mergeGuiObject(
 			{
@@ -304,83 +275,64 @@ function Component:render(): React.ReactNode
 				[React.Event.InputBegan] = function(_, input: InputObject)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
 						if not isHovered then
-							self:setState({
-								IsHovered = true,
-							})
+							setIsHovered(true)
 						end
 					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
 						if not isPressed then
-							self:setState({
-								IsPressed = true,
-							})
+							setIsPressed(true)
 						end
 					end
 				end :: any,
 				[React.Event.InputEnded] = function(_, input: InputObject)
 					if input.UserInputType == Enum.UserInputType.MouseMovement then
 						if isHovered then
-							self:setState({
-								IsHovered = false,
-							})
+							setIsHovered(false)
 						end
 					elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
 						if isPressed then
-							self:setState({
-								IsPressed = false,
-							})
+							setIsPressed(false)
 						end
 					end
 				end,
 				[React.Event.Activated] = function()
 					print("activate")
-					if self.props.IsEnabled then
+					if props.IsEnabled then
 						print("click")
 						onChanged(not value)
-						self:setState({
-							TargetValue = not value,
-						})
 						if not isAnimated then
 							playSound()
 						end
 					end
 				end,
 				[React.Event.SelectionGained] = function()
-					if self.props.IsEnabled then
+					if props.IsEnabled then
 						if not isFocused then
-							self:setState({
-								IsFocused = true,
-							})
+							setIsFocused(true)
 						end
 					end
 				end,
 				[React.Event.SelectionLost] = function()
-					if self.props.IsEnabled then
+					if props.IsEnabled then
 						if isFocused then
-							self:setState({
-								IsFocused = false,
-							})
+							setIsFocused(false)
 						end
 					end
 				end,
 				[React.Change.AbsolutePosition] = function(inst: ImageButton)
-					if self.state.KnobAbsolutePosition ~= inst.AbsolutePosition then
-						self:setState({
-							KnobAbsolutePosition = inst.AbsolutePosition,
-						})
+					if knobAbsolutePosition ~= inst.AbsolutePosition then
+						setKnobAbsolutePosition(inst.AbsolutePosition)
 					end
 				end :: any,
 				[React.Change.AbsoluteSize] = function(inst: ImageButton)
-					if self.state.KnobAbsoluteSize ~= inst.AbsoluteSize then
-						self:setState({
-							KnobAbsoluteSize = inst.AbsoluteSize,
-						})
+					if knobAbsoluteSize ~= inst.AbsoluteSize then
+						setKnobAbsoluteSize(inst.AbsoluteSize)
 					end
 				end :: any,
 			} :: RobloxTypes.GuiObjectProperties,
-			self.props
+			props
 		),
 		{
-			UIListLayout = React.createElement(
+			UIListLayout = e(
 				"UIListLayout",
 				{
 					Padding = UDim.new(0, 0),
@@ -393,14 +345,14 @@ function Component:render(): React.ReactNode
 			),
 			Bubble = if isAnimated
 					and (math.round(bubbleAlpha) ~= bubbleAlpha or isBubbleEnabled)
-				then React.createElement(PopUp, {
+				then e(PopUp, {
 					DisplayAnchorPoint = Vector2.new(0.5, 0.5),
-					TargetAbsolutePosition = self.state.KnobAbsolutePosition
-						+ self.state.KnobAbsoluteSize * Vector2.new(0.5, 0.5),
+					TargetAbsolutePosition = knobAbsolutePosition
+						+ knobAbsoluteSize * Vector2.new(0.5, 0.5),
 					DisplayComponent = function(): React.ReactNode
 						local bubbleSize =
 							math.ceil(2 * scale * BUTTON_SIZE_DP * bubbleAlpha)
-						return React.createElement(
+						return e(
 							"Frame",
 							{
 								BackgroundTransparency = 1 - 0.2 * bubbleAlpha,
@@ -409,7 +361,7 @@ function Component:render(): React.ReactNode
 								Size = UDim2.fromOffset(bubbleSize, bubbleSize),
 							} :: RobloxTypes.FrameProperties,
 							{
-								React.createElement(
+								e(
 									"UICorner",
 									{
 										CornerRadius = UDim.new(0.5, 0),
@@ -420,7 +372,7 @@ function Component:render(): React.ReactNode
 					end,
 				})
 				else nil,
-			Box = React.createElement(
+			Box = e(
 				"ImageLabel",
 				{
 					Size = (function(): UDim2
@@ -441,7 +393,7 @@ function Component:render(): React.ReactNode
 					ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
 				} :: RobloxTypes.ImageLabelProperties,
 				{
-					UICorner = React.createElement(
+					UICorner = e(
 						"UICorner",
 						{
 							CornerRadius = UDim.new(
@@ -450,7 +402,7 @@ function Component:render(): React.ReactNode
 							),
 						} :: RobloxTypes.UICornerProperties
 					),
-					UIStroke = React.createElement(
+					UIStroke = e(
 						"UIStroke",
 						{
 							ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -468,62 +420,76 @@ function Component:render(): React.ReactNode
 	)
 end
 
-function Component:willUnmount()
-	getAlphaRunner(self):Disconnect()
-	getBubbleAlphaRunner(self):Disconnect()
+Library.Primary = function(props: StyleCheckboxProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: CheckboxProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
+	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.SoundVolume = style.Volume
+
+	return e(Library.Full, newProps)
 end
 
-return {
-	Full = Component,
-	OnSurfacePrimary = function(props: StyleCheckboxProperties): React.ReactNode
-		local style = props.Style
+Library.Secondary = function(props: StyleCheckboxProperties): React.ReactNode
+	local style = props.Style
 
-		local newProps = table.clone(props) :: CheckboxProperties;
-		(newProps :: any).Style = nil
-		newProps.IsAnimated = style.IsAnimated
-		newProps.SchemeType = style.SchemeType
-		newProps.Scale = style.Scale
-		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
-		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.SoundVolume = style.Volume
+	local newProps = table.clone(props) :: CheckboxProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
+	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.SoundVolume = style.Volume
 
-		return React.createElement(Component, newProps)
-	end,
-	OnSurfaceSecondary = function(props: StyleCheckboxProperties): React.ReactNode
-		local style = props.Style
+	return e(Library.Full, newProps)
+end
 
-		local newProps = table.clone(props) :: CheckboxProperties;
-		(newProps :: any).Style = nil
-		newProps.IsAnimated = style.IsAnimated
-		newProps.SchemeType = style.SchemeType
-		newProps.Scale = style.Scale
-		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
-		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.SoundVolume = style.Volume
+Library.Tertiary = function(props: StyleCheckboxProperties): React.ReactNode
+	local style = props.Style
 
-		return React.createElement(Component, newProps)
-	end,
-	OnSurfaceTertiary = function(props: StyleCheckboxProperties): React.ReactNode
-		local style = props.Style
+	local newProps = table.clone(props) :: CheckboxProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
+	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.SoundVolume = style.Volume
 
-		local newProps = table.clone(props) :: CheckboxProperties;
-		(newProps :: any).Style = nil
-		newProps.IsAnimated = style.IsAnimated
-		newProps.SchemeType = style.SchemeType
-		newProps.Scale = style.Scale
-		newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-		newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
-		newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-		newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
-		newProps.SoundVolume = style.Volume
+	return e(Library.Full, newProps)
+end
 
-		return React.createElement(Component, newProps)
-	end,
-}
+Library.OnSurface = function(props: StyleCheckboxProperties): React.ReactNode
+	local style = props.Style
+
+	local newProps = table.clone(props) :: CheckboxProperties;
+	(newProps :: any).Style = nil
+	newProps.IsAnimated = style.IsAnimated
+	newProps.SchemeType = style.SchemeType
+	newProps.Scale = style.Scale
+	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.Outline)
+	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHigh)
+	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.SoundVolume = style.Volume
+
+	return e(Library.Full, newProps)
+end
+
+return Library

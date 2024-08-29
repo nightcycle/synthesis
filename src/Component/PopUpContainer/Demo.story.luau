@@ -12,7 +12,8 @@ local Style = require("@proj/Style")
 -- Constants
 -- Variables
 -- References
-
+-- Private Functions
+local e = React.createElement
 -- Class
 return function(target: Frame)
 	local folder = Instance.new("Folder")
@@ -39,7 +40,7 @@ return function(target: Frame)
 		local popUpPosition = absolutePosition + absoluteSize * Vector2.new(0, 1)
 
 		return ReactRoblox.createPortal(
-			React.createElement(
+			e(
 				"TextButton",
 				{
 					Text = "Test",
@@ -59,7 +60,7 @@ return function(target: Frame)
 					end :: any,
 				} :: RobloxTypes.TextButtonProperties,
 				{
-					PopUpContainer = React.createElement(
+					PopUpContainer = e(
 						PopUpContainer,
 						{
 							TargetAbsolutePosition = popUpPosition,
@@ -68,7 +69,7 @@ return function(target: Frame)
 								Enums.ColorRoleType.SurfaceContainerHigh
 							),
 							DisplayComponent = function(): React.ReactNode
-								return React.createElement(
+								return e(
 									"TextButton",
 									{
 										Text = "Container Content",
@@ -89,7 +90,7 @@ return function(target: Frame)
 		)
 	end
 
-	root:render(React.createElement(newPopUp, {}))
+	root:render(e(newPopUp, {}))
 
 	return function()
 		root:unmount()
