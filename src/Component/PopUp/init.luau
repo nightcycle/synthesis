@@ -66,7 +66,7 @@ return function(props: PopUpProperties): React.ReactNode
 		{
 			Container = e(
 				Container,
-				PropUtil.mergeFrame({
+				PropUtil.mergeGuiObject({
 					Position = UDim2.fromOffset(absolutePosition.X, absolutePosition.Y),
 					AnchorPoint = displayAnchorPoint,
 					-- [React.Change.AbsoluteSize] = function(inst: GuiObject): ()
@@ -85,7 +85,7 @@ return function(props: PopUpProperties): React.ReactNode
 							} :: RobloxTypes.UIListLayoutProperties
 						),
 					},
-				}, props) :: RobloxTypes.FrameProperties
+				}, props) :: RobloxTypes.GuiObjectProperties
 			),
 		}
 	)

@@ -23,10 +23,11 @@ type BaseButtonProperties = RobloxTypes.GuiButtonProperties & {
 	Type: Enums.ButtonRenderType,
 	Icon: Types.ImageData?,
 	Text: string?,
-	FontData: FontData?,
+	PaddingDp: number?,
 }
 export type ButtonProperties = BaseButtonProperties & {
 	Scale: number?,
+	FontData: FontData?,
 	SchemeType: Enums.SchemeType?,
 	FillColor3: Color3?,
 	TextColor3: Color3,
@@ -42,7 +43,7 @@ export type StyleButtonProperties = BaseButtonProperties & {
 
 -- Constants
 local ICON_DIM_DP = 16
-local BUTTON_PAD_DP = 4
+local INNER_PAD_DP = 4
 local TARGET_PAD_DP = 6
 local TEXT_PAD_UPDOWN_DP = 2
 local TEXT_PAD_LEFTRIGHT_DP = 6
@@ -80,10 +81,10 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 	local elevation = if props.Elevation ~= nil
 		then props.Elevation
 		else Defaults.Elevation
-
+	local paddingDp = props.PaddingDp or INNER_PAD_DP
 	-- process state / props
 	local iconDim = math.ceil(ICON_DIM_DP * scale)
-	local iconPad = math.ceil(BUTTON_PAD_DP * scale)
+	local buttonPad = math.ceil(paddingDp * scale)
 	local mergeProps: ButtonContainer.ButtonContainerProperties =
 		PropUtil.mergeGuiButton({}, props) :: ButtonContainer.ButtonContainerProperties
 
@@ -109,10 +110,10 @@ Library.Full = function(props: ButtonProperties): React.ReactNode
 		UIPadding = e(
 			"UIPadding",
 			{
-				PaddingLeft = UDim.new(0, iconPad),
-				PaddingRight = UDim.new(0, iconPad),
-				PaddingTop = UDim.new(0, iconPad),
-				PaddingBottom = UDim.new(0, iconPad),
+				PaddingLeft = UDim.new(0, buttonPad),
+				PaddingRight = UDim.new(0, buttonPad),
+				PaddingTop = UDim.new(0, buttonPad),
+				PaddingBottom = UDim.new(0, buttonPad),
 			} :: RobloxTypes.UIPaddingProperties
 		),
 	}

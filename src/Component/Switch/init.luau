@@ -663,7 +663,7 @@ Library.Full = function(props: SwitchProperties): React.ReactNode
 								setKnobAbsoluteSize(inst.AbsoluteSize)
 							end
 						end :: any,
-					} :: RobloxTypes.FrameProperties,
+					} :: RobloxTypes.GuiObjectProperties,
 					{
 						Bubble = if isAnimated
 								and (
@@ -689,7 +689,7 @@ Library.Full = function(props: SwitchProperties): React.ReactNode
 												bubbleSize,
 												bubbleSize
 											),
-										} :: RobloxTypes.FrameProperties,
+										} :: RobloxTypes.GuiObjectProperties,
 										{
 											e(
 												"UICorner",

@@ -12,8 +12,8 @@ local PropUtil = require("@proj/PropUtil")
 -- Private Functions
 local e = React.createElement
 -- Class
-return function(props: RobloxTypes.FrameProperties): React.ReactNode
-	local newProps = PropUtil.mergeFrame({
+return function(props: RobloxTypes.GuiObjectProperties): React.ReactNode
+	local newProps = PropUtil.mergeGuiObject({
 		AutomaticSize = Enum.AutomaticSize.XY,
 		Size = UDim2.fromScale(0, 0),
 		BackgroundTransparency = 1,

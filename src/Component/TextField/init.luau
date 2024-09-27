@@ -295,7 +295,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					)
 					else nil,
 			},
-		} :: RobloxTypes.FrameProperties
+		} :: RobloxTypes.GuiObjectProperties
 	)
 
 	local mainButtonTextBox = if isTextBoxFocused or (value and value:len() > 0)
@@ -453,7 +453,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 					-- 	} :: RobloxTypes.UIFlexItemProperties
 					-- ),
 				},
-			} :: RobloxTypes.FrameProperties
+			} :: RobloxTypes.GuiObjectProperties
 		),
 		DropDownIconButton = if rightIconImage == DROP_DOWN_ICON
 			then e("ImageButton", {
@@ -731,7 +731,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 								} :: RobloxTypes.UIFlexItemProperties
 							),
 						},
-					} :: RobloxTypes.FrameProperties
+					} :: RobloxTypes.GuiObjectProperties
 				),
 			FilledButtonListLayout = if isFilled
 				then e(
@@ -761,7 +761,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 							then errorColor3
 							else borderHightlightColor3,
 						Size = UDim2.new(0, 0, 0, bottomLineThickness),
-					} :: RobloxTypes.FrameProperties
+					} :: RobloxTypes.GuiObjectProperties
 				)
 				else nil,
 			-- TopLine = if isFilled
@@ -774,7 +774,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 			-- 			-- Visible = isTextBoxFocused or isError,
 			-- 			LayoutOrder = 0,
 			-- 			Size = UDim2.new(0, 0, 0, bottomLineThickness),
-			-- 		} :: RobloxTypes.FrameProperties
+			-- 		} :: RobloxTypes.GuiObjectProperties
 			-- 	)
 			-- 	else nil,
 		}
@@ -782,7 +782,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 
 	return e(
 		Container,
-		PropUtil.mergeFrame(
+		PropUtil.mergeGuiObject(
 			{
 
 				children = {
@@ -863,7 +863,7 @@ function Library.Full(props: TextFieldProperties): React.ReactNode
 						},
 					}),
 				},
-			} :: RobloxTypes.FrameProperties,
+			} :: RobloxTypes.GuiObjectProperties,
 			props
 		)
 	)

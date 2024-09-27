@@ -25,7 +25,7 @@ return function(target: Frame)
 	task.spawn(function()
 		local Interface = require("../Checkbox")
 
-		local function halfFrame(props: RobloxTypes.FrameProperties & {
+		local function halfFrame(props: RobloxTypes.GuiObjectProperties & {
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
@@ -110,7 +110,7 @@ return function(target: Frame)
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
-				} :: RobloxTypes.FrameProperties,
+				} :: RobloxTypes.GuiObjectProperties,
 				{
 					UIListLayout = e(
 						"UIListLayout",
@@ -130,7 +130,6 @@ return function(target: Frame)
 					Secondary = newThemeBlock("Secondary", Enums.ColorRoleType.Surface),
 					Tertiary = newThemeBlock("Tertiary", Enums.ColorRoleType.Surface),
 					OnSurface = newThemeBlock("OnSurface", Enums.ColorRoleType.Surface),
-
 				}
 			)
 		end
@@ -149,7 +148,7 @@ return function(target: Frame)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BorderSizePixel = 0,
 				BackgroundTransparency = 1,
-			} :: RobloxTypes.FrameProperties,
+			} :: RobloxTypes.GuiObjectProperties,
 			(function(): { [string]: any }
 				local children: { [string]: any } = {}
 				for i, color in ipairs(COLORS) do

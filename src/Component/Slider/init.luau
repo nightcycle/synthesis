@@ -22,17 +22,17 @@ local Transition = require("@proj/Transition")
 local useLerp = require("@hook/useLerp")
 -- Types
 type Style = Style.Style
-export type BaseSliderProperties = RobloxTypes.GuiButtonProperties & {
+type TemplateBaseSliderProperties<V> = RobloxTypes.GuiButtonProperties & {
 	Range: NumberRange,
-	Value: number | NumberRange,
-	OnChange: (value: number | NumberRange) -> (),
-	OnRelease: ((value: number | NumberRange) -> ())?,
+	Value: V,
+	OnChange: (value: V) -> (),
+	OnRelease: ((value: V) -> ())?,
 	SnapCount: number?,
 	IsLabelEnabled: boolean?,
 	IsEnabled: boolean?,
 	Elevation: number?,
 }
-export type SliderProperties = BaseSliderProperties & {
+type TemplateSliderProperties<V> = TemplateBaseSliderProperties<V> & {
 	FillColor3: Color3?,
 	ContainerColor3: Color3?,
 	OnFillColor3: Color3?,
@@ -49,9 +49,15 @@ export type SliderProperties = BaseSliderProperties & {
 	SchemeType: Enums.SchemeType?,
 	Scale: number?,
 }
-export type StyleSliderProperties = BaseSliderProperties & {
+type TemplateStyleSliderProperties<V> = TemplateBaseSliderProperties<V> & {
 	Style: Style,
 }
+export type SliderProperties =
+	TemplateSliderProperties<NumberRange>
+	| TemplateSliderProperties<number>
+export type StyleSliderProperties =
+	TemplateStyleSliderProperties<NumberRange>
+	| TemplateStyleSliderProperties<number>
 -- Constants
 local BAR_HEIGHT_DP = 16
 local HANDLE_HEIGHT_DP = 44
@@ -190,8 +196,8 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	-- unpack props
 	local range: NumberRange = props.Range
 	local value: NumberRange | number = props.Value
-	local onChange: (NumberRange | number) -> () = props.OnChange
-	local onRelease: ((NumberRange | number) -> ())? = props.OnRelease
+	local onChange: (NumberRange | number) -> () = props.OnChange :: any
+	local onRelease: ((NumberRange | number) -> ())? = props.OnRelease :: any?
 	local snapCount: number? = props.SnapCount or Defaults.SnapCount
 	local isLabelEnabled: boolean = if props.IsLabelEnabled ~= nil
 		then props.IsLabelEnabled
@@ -231,7 +237,8 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local absolutePosition: Vector2, setAbsolutePosition =
 		React.useState(Vector2.new(0, 0))
 
-	local selectionIndex: number?, setSelectionIndex = React.useState(nil :: number?)
+	local selectionIndex: number?, actualSetSelectionIndex =
+		React.useState(nil :: number?)
 	local isHovered: boolean, setIsHovered = React.useState(false)
 	local isPressed: boolean, setIsPressed = React.useState(false)
 	local isFocused: boolean, setIsFocused = React.useState(false)
@@ -248,6 +255,13 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 	local alpha2 = Transition.Easing[Enums.TransitionType.Standard](rawAlpha2)
 
 	-- process value
+	local function setSelectionIndex(sIndex: number?)
+		if sIndex == nil and onRelease then
+			onRelease(value)
+		end
+		actualSetSelectionIndex(sIndex)
+	end
+
 	local function formatScalarValue(scalarValue: number): number
 		local outValue = math.clamp(scalarValue, range.Min, range.Max)
 		if snapCount then
@@ -265,7 +279,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		local formatValue = formatScalarValue(value)
 		if formatValue ~= value then
 			value = formatValue
-			onChange(value)
+			onChange(value :: number)
 		end
 	else
 		local formatMinValue = formatScalarValue(value.Min)
@@ -278,7 +292,6 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 
 	local handleAlpha1: number, handleAlpha2: number?
 	if typeof(value) == "number" then
-		print("value", value, "range", range.Min, "-", range.Max)
 		handleAlpha1 = math.clamp((value - range.Min) / (range.Max - range.Min), 0, 1)
 	else
 		handleAlpha1 = math.clamp((value.Min - range.Min) / (range.Max - range.Min), 0, 1)
@@ -495,8 +508,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 			if handleAlpha2 then
 				local minDist = math.abs(handleAlpha1 - alpha)
 				local maxDist = math.abs(handleAlpha2 - alpha)
-				print(`h1:`, handleAlpha1, `h2:`, handleAlpha2, `alpha:`, alpha)
-				print(`minDist:`, minDist, `maxDist:`, maxDist)
+
 				if soundVolume > 0 then
 					Sounds.play(GRAB_SOUND_TYPE, soundVolume)
 				end
@@ -523,14 +535,12 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 		if typeof(value) == "number" then
 			local newValue =
 				formatScalarValue(range.Min + alpha * (range.Max - range.Min))
+
 			if newValue == value then
 				return
 			end
-			if isOnRelease then
-				if onRelease then
-					onRelease(newValue)
-				end
-			else
+
+			if not isOnRelease then
 				if soundVolume > 0 and snapCount then
 					Sounds.play(SNAP_SOUND_TYPE, soundVolume)
 				end
@@ -568,11 +578,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 				outValue = NumberRange.new(minVal, newVal)
 			end
 
-			if isOnRelease then
-				if onRelease then
-					onRelease(outValue)
-				end
-			else
+			if not isOnRelease then
 				if soundVolume > 0 and snapCount then
 					Sounds.play(SNAP_SOUND_TYPE, soundVolume)
 				end
@@ -640,7 +646,10 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					inst: ImageButton,
 					input: InputObject
 				)
-					if input.UserInputType == Enum.UserInputType.MouseMovement then
+					if
+						input.UserInputType == Enum.UserInputType.MouseMovement
+						and isPressed
+					then
 						updateHandle(inst, input.Position.X, input.Position.Y, false)
 					end
 				end :: any,
@@ -795,7 +804,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 					BackgroundColor3 = Color3.new(1, 1, 1),
 					BorderSizePixel = 0,
 					Size = UDim2.new(0, 0, 0, math.round(HANDLE_HEIGHT_DP * scale)),
-				} :: RobloxTypes.FrameProperties,
+				} :: RobloxTypes.GuiObjectProperties,
 				{
 					UIGradient = e(
 						"UIGradient",
@@ -824,7 +833,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 							BackgroundColor3 = Color3.new(1, 1, 1),
 							BorderSizePixel = 0,
 							Size = UDim2.new(0, 0, 0, math.round(BAR_HEIGHT_DP * scale)),
-						} :: RobloxTypes.FrameProperties,
+						} :: RobloxTypes.GuiObjectProperties,
 						{
 							UIListLayout = if snapCount
 								then e(
@@ -867,7 +876,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 											0,
 											math.round(DOT_DIAMETER_DP * scale)
 										),
-									} :: RobloxTypes.FrameProperties,
+									} :: RobloxTypes.GuiObjectProperties,
 									{
 										UIListLayout = e(
 											"UIListLayout",
@@ -935,7 +944,7 @@ Library.Full = function(props: SliderProperties): React.ReactNode
 																		* scale
 																)
 															),
-														} :: RobloxTypes.FrameProperties,
+														} :: RobloxTypes.GuiObjectProperties,
 														{
 															UICorner = e(
 																"UICorner",
@@ -966,7 +975,7 @@ end
 Library.Primary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
-	local newProps = table.clone(props) :: SliderProperties;
+	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SchemeType = style.SchemeType
@@ -986,13 +995,13 @@ Library.Primary = function(props: StyleSliderProperties): React.ReactNode
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return e(Library.Full, newProps)
+	return e(Library.Full, newProps :: any)
 end
 
 Library.Secondary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
-	local newProps = table.clone(props) :: SliderProperties;
+	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SchemeType = style.SchemeType
@@ -1012,13 +1021,13 @@ Library.Secondary = function(props: StyleSliderProperties): React.ReactNode
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return e(Library.Full, newProps)
+	return e(Library.Full, newProps :: any)
 end
 
 Library.Tertiary = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
-	local newProps = table.clone(props) :: SliderProperties;
+	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SchemeType = style.SchemeType
@@ -1038,13 +1047,13 @@ Library.Tertiary = function(props: StyleSliderProperties): React.ReactNode
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return e(Library.Full, newProps)
+	return e(Library.Full, newProps :: any)
 end
 
 Library.OnSurface = function(props: StyleSliderProperties): React.ReactNode
 	local style = props.Style
 
-	local newProps = table.clone(props) :: SliderProperties;
+	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SchemeType = style.SchemeType
@@ -1064,7 +1073,7 @@ Library.OnSurface = function(props: StyleSliderProperties): React.ReactNode
 	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
 	newProps.SoundVolume = style.Volume
 
-	return e(Library.Full, newProps)
+	return e(Library.Full, newProps :: any)
 end
 
 return Library

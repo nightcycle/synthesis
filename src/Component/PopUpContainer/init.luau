@@ -227,7 +227,7 @@ return function(props: PopUpContainerProperties): React.ReactNode
 					)
 					else popUpContainerContents,
 			},
-		} :: RobloxTypes.FrameProperties
+		} :: RobloxTypes.GuiObjectProperties
 	)
 
 	local shadowFrame = e(

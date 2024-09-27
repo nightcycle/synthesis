@@ -45,7 +45,7 @@ return function(target: Frame)
 			BorderSizePixel = 0,
 			BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
 			BackgroundTransparency = 0,
-		} :: RobloxTypes.FrameProperties,
+		} :: RobloxTypes.GuiObjectProperties,
 		{
 
 			P25 = newButton(0.25),

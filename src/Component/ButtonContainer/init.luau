@@ -65,6 +65,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 	local rippleDuration = props.RippleDuration or 0.5
 	local targetPaddingDp = props.TargetPaddingDp or 0
 
+	-- state
 	local currentRippleAlpha, setCurrentRippleAlpha = React.useState(0)
 	local isRippleReset, setIsRippleReset = React.useState(false)
 	local originRippleAlpha: number?, setOriginRippleAlpha =
@@ -243,7 +244,9 @@ return function(props: ButtonContainerProperties): React.ReactNode
 				} :: RobloxTypes.UIPaddingProperties
 			),
 	}
-
+	if targetPadPx == 0 then
+		buttonContents["UIListLayout"] = nil :: any
+	end
 	local propCopy: RobloxTypes.GuiButtonProperties =
 		table.clone(props) :: RobloxTypes.GuiButtonProperties
 	do
@@ -357,10 +360,11 @@ return function(props: ButtonContainerProperties): React.ReactNode
 						then e(
 							"Frame",
 							{
+								BorderSizePixel = 0,
 								AutomaticSize = Enum.AutomaticSize.XY,
 								BackgroundColor3 = buttonBackgroundColor3,
 								BackgroundTransparency = buttonBackgroundTransparency,
-							} :: RobloxTypes.FrameProperties,
+							} :: RobloxTypes.GuiObjectProperties,
 							buttonContents
 						)
 						else nil,

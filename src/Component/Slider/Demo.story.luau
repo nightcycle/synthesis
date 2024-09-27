@@ -23,7 +23,7 @@ return function(target: Frame)
 	task.spawn(function()
 		local Interface = require("../Slider")
 
-		local function halfFrame(props: RobloxTypes.FrameProperties & {
+		local function halfFrame(props: RobloxTypes.GuiObjectProperties & {
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
@@ -48,7 +48,7 @@ return function(target: Frame)
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
-				} :: RobloxTypes.FrameProperties,
+				} :: RobloxTypes.GuiObjectProperties,
 				{
 					UIListLayout = e(
 						"UIListLayout",
@@ -66,8 +66,11 @@ return function(target: Frame)
 							LayoutOrder = 1,
 							Value = defaultValue,
 							OnChange = function(value: number | NumberRange)
-								print("Default", value)
+								print("Default-Change", value)
 								setDefaultValue(value)
+							end,
+							OnRelease = function(value: number | NumberRange)
+								print("Default-Release", value)
 							end,
 							Range = NumberRange.new(0, 100),
 							IsEnabled = true,
@@ -102,6 +105,9 @@ return function(target: Frame)
 								print("NoSnap", value)
 								setNoSnapValue(value)
 							end,
+							OnRelease = function(value: number | NumberRange)
+								print("NoSnap-Release", value)
+							end,
 							Range = NumberRange.new(0, 100),
 							IsEnabled = true,
 							IsAnimated = true,
@@ -131,8 +137,11 @@ return function(target: Frame)
 							LayoutOrder = 3,
 							Value = doubleValue,
 							OnChange = function(value: number | NumberRange)
-								print("NoSnap", value)
+								print("DoubleSlider", value)
 								setDoubleValue(value)
+							end,
+							OnRelease = function(value: number | NumberRange)
+								print("DoubleSlider-Release", value)
 							end,
 							Range = NumberRange.new(0, 100),
 							IsEnabled = true,
@@ -206,7 +215,7 @@ return function(target: Frame)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BorderSizePixel = 0,
 				BackgroundTransparency = 1,
-			} :: RobloxTypes.FrameProperties,
+			} :: RobloxTypes.GuiObjectProperties,
 			(function(): { [string]: any }
 				local children: { [string]: any } = {}
 				for i, color in ipairs(COLORS) do

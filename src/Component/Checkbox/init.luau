@@ -359,7 +359,7 @@ Library.Full = function(props: CheckboxProperties): React.ReactNode
 								BackgroundColor3 = fillColor3,
 								BorderSizePixel = 0,
 								Size = UDim2.fromOffset(bubbleSize, bubbleSize),
-							} :: RobloxTypes.FrameProperties,
+							} :: RobloxTypes.GuiObjectProperties,
 							{
 								e(
 									"UICorner",

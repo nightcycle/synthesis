@@ -344,7 +344,7 @@ Library.Full = function(props: RadioButtonProperties): React.ReactNode
 								BackgroundColor3 = fillColor3,
 								BorderSizePixel = 0,
 								Size = UDim2.fromOffset(bubbleSize, bubbleSize),
-							} :: RobloxTypes.FrameProperties,
+							} :: RobloxTypes.GuiObjectProperties,
 							{
 								e(
 									"UICorner",
@@ -371,7 +371,7 @@ Library.Full = function(props: RadioButtonProperties): React.ReactNode
 						)
 					end)(),
 					BackgroundTransparency = 1,
-				} :: RobloxTypes.FrameProperties,
+				} :: RobloxTypes.GuiObjectProperties,
 				{
 					UICorner = e(
 						"UICorner",
@@ -426,7 +426,7 @@ Library.Full = function(props: RadioButtonProperties): React.ReactNode
 								then borderData.Color3
 								else backgroundData.Color3,
 							BorderSizePixel = 0,
-						} :: RobloxTypes.FrameProperties,
+						} :: RobloxTypes.GuiObjectProperties,
 						{
 							UICorner = e(
 								"UICorner",
