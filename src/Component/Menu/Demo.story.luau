@@ -8,8 +8,6 @@ local MaterialIcons = require("@wally/MaterialIcons")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
 local Types = require("@proj/Types")
-local Enums = require("@proj/Enums")
-local Style = require("@proj/Style")
 -- Types
 -- Constants
 -- Variables
@@ -24,11 +22,15 @@ return function(target: Frame)
 	local Menu = require("../Menu")
 
 	local function newPopUp()
+		local Style = require("@proj/Style")
+		local Theme = require("@proj/Theme")
+		local Typography = require("@proj/Typography")
 		local style = Style.new(
-			1,
-			Enum.Font.BuilderSans,
-			Enums.SchemeType.Light,
-			Color3.new(1, 0, 0)
+			2,
+			0.5,
+			true,
+			Theme.new(Color3.new(1, 0, 0), "Dark", 0),
+			Typography.fromFont(Enum.Font.BuilderSans)
 		)
 		-- Style.new(
 		-- 	1,
@@ -49,10 +51,8 @@ return function(target: Frame)
 					Position = UDim2.fromScale(0.4, 0.5),
 					BackgroundTransparency = 0.5,
 
-					BackgroundColor3 = style:GetColor(
-						Enums.ColorRoleType.PrimaryContainer
-					),
-					TextColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+					BackgroundColor3 = style.Theme.PrimaryContainer,
+					TextColor3 = style.Theme.OnPrimaryContainer,
 					[React.Change.AbsolutePosition] = function(inst: TextButton)
 						setAbsolutePosition(inst.AbsolutePosition)
 					end :: any,
@@ -66,18 +66,10 @@ return function(target: Frame)
 						{
 							TargetAbsolutePosition = popUpPosition,
 							TargetAbsoluteWidth = absoluteSize.X,
-							SurfaceColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHigh
-							),
-							OnSurfaceColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSurface
-							),
-							SelectionSurfaceColor3 = style:GetColor(
-								Enums.ColorRoleType.SecondaryContainer
-							),
-							SelectionOnSurfaceColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSecondaryContainer
-							),
+							SurfaceColor3 = style.Theme.SurfaceContainerHigh,
+							OnSurfaceColor3 = style.Theme.OnSurface,
+							SelectionSurfaceColor3 = style.Theme.SecondaryContainer,
+							SelectionOnSurfaceColor3 = style.Theme.OnSecondaryContainer,
 							Rows = {
 								[1] = Types.OptionData.new(function(onSelect: boolean)
 									print("Option 1", onSelect)

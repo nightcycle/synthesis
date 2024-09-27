@@ -6,7 +6,6 @@ local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
-local Enums = require("@proj/Enums")
 
 -- Types
 -- Constants
@@ -21,15 +20,22 @@ return function(target: Frame)
 
 	local Circular = require("../Circular")
 	local Style = require("@proj/Style")
-	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
-
+	local Theme = require("@proj/Theme")
+	local Typography = require("@proj/Typography")
+	local style = Style.new(
+		1,
+		0.5,
+		true,
+		Theme.new(Color3.new(1, 0, 0), "Dark", 0),
+		Typography.fromFont(Enum.Font.BuilderSans)
+	)
 	local function newButton(progress: number?)
 		return e(
 			Circular.Full,
 			{
-				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-				EmptyColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer),
-				SchemeType = style.SchemeType,
+				FillColor3 = style.Theme.Primary,
+				EmptyColor3 = style.Theme.PrimaryContainer,
+				SchemeType = style.Theme.SchemeType,
 				Scale = style.Scale,
 				Progress = progress,
 				IsEnabled = true,
@@ -43,7 +49,7 @@ return function(target: Frame)
 		{
 			Size = UDim2.new(1, 0, 1, 0),
 			BorderSizePixel = 0,
-			BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+			BackgroundColor3 = style.Theme.Surface,
 			BackgroundTransparency = 0,
 		} :: RobloxTypes.GuiObjectProperties,
 		{

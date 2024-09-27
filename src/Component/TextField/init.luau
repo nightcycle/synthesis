@@ -877,18 +877,18 @@ function Library._OnSurfaceHighlightColor(
 
 	local newProps = table.clone(props) :: TextFieldProperties;
 	(newProps :: any).Style = nil
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
-	newProps.BorderHightlightColor3 = style:GetColor(colorRole)
-	newProps.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainer)
-	newProps.ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error)
-	newProps.BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.SupportingTextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.BodyFontData = style:GetFontData(Enums.FontType.BodyLarge)
-	newProps.SupportFontData = style:GetFontData(Enums.FontType.LabelSmall)
-	newProps.DropDownShadowColor3 = style:GetColor(Enums.ColorRoleType.Shadow)
+	newProps.BorderHightlightColor3 = style.Theme[colorRole]
+	newProps.BackgroundColor3 = style.Theme.SurfaceContainer
+	newProps.ErrorColor3 = style.Theme.Error
+	newProps.BorderColor3 = style.Theme.OnSurface
+	newProps.TextColor3 = style.Theme.OnSurface
+	newProps.LabelColor3 = style.Theme.OnSurface
+	newProps.SupportingTextColor3 = style.Theme.OnSurface
+	newProps.BodyFontData = style.Typography.BodyLarge
+	newProps.SupportFontData = style.Typography.LabelSmall
+	newProps.DropDownShadowColor3 = style.Theme.Shadow
 	newProps.DropDownShadowTransparency = nil
 	newProps.SoundVolume = style.Volume
 

@@ -24,6 +24,7 @@
 		"**types": true,
 		"sourcemap.json": true,
 		"serve": true,
+		"build": true,,
 		"package-lock.json": true,
 		"darklua-sourcemap.json": true,
 		"node_modules": true,

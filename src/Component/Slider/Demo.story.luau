@@ -5,7 +5,6 @@
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
-local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
 
@@ -27,11 +26,21 @@ return function(target: Frame)
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
+			local Style = require("@proj/Style")
+			local Theme = require("@proj/Theme")
+			local Typography = require("@proj/Typography")
 			local style = Style.new(
 				1,
-				Enum.Font.SourceSans,
-				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
-				props.Color3
+				0.5,
+				true,
+				Theme.new(
+					props.Color3,
+					if props.IsDarkMode
+						then Enums.SchemeType.Dark
+						else Enums.SchemeType.Light,
+					0
+				),
+				Typography.fromFont(Enum.Font.BuilderSans)
 			)
 			local defaultValue, setDefaultValue =
 				React.useState(50 :: number | NumberRange)
@@ -44,7 +53,7 @@ return function(target: Frame)
 				"Frame",
 				{
 					Name = "HalfFrame",
-					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+					BackgroundColor3 = style.Theme.Surface,
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
@@ -76,24 +85,18 @@ return function(target: Frame)
 							IsEnabled = true,
 							IsAnimated = true,
 							Elevation = 0,
-							SchemeType = style.SchemeType,
+							SchemeType = style.Theme.SchemeType,
 							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
 							SnapCount = 5,
 							IsLabelEnabled = true,
-							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-							ContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
-							),
-							LabelColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
-							),
-							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-							OnContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.OnPrimaryContainer
-							),
-							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
+							FillColor3 = style.Theme.Primary,
+							ContainerColor3 = style.Theme.PrimaryContainer,
+							LabelColor3 = style.Theme.SurfaceContainerHighest,
+							OnLabelColor3 = style.Theme.OnSurface,
+							OnFillColor3 = style.Theme.OnPrimary,
+							OnContainerColor3 = style.Theme.OnPrimaryContainer,
+							LabelFontData = style.Typography.LabelLarge,
 						} :: Interface.SliderProperties
 					),
 					NoSnap = e(
@@ -112,23 +115,17 @@ return function(target: Frame)
 							IsEnabled = true,
 							IsAnimated = true,
 							Elevation = 0,
-							SchemeType = style.SchemeType,
+							SchemeType = style.Theme.SchemeType,
 							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
 							IsLabelEnabled = true,
-							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-							ContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
-							),
-							LabelColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
-							),
-							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-							OnContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.OnPrimaryContainer
-							),
-							LabelFontData = style:GetFontData(Enums.FontType.LabelLarge),
+							FillColor3 = style.Theme.Primary,
+							ContainerColor3 = style.Theme.PrimaryContainer,
+							LabelColor3 = style.Theme.SurfaceContainerHighest,
+							OnLabelColor3 = style.Theme.OnSurface,
+							OnFillColor3 = style.Theme.OnPrimary,
+							OnContainerColor3 = style.Theme.OnPrimaryContainer,
+							LabelFontData = style.Typography.LabelLarge,
 						} :: Interface.SliderProperties
 					),
 					DoubleSlider = e(
@@ -147,23 +144,17 @@ return function(target: Frame)
 							IsEnabled = true,
 							IsAnimated = true,
 							Elevation = 0,
-							SchemeType = style.SchemeType,
+							SchemeType = style.Theme.SchemeType,
 							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
 							IsLabelEnabled = true,
-							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-							ContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
-							),
-							LabelColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
-							),
-							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-							OnContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.OnPrimaryContainer
-							),
-							LabelFontData = style:GetFontData(Enums.FontType.BodyLarge),
+							FillColor3 = style.Theme.Primary,
+							ContainerColor3 = style.Theme.PrimaryContainer,
+							LabelColor3 = style.Theme.SurfaceContainerHighest,
+							OnLabelColor3 = style.Theme.OnSurface,
+							OnFillColor3 = style.Theme.OnPrimary,
+							OnContainerColor3 = style.Theme.OnPrimaryContainer,
+							LabelFontData = style.Typography.BodyLarge,
 						} :: Interface.SliderProperties
 					),
 					Disable = e(
@@ -179,23 +170,17 @@ return function(target: Frame)
 							IsEnabled = false,
 							IsAnimated = true,
 							Elevation = 0,
-							SchemeType = style.SchemeType,
+							SchemeType = style.Theme.SchemeType,
 							Size = UDim2.fromScale(0.7, 0),
 							Scale = 1,
 							IsLabelEnabled = true,
-							FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-							ContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.PrimaryContainer
-							),
-							LabelColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHighest
-							),
-							OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary),
-							OnContainerColor3 = style:GetColor(
-								Enums.ColorRoleType.OnPrimaryContainer
-							),
-							LabelFontData = style:GetFontData(Enums.FontType.BodyLarge),
+							FillColor3 = style.Theme.Primary,
+							ContainerColor3 = style.Theme.PrimaryContainer,
+							LabelColor3 = style.Theme.SurfaceContainerHighest,
+							OnLabelColor3 = style.Theme.OnSurface,
+							OnFillColor3 = style.Theme.OnPrimary,
+							OnContainerColor3 = style.Theme.OnPrimaryContainer,
+							LabelFontData = style.Typography.BodyLarge,
 						} :: Interface.SliderProperties
 					),
 				}

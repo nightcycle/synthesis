@@ -763,17 +763,16 @@ Library.Primary = function(props: StyleSwitchProperties): React.ReactNode
 	local newProps = table.clone(props) :: SwitchProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.BackgroundColor3 =
-		style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-	newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-	newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.BackgroundColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnBackgroundColor3 = style.Theme.Outline
+	newProps.FillColor3 = style.Theme.Primary
+	newProps.ButtonColor3 = style.Theme.PrimaryContainer
+	newProps.OnButtonColor3 = style.Theme.OnPrimaryContainer
+	newProps.DisabledColor3 = style.Theme.OnSurface
+	newProps.OnDisabledColor3 = style.Theme.Surface
 	newProps.SoundVolume = style.Volume
 	return e(Library.Full, newProps)
 end
@@ -783,17 +782,16 @@ Library.Secondary = function(props: StyleSwitchProperties): React.ReactNode
 	local newProps = table.clone(props) :: SwitchProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.BackgroundColor3 =
-		style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-	newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-	newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.BackgroundColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnBackgroundColor3 = style.Theme.Outline
+	newProps.FillColor3 = style.Theme.Secondary
+	newProps.ButtonColor3 = style.Theme.SecondaryContainer
+	newProps.OnButtonColor3 = style.Theme.OnSecondaryContainer
+	newProps.DisabledColor3 = style.Theme.OnSurface
+	newProps.OnDisabledColor3 = style.Theme.Surface
 	newProps.SoundVolume = style.Volume
 	return e(Library.Full, newProps)
 end
@@ -803,17 +801,16 @@ Library.Tertiary = function(props: StyleSwitchProperties): React.ReactNode
 	local newProps = table.clone(props) :: SwitchProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.BackgroundColor3 =
-		style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-	newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-	newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.BackgroundColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnBackgroundColor3 = style.Theme.Outline
+	newProps.FillColor3 = style.Theme.Tertiary
+	newProps.ButtonColor3 = style.Theme.TertiaryContainer
+	newProps.OnButtonColor3 = style.Theme.OnTertiaryContainer
+	newProps.DisabledColor3 = style.Theme.OnSurface
+	newProps.OnDisabledColor3 = style.Theme.Surface
 	newProps.SoundVolume = style.Volume
 	return e(Library.Full, newProps)
 end
@@ -824,18 +821,18 @@ Library.OnSurface = function(props: StyleSwitchProperties): React.ReactNode
 	local newProps = table.clone(props) :: SwitchProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.OutlineVariant)
-	newProps.OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Outline)
+	newProps.BackgroundColor3 = style.Theme.OutlineVariant
+	newProps.OnBackgroundColor3 = style.Theme.OnSurface
+	newProps.FillColor3 = style.Theme.Outline
 
-	newProps.ButtonColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHigh)
-	newProps.OnButtonColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.ButtonColor3 = style.Theme.SurfaceContainerHigh
+	newProps.OnButtonColor3 = style.Theme.OnSurface
 
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+	newProps.DisabledColor3 = style.Theme.OnSurface
+	newProps.OnDisabledColor3 = style.Theme.Surface
 	newProps.SoundVolume = style.Volume
 	return e(Library.Full, newProps)
 end

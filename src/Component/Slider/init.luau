@@ -978,21 +978,20 @@ Library.Primary = function(props: StyleSliderProperties): React.ReactNode
 	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
-	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
-	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.DisabledContainerColor3 =
-		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.FillColor3 = style.Theme.Primary
+	newProps.ContainerColor3 = style.Theme.PrimaryContainer
+	newProps.OnFillColor3 = style.Theme.OnPrimary
+	newProps.OnContainerColor3 = style.Theme.OnPrimaryContainer
+	newProps.DisabledFillColor3 = style.Theme.OnSurface
+	newProps.DisabledContainerColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnFillColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnContainerColor3 = style.Theme.OnSurface
+	newProps.LabelColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnLabelColor3 = style.Theme.OnSurface
+	newProps.LabelFontData = style.Typography.BodyLarge
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps :: any)
@@ -1004,21 +1003,20 @@ Library.Secondary = function(props: StyleSliderProperties): React.ReactNode
 	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
-	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
-	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.DisabledContainerColor3 =
-		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.FillColor3 = style.Theme.Secondary
+	newProps.ContainerColor3 = style.Theme.SecondaryContainer
+	newProps.OnFillColor3 = style.Theme.OnSecondary
+	newProps.OnContainerColor3 = style.Theme.OnSecondaryContainer
+	newProps.DisabledFillColor3 = style.Theme.OnSurface
+	newProps.DisabledContainerColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnFillColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnContainerColor3 = style.Theme.OnSurface
+	newProps.LabelColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnLabelColor3 = style.Theme.OnSurface
+	newProps.LabelFontData = style.Typography.BodyLarge
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps :: any)
@@ -1030,21 +1028,20 @@ Library.Tertiary = function(props: StyleSliderProperties): React.ReactNode
 	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
-	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
-	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.DisabledContainerColor3 =
-		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.FillColor3 = style.Theme.Tertiary
+	newProps.ContainerColor3 = style.Theme.TertiaryContainer
+	newProps.OnFillColor3 = style.Theme.OnTertiary
+	newProps.OnContainerColor3 = style.Theme.OnTertiaryContainer
+	newProps.DisabledFillColor3 = style.Theme.OnSurface
+	newProps.DisabledContainerColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnFillColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnContainerColor3 = style.Theme.OnSurface
+	newProps.LabelColor3 = style.Theme.SurfaceContainerHighest
+	newProps.OnLabelColor3 = style.Theme.OnSurface
+	newProps.LabelFontData = style.Typography.BodyLarge
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps :: any)
@@ -1056,21 +1053,20 @@ Library.OnSurface = function(props: StyleSliderProperties): React.ReactNode
 	local newProps = table.clone(props) :: TemplateSliderProperties<number | NumberRange>;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
 
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.ContainerColor3 = style:GetColor(Enums.ColorRoleType.InverseOnSurface)
-	newProps.OnFillColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHigh)
-	newProps.OnContainerColor3 = style:GetColor(Enums.ColorRoleType.SurfaceVariant)
-	newProps.DisabledFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.DisabledContainerColor3 =
-		style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnFillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.DisabledOnContainerColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.OnLabelColor3 = style:GetColor(Enums.ColorRoleType.SurfaceContainerHighest)
-	newProps.LabelFontData = style:GetFontData(Enums.FontType.BodyLarge)
+	newProps.FillColor3 = style.Theme.OnSurface
+	newProps.ContainerColor3 = style.Theme.InverseOnSurface
+	newProps.OnFillColor3 = style.Theme.SurfaceContainerHigh
+	newProps.OnContainerColor3 = style.Theme.SurfaceVariant
+	newProps.DisabledFillColor3 = style.Theme.OnSurface
+	newProps.DisabledContainerColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnFillColor3 = style.Theme.OnSurfaceVariant
+	newProps.DisabledOnContainerColor3 = style.Theme.OnSurface
+	newProps.LabelColor3 = style.Theme.OnSurface
+	newProps.OnLabelColor3 = style.Theme.SurfaceContainerHighest
+	newProps.LabelFontData = style.Typography.BodyLarge
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps :: any)

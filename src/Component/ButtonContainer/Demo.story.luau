@@ -23,8 +23,15 @@ return function(target: Frame)
 	local TextDisplay = require("@comp/TextDisplay")
 	local UIPadding = require("@comp/Padding")
 	local Style = require("@proj/Style")
-	local style = Style.new(2, Enum.Font.BuilderSans, "Dark", Color3.new(1, 0, 0))
-
+	local Theme = require("@proj/Theme")
+	local Typography = require("@proj/Typography")
+	local style = Style.new(
+		1,
+		0.5,
+		true,
+		Theme.new(Color3.new(1, 0, 0), "Dark", 0),
+		Typography.fromFont(Enum.Font.BuilderSans)
+	)
 	local function newButton(renderType: Enums.ButtonRenderType): React.ReactNode
 		local lineColorRole = if renderType == Enums.ButtonRenderType.Filled
 			then Enums.ColorRoleType.OnPrimary
@@ -53,8 +60,8 @@ return function(target: Frame)
 						} :: TextDisplay.StyleTextDisplayProperties
 					)
 				end,
-				FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-				LineColor3 = style:GetColor(lineColorRole),
+				FillColor3 = style.Theme.Primary,
+				LineColor3 = style.Theme[lineColorRole],
 				RippleDuration = 0.5,
 				BorderSizePixel = 0,
 				IsAnimated = true,
@@ -83,7 +90,7 @@ return function(target: Frame)
 	local element = e("Frame", {
 		Size = UDim2.new(1, 0, 1, 0),
 		BorderSizePixel = 0,
-		BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+		BackgroundColor3 = style.Theme.Surface,
 	}, {
 
 		FilledButton = newButton(Enums.ButtonRenderType.Filled),

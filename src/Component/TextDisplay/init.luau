@@ -167,7 +167,7 @@ end
 
 function Library.StyleSimple(props: StyleTextDisplayProperties): React.ReactNode
 	local fontType: Enums.FontType = props.FontType
-	local fontData = props.Style:GetFontData(fontType)
+	local fontData = props.Style.Typography[fontType]
 	local scale = props.Style.Scale
 	return e(
 		"TextLabel",
@@ -176,7 +176,7 @@ function Library.StyleSimple(props: StyleTextDisplayProperties): React.ReactNode
 				Text = props.Text,
 				TextColor3 = if typeof(props.Color) == "Color3"
 					then props.Color
-					else props.Style:GetColor(props.Color),
+					else props.Style.Theme[props.Color],
 				BackgroundTransparency = 1,
 				TextSize = Typography.getTextSize(fontData.Size, scale),
 				LineHeight = Typography.getGuiLineHeight(

@@ -5,7 +5,6 @@
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
-local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
 local Container = require("@comp/Container")
@@ -29,13 +28,22 @@ return function(target: Frame)
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
+			local Style = require("@proj/Style")
+			local Theme = require("@proj/Theme")
+			local Typography = require("@proj/Typography")
 			local style = Style.new(
 				1,
-				Enum.Font.SourceSans,
-				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
-				props.Color3
+				0.5,
+				true,
+				Theme.new(
+					props.Color3,
+					if props.IsDarkMode
+						then Enums.SchemeType.Dark
+						else Enums.SchemeType.Light,
+					0
+				),
+				Typography.fromFont(Enum.Font.BuilderSans)
 			)
-
 			local function newThemeBlock(
 				name: string,
 				backgroundRole: Enums.ColorRoleType
@@ -44,9 +52,9 @@ return function(target: Frame)
 				local defaultSelection, setSelection = React.useState(false)
 				return e(Container, {
 					BackgroundTransparency = 0,
-					BackgroundColor3 = style:GetColor(backgroundRole),
+					BackgroundColor3 = style.Theme[backgroundRole],
 					BorderSizePixel = 1,
-					BorderColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+					BorderColor3 = style.Theme.Outline,
 				}, {
 					UIListLayout = e(
 						"UIListLayout",
@@ -62,7 +70,7 @@ return function(target: Frame)
 					-- Divider1 = e("Frame", {
 					-- 	BackgroundTransparency = 0,
 					-- 	LayoutOrder = 0,
-					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+					-- 	BackgroundColor3 = style.Theme.Outline,
 					-- 	BorderSizePixel = 0,
 					-- 	Size = UDim2.new(1, 0, 0, 1),
 					-- }),
@@ -94,7 +102,7 @@ return function(target: Frame)
 					-- Divider2 = e("Frame", {
 					-- 	BackgroundTransparency = 0,
 					-- 	LayoutOrder = 3,
-					-- 	BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
+					-- 	BackgroundColor3 = style.Theme.Outline,
 					-- 	BorderSizePixel = 0,
 					-- 	Size = UDim2.new(1, 0, 0, 1),
 					-- }),
@@ -105,7 +113,7 @@ return function(target: Frame)
 				"Frame",
 				{
 					Name = "HalfFrame",
-					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Background),
+					BackgroundColor3 = style.Theme.Background,
 					BackgroundTransparency = 1,
 					BorderSizePixel = 0,
 					Size = props.Size,

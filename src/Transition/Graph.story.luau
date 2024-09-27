@@ -6,7 +6,6 @@ local Maid = require("@wally/Maid")
 local CurveUtil = require("@wally/CurveUtil")
 
 -- Modules
-local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 
 -- Types
@@ -23,11 +22,15 @@ return function(frame: Frame)
 	local maid = Maid.new()
 	task.spawn(function()
 		local Module = require(script.Parent)
+		local Style = require("@proj/Style")
+		local Theme = require("@proj/Theme")
+		local Typography = require("@proj/Typography")
 		local style = Style.new(
 			1,
-			Enum.Font.SourceSans,
-			Enums.SchemeType.Light,
-			Color3.fromHSV(math.random(), 0.7, 0.7)
+			0.5,
+			true,
+			Theme.new(Color3.fromHSV(math.random(), 0.7, 0.7), Enums.SchemeType.Light, 0),
+			Typography.fromFont(Enum.Font.BuilderSans)
 		)
 
 		local gridLayout = maid:GiveTask(Instance.new("UIGridLayout"))
@@ -52,20 +55,20 @@ return function(frame: Frame)
 
 			local out = maid:GiveTask(Instance.new("Frame"))
 			out.LayoutOrder = order
-			out.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Background)
+			out.BackgroundColor3 = style.Theme.Background
 
 			local label = Instance.new("ImageLabel")
 			label.Size = UDim2.fromScale(0, 0)
 			label.AutomaticSize = Enum.AutomaticSize.XY
 			label.Parent = out
-			label.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+			label.BackgroundColor3 = style.Theme.Surface
 			label.LayoutOrder = 2
 
 			local image = Instance.new("EditableImage")
 			image.Parent = label
 
 			local subFrame = Instance.new("Frame")
-			subFrame.BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface)
+			subFrame.BackgroundColor3 = style.Theme.Surface
 			subFrame.BorderSizePixel = 0
 			subFrame.Size = UDim2.new(1, 0, 0, 5)
 			subFrame.AnchorPoint = Vector2.new(0, 0.5)
@@ -96,7 +99,7 @@ return function(frame: Frame)
 			text.AutomaticSize = Enum.AutomaticSize.X
 			text.BackgroundTransparency = 1
 			text.TextScaled = false
-			text.TextColor3 = style:GetColor(Enums.ColorRoleType.OnBackground)
+			text.TextColor3 = style.Theme.OnBackground
 			text.TextSize = 14
 			text.Size = UDim2.fromOffset(0, 14)
 			text.Text = name
@@ -136,8 +139,8 @@ return function(frame: Frame)
 							Vector2.new(clampX, math.clamp(1 - y, 0, 1)) * image.Size
 								+ offset,
 							if index % 2 == 0
-								then style:GetColor(Enums.ColorRoleType.OnPrimary)
-								else style:GetColor(Enums.ColorRoleType.OnTertiary),
+								then style.Theme.OnPrimary
+								else style.Theme.OnTertiary,
 							0,
 							Enum.ImageCombineType.BlendSourceOver
 						)
@@ -157,8 +160,8 @@ return function(frame: Frame)
 						-- 	1
 						-- ),
 						if index % 2 == 0
-							then style:GetColor(Enums.ColorRoleType.Primary)
-							else style:GetColor(Enums.ColorRoleType.Tertiary),
+							then style.Theme.Primary
+							else style.Theme.Tertiary,
 						0,
 						Enum.ImageCombineType.BlendSourceOver
 					)

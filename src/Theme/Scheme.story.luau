@@ -13,13 +13,14 @@ local Enums = require("@proj/Enums")
 return function(frame: Frame)
 	local maid = Maid.new()
 	task.spawn(function()
-		local Theme = require(script.Parent)
+		local Theme = require("./Solver")
 
 		local function displayScheme(schemeType: Enums.SchemeType, source: Color3): Frame
 			local theme = Theme.new(source)
 			local scheme = theme._Schemes[schemeType]
 			local halfFrame = maid:GiveTask(Instance.new("Frame"))
-			halfFrame.BackgroundColor3 = theme:Get(Enums.ColorRoleType.Background, schemeType)
+			halfFrame.BackgroundColor3 =
+				theme:Get(Enums.ColorRoleType.Background, schemeType)
 
 			local listLayout = maid:GiveTask(Instance.new("UIListLayout"))
 			listLayout.FillDirection = Enum.FillDirection.Vertical
@@ -35,8 +36,9 @@ return function(frame: Frame)
 				label.TextColor3 = Color3.new(0.5, 0.5, 0.5)
 				label.Text = `{role}`
 				label.BackgroundColor3 = v
-				label.LayoutOrder = (Enums.getValueFromEnumItem("ColorRoleType", role) * i)
-					+ Enums.getValueFromEnumItem("ColorRoleType", role)
+				label.LayoutOrder = (
+					Enums.getValueFromEnumItem("ColorRoleType", role) * i
+				) + Enums.getValueFromEnumItem("ColorRoleType", role)
 				label.Size = UDim2.fromScale(0.9, 1 / 50)
 				label.TextScaled = true
 				label.Parent = halfFrame

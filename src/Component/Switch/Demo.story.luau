@@ -5,7 +5,6 @@
 local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
-local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
 
@@ -27,11 +26,21 @@ return function(target: Frame)
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
+			local Style = require("@proj/Style")
+			local Theme = require("@proj/Theme")
+			local Typography = require("@proj/Typography")
 			local style = Style.new(
 				1,
-				Enum.Font.SourceSans,
-				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
-				props.Color3
+				0.5,
+				true,
+				Theme.new(
+					props.Color3,
+					if props.IsDarkMode
+						then Enums.SchemeType.Dark
+						else Enums.SchemeType.Light,
+					0
+				),
+				Typography.fromFont(Enum.Font.BuilderSans)
 			)
 			local defaultSelection, setDefaultSelection = React.useState(false)
 			local inanimateSelection, setInanimateSelection = React.useState(false)
@@ -42,7 +51,7 @@ return function(target: Frame)
 				"Frame",
 				{
 					Name = "HalfFrame",
-					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+					BackgroundColor3 = style.Theme.Surface,
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
@@ -86,21 +95,15 @@ return function(target: Frame)
 						IsAnimated = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
-						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						IconColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						IconDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						BackgroundColor3 = style.Theme.SurfaceContainerHighest,
+						OnBackgroundColor3 = style.Theme.Outline,
+						FillColor3 = style.Theme.Primary,
+						ButtonColor3 = style.Theme.PrimaryContainer,
+						IconColor3 = style.Theme.OnPrimaryContainer,
+						DisabledColor3 = style.Theme.OnSurface,
+						IconDisabledColor3 = style.Theme.Surface,
 						Elevation = 0,
-						SchemeType = style.SchemeType,
+						SchemeType = style.Theme.SchemeType,
 						Scale = 1,
 					}),
 
@@ -115,21 +118,15 @@ return function(target: Frame)
 						IsAnimated = false,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
-						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						BackgroundColor3 = style.Theme.SurfaceContainerHighest,
+						OnBackgroundColor3 = style.Theme.Outline,
+						FillColor3 = style.Theme.Primary,
+						ButtonColor3 = style.Theme.PrimaryContainer,
+						OnButtonColor3 = style.Theme.OnPrimaryContainer,
+						DisabledColor3 = style.Theme.OnSurface,
+						OnDisabledColor3 = style.Theme.Surface,
 						Elevation = 0,
-						SchemeType = style.SchemeType,
+						SchemeType = style.Theme.SchemeType,
 						Scale = 1,
 					}),
 
@@ -144,21 +141,15 @@ return function(target: Frame)
 						IsAnimated = true,
 						IncludeIconOnSelected = false,
 						IncludeIconOnDeselected = false,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
-						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						BackgroundColor3 = style.Theme.SurfaceContainerHighest,
+						OnBackgroundColor3 = style.Theme.Outline,
+						FillColor3 = style.Theme.Primary,
+						ButtonColor3 = style.Theme.PrimaryContainer,
+						OnButtonColor3 = style.Theme.OnPrimaryContainer,
+						DisabledColor3 = style.Theme.OnSurface,
+						OnDisabledColor3 = style.Theme.Surface,
 						Elevation = 0,
-						SchemeType = style.SchemeType,
+						SchemeType = style.Theme.SchemeType,
 						Scale = 1,
 					}),
 
@@ -173,21 +164,15 @@ return function(target: Frame)
 						IsAnimated = true,
 						IncludeIconOnSelected = true,
 						IncludeIconOnDeselected = true,
-						BackgroundColor3 = style:GetColor(
-							Enums.ColorRoleType.SurfaceContainerHighest
-						),
-						OnBackgroundColor3 = style:GetColor(Enums.ColorRoleType.Outline),
-						FillColor3 = style:GetColor(Enums.ColorRoleType.Primary),
-						ButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.PrimaryContainer
-						),
-						OnButtonColor3 = style:GetColor(
-							Enums.ColorRoleType.OnPrimaryContainer
-						),
-						DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-						OnDisabledColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+						BackgroundColor3 = style.Theme.SurfaceContainerHighest,
+						OnBackgroundColor3 = style.Theme.Outline,
+						FillColor3 = style.Theme.Primary,
+						ButtonColor3 = style.Theme.PrimaryContainer,
+						OnButtonColor3 = style.Theme.OnPrimaryContainer,
+						DisabledColor3 = style.Theme.OnSurface,
+						OnDisabledColor3 = style.Theme.Surface,
 						Elevation = 0,
-						SchemeType = style.SchemeType,
+						SchemeType = style.Theme.SchemeType,
 						Scale = 1,
 					}),
 				}

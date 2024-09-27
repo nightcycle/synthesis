@@ -6,7 +6,6 @@ local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 local MaterialIcons = require("@wally/MaterialIcons")
 -- Modules
-local Style = require("@proj/Style")
 local Enums = require("@proj/Enums")
 local RobloxTypes = require("@proj/RobloxTypes")
 
@@ -28,11 +27,21 @@ return function(target: Frame)
 			Color3: Color3,
 			IsDarkMode: boolean,
 		}): React.ReactNode
+			local Style = require("@proj/Style")
+			local Theme = require("@proj/Theme")
+			local Typography = require("@proj/Typography")
 			local style = Style.new(
 				1,
-				Enum.Font.SourceSans,
-				if props.IsDarkMode then Enums.SchemeType.Dark else Enums.SchemeType.Light,
-				props.Color3
+				0.5,
+				true,
+				Theme.new(
+					props.Color3,
+					if props.IsDarkMode
+						then Enums.SchemeType.Dark
+						else Enums.SchemeType.Light,
+					0
+				),
+				Typography.fromFont(Enum.Font.BuilderSans)
 			)
 			local defaultFilledValue, setDefaultFilledValue =
 				React.useState(nil :: string?)
@@ -45,7 +54,7 @@ return function(target: Frame)
 				"Frame",
 				{
 					Name = "HalfFrame",
-					BackgroundColor3 = style:GetColor(Enums.ColorRoleType.Surface),
+					BackgroundColor3 = style.Theme.Surface,
 					BorderSizePixel = 0,
 					Size = props.Size,
 					Position = props.Position,
@@ -76,28 +85,20 @@ return function(target: Frame)
 							IsError = false,
 							IsFilled = true,
 							Label = "Label",
-							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainer
-							),
-							BorderHightlightColor3 = style:GetColor(
-								Enums.ColorRoleType.Primary
-							),
-							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
-							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							SupportingTextColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSurface
-							),
+							BackgroundColor3 = style.Theme.SurfaceContainer,
+							BorderHightlightColor3 = style.Theme.Primary,
+							ErrorColor3 = style.Theme.Error,
+							BorderColor3 = style.Theme.OnSurface,
+							TextColor3 = style.Theme.OnSurface,
+							LabelColor3 = style.Theme.OnSurface,
+							SupportingTextColor3 = style.Theme.OnSurface,
 							CharacterLimit = 20,
 							SupportingText = "Supporting Text",
 							Icon = MaterialIcons.vpn_key,
 							Elevation = 0,
 							SchemeType = Enums.SchemeType.Light,
-							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
-							SupportFontData = style:GetFontData(
-								Enums.FontType.LabelSmall
-							),
+							BodyFontData = style.Typography.BodyLarge,
+							SupportFontData = style.Typography.LabelSmall,
 							Scale = 1,
 						} :: any
 					),
@@ -118,28 +119,20 @@ return function(target: Frame)
 							LayoutOrder = 2,
 							Label = "Label",
 							IsClearButtonEnabled = false,
-							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainer
-							),
-							BorderHightlightColor3 = style:GetColor(
-								Enums.ColorRoleType.Primary
-							),
-							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
-							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							SupportingTextColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSurface
-							),
+							BackgroundColor3 = style.Theme.SurfaceContainer,
+							BorderHightlightColor3 = style.Theme.Primary,
+							ErrorColor3 = style.Theme.Error,
+							BorderColor3 = style.Theme.OnSurface,
+							TextColor3 = style.Theme.OnSurface,
+							LabelColor3 = style.Theme.OnSurface,
+							SupportingTextColor3 = style.Theme.OnSurface,
 							CharacterLimit = 20,
 							SupportingText = "Supporting Text",
 							-- Icon = MaterialIcons.vpn_key,
 							Elevation = 0,
 							SchemeType = Enums.SchemeType.Light,
-							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
-							SupportFontData = style:GetFontData(
-								Enums.FontType.LabelSmall
-							),
+							BodyFontData = style.Typography.BodyLarge,
+							SupportFontData = style.Typography.LabelSmall,
 							Scale = 1,
 						} :: Interface.TextFieldProperties
 					),
@@ -161,19 +154,13 @@ return function(target: Frame)
 							Label = "Label",
 							Size = UDim2.fromScale(0.8, 0),
 							IsClearButtonEnabled = false,
-							BackgroundColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainer
-							),
-							BorderHightlightColor3 = style:GetColor(
-								Enums.ColorRoleType.Primary
-							),
-							ErrorColor3 = style:GetColor(Enums.ColorRoleType.Error),
-							BorderColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							TextColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							LabelColor3 = style:GetColor(Enums.ColorRoleType.OnSurface),
-							SupportingTextColor3 = style:GetColor(
-								Enums.ColorRoleType.OnSurface
-							),
+							BackgroundColor3 = style.Theme.SurfaceContainer,
+							BorderHightlightColor3 = style.Theme.Primary,
+							ErrorColor3 = style.Theme.Error,
+							BorderColor3 = style.Theme.OnSurface,
+							TextColor3 = style.Theme.OnSurface,
+							LabelColor3 = style.Theme.OnSurface,
+							SupportingTextColor3 = style.Theme.OnSurface,
 							CharacterLimit = 20,
 							SupportingText = "Supporting Text",
 							DropDownOptions = {
@@ -186,10 +173,8 @@ return function(target: Frame)
 							-- Icon = MaterialIcons.vpn_key,
 							Elevation = 0,
 							SchemeType = Enums.SchemeType.Light,
-							BodyFontData = style:GetFontData(Enums.FontType.BodyLarge),
-							SupportFontData = style:GetFontData(
-								Enums.FontType.LabelSmall
-							),
+							BodyFontData = style.Typography.BodyLarge,
+							SupportFontData = style.Typography.LabelSmall,
 							Scale = 1,
 						} :: Interface.TextFieldProperties
 					),

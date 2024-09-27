@@ -448,12 +448,12 @@ Library.Primary = function(props: StyleRadioButtonProperties): React.ReactNode
 	local newProps = table.clone(props) :: RadioButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
-	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OutlineColor3 = style.Theme.OnSurfaceVariant
+	newProps.FillColor3 = style.Theme.Primary
+	newProps.IconColor3 = style.Theme.OnPrimary
+	newProps.DisabledColor3 = style.Theme.OnSurface
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps)
@@ -465,12 +465,12 @@ Library.Secondary = function(props: StyleRadioButtonProperties): React.ReactNode
 	local newProps = table.clone(props) :: RadioButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
-	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OutlineColor3 = style.Theme.OnSurfaceVariant
+	newProps.FillColor3 = style.Theme.Secondary
+	newProps.IconColor3 = style.Theme.OnSecondary
+	newProps.DisabledColor3 = style.Theme.OnSurface
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps)
@@ -482,12 +482,12 @@ Library.Tertiary = function(props: StyleRadioButtonProperties): React.ReactNode
 	local newProps = table.clone(props) :: RadioButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
-	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OutlineColor3 = style.Theme.OnSurfaceVariant
+	newProps.FillColor3 = style.Theme.Tertiary
+	newProps.IconColor3 = style.Theme.OnTertiary
+	newProps.DisabledColor3 = style.Theme.OnSurface
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps)
@@ -499,12 +499,12 @@ Library.OnSurface = function(props: StyleRadioButtonProperties): React.ReactNode
 	local newProps = table.clone(props) :: RadioButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.IsAnimated = style.IsAnimated
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	newProps.Scale = style.Scale
-	newProps.OutlineColor3 = style:GetColor(Enums.ColorRoleType.Outline)
-	newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.OnSurfaceVariant)
-	newProps.IconColor3 = style:GetColor(Enums.ColorRoleType.SurfaceVariant)
-	newProps.DisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.OutlineColor3 = style.Theme.Outline
+	newProps.FillColor3 = style.Theme.OnSurfaceVariant
+	newProps.IconColor3 = style.Theme.SurfaceVariant
+	newProps.DisabledColor3 = style.Theme.OnSurface
 	newProps.SoundVolume = style.Volume
 
 	return e(Library.Full, newProps)

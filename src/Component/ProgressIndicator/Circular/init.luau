@@ -258,9 +258,9 @@ end
 function Library.Primary(props: StyleProgressIndicatorCircularProperties): React.ReactNode
 	local style = props.Style
 	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
-	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-	mergeProps.SchemeType = style.SchemeType
+	mergeProps.FillColor3 = style.Theme.Primary
+	mergeProps.EmptyColor3 = style.Theme.PrimaryContainer
+	mergeProps.SchemeType = style.Theme.SchemeType
 	mergeProps.Scale = style.Scale
 
 	return e(Library.Full, mergeProps)
@@ -271,9 +271,9 @@ function Library.Secondary(
 ): React.ReactNode
 	local style = props.Style
 	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
-	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-	mergeProps.SchemeType = style.SchemeType
+	mergeProps.FillColor3 = style.Theme.Secondary
+	mergeProps.EmptyColor3 = style.Theme.SecondaryContainer
+	mergeProps.SchemeType = style.Theme.SchemeType
 	mergeProps.Scale = style.Scale
 
 	return e(Library.Full, mergeProps)
@@ -284,9 +284,9 @@ function Library.Tertiary(
 ): React.ReactNode
 	local style = props.Style
 	local mergeProps = table.clone(props) :: ProgressIndicatorCircularProperties
-	mergeProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-	mergeProps.EmptyColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-	mergeProps.SchemeType = style.SchemeType
+	mergeProps.FillColor3 = style.Theme.Tertiary
+	mergeProps.EmptyColor3 = style.Theme.TertiaryContainer
+	mergeProps.SchemeType = style.Theme.SchemeType
 	mergeProps.Scale = style.Scale
 
 	return e(Library.Full, mergeProps)

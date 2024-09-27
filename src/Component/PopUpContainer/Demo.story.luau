@@ -6,8 +6,6 @@ local React = require("@wally/React")
 local ReactRoblox = require("@wally/ReactRoblox")
 -- Modules
 local RobloxTypes = require("@proj/RobloxTypes")
-local Enums = require("@proj/Enums")
-local Style = require("@proj/Style")
 -- Types
 -- Constants
 -- Variables
@@ -22,11 +20,15 @@ return function(target: Frame)
 	local PopUpContainer = require("../PopUpContainer")
 
 	local function newPopUp()
+		local Style = require("@proj/Style")
+		local Theme = require("@proj/Theme")
+		local Typography = require("@proj/Typography")
 		local style = Style.new(
-			1,
-			Enum.Font.BuilderSans,
-			Enums.SchemeType.Light,
-			Color3.new(1, 0, 0)
+			2,
+			0.5,
+			true,
+			Theme.new(Color3.new(1, 0, 0), "Dark", 0),
+			Typography.fromFont(Enum.Font.BuilderSans)
 		)
 		-- Style.new(
 		-- 	1,
@@ -48,10 +50,8 @@ return function(target: Frame)
 					Position = UDim2.fromScale(0.4, 0.8),
 					BackgroundTransparency = 0.5,
 
-					BackgroundColor3 = style:GetColor(
-						Enums.ColorRoleType.PrimaryContainer
-					),
-					TextColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer),
+					BackgroundColor3 = style.Theme.PrimaryContainer,
+					TextColor3 = style.Theme.OnPrimaryContainer,
 					[React.Change.AbsolutePosition] = function(inst: TextButton)
 						setAbsolutePosition(inst.AbsolutePosition)
 					end :: any,
@@ -65,9 +65,7 @@ return function(target: Frame)
 						{
 							TargetAbsolutePosition = popUpPosition,
 							TargetAbsoluteWidth = absoluteSize.X,
-							SurfaceColor3 = style:GetColor(
-								Enums.ColorRoleType.SurfaceContainerHigh
-							),
+							SurfaceColor3 = style.Theme.SurfaceContainerHigh,
 							DisplayComponent = function(): React.ReactNode
 								return e(
 									"TextButton",
@@ -76,9 +74,7 @@ return function(target: Frame)
 										Size = UDim2.new(0, 200, 0, 200),
 										Position = UDim2.fromScale(0.4, 0.5),
 										BackgroundTransparency = 1,
-										TextColor3 = style:GetColor(
-											Enums.ColorRoleType.OnSurface
-										),
+										TextColor3 = style.Theme.OnSurface,
 									} :: RobloxTypes.TextButtonProperties
 								)
 							end,

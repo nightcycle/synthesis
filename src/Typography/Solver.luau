@@ -9,17 +9,17 @@ local Types = require("@proj/Types")
 -- Types
 export type FontData = Types.FontData
 type TextInstance = TextLabel | TextButton | TextBox
-export type Typography = {
-	__index: Typography,
+export type TypographySolver = {
+	__index: TypographySolver,
 	_Fonts: { [Enums.FontType]: FontData },
 	getTextSize: (fontSize: number, scale: number) -> number,
 	getGuiLineHeight: (lineHeight: number, fontSize: number) -> number,
 	apply: (inst: TextInstance, fontData: FontData, scale: number?) -> (),
-	Apply: (self: Typography, inst: TextInstance, fontType: Enums.FontType, scale: number?) -> (),
-	Get: (self: Typography, fontType: Enums.FontType) -> FontData,
-	Hash: (self: Typography) -> string,
-	new: (fonts: { [Enums.FontType]: FontData }) -> Typography,
-	fromFont: (font: Enum.Font) -> Typography,
+	Apply: (self: TypographySolver, inst: TextInstance, fontType: Enums.FontType, scale: number?) -> (),
+	Get: (self: TypographySolver, fontType: Enums.FontType) -> FontData,
+	Hash: (self: TypographySolver) -> string,
+	new: (fonts: { [Enums.FontType]: FontData }) -> TypographySolver,
+	fromFont: (font: Enum.Font) -> TypographySolver,
 }
 -- Constants
 local WEIGHT = {
@@ -34,7 +34,7 @@ local WEIGHT = {
 	[900] = Enum.FontWeight.Heavy,
 }
 -- Variables
-local FontCache: { [Enum.Font]: Typography } = {}
+local FontCache: { [Enum.Font]: TypographySolver } = {}
 
 -- References
 -- Private Functions
@@ -46,22 +46,22 @@ local function newFontFamily(font: Enum.Font, weight: Enum.FontWeight, style: En
 end
 
 -- Class
-local Typography = {} :: Typography
-Typography.__index = Typography
+local TypographySolver = {} :: TypographySolver
+TypographySolver.__index = TypographySolver
 
-function Typography.getTextSize(fontSize: number, scale: number): number
+function TypographySolver.getTextSize(fontSize: number, scale: number): number
 	return fontSize * scale
 end
 
-function Typography.getGuiLineHeight(lineHeight: number, fontSize: number): number
+function TypographySolver.getGuiLineHeight(lineHeight: number, fontSize: number): number
 	return lineHeight / fontSize
 end
 
-function Typography.apply(inst: TextInstance, fontData: FontData, scale: number?)
+function TypographySolver.apply(inst: TextInstance, fontData: FontData, scale: number?)
 	scale = scale or 1
 	assert(scale)
-	local textSize = Typography.getTextSize(fontData.Size, scale)
-	local lineHeightRatio = Typography.getGuiLineHeight(fontData.LineHeight, fontData.Size)
+	local textSize = TypographySolver.getTextSize(fontData.Size, scale)
+	local lineHeightRatio = TypographySolver.getGuiLineHeight(fontData.LineHeight, fontData.Size)
 	if inst:IsA("TextLabel") then
 		inst.TextSize = textSize
 		inst.LineHeight = lineHeightRatio
@@ -79,15 +79,15 @@ function Typography.apply(inst: TextInstance, fontData: FontData, scale: number?
 	end
 end
 
-function Typography:Apply(inst: TextInstance, fontType: Enums.FontType, scale: number?)
-	Typography.apply(inst, self:Get(fontType), scale)
+function TypographySolver:Apply(inst: TextInstance, fontType: Enums.FontType, scale: number?)
+	TypographySolver.apply(inst, self:Get(fontType), scale)
 end
 
-function Typography:Get(style: Enums.FontType): FontData
+function TypographySolver:Get(style: Enums.FontType): FontData
 	return self._Fonts[style]
 end
 
-function Typography:Hash(): string
+function TypographySolver:Hash(): string
 	local fullMessage = ""
 	for fontType, fontData in pairs(self._Fonts) do
 		fullMessage ..= `[{fontType}-{fontData.Font}-{fontData.Size}-{fontData.Tracking}-{fontData.LineHeight}],`
@@ -95,20 +95,20 @@ function Typography:Hash(): string
 	return HashUtil.md5(fullMessage)
 end
 
-function Typography.new(fonts: { [Enums.FontType]: FontData }): Typography
-	local self: Typography = setmetatable({}, Typography) :: any
+function TypographySolver.new(fonts: { [Enums.FontType]: FontData }): TypographySolver
+	local self: TypographySolver = setmetatable({}, TypographySolver) :: any
 	self._Fonts = table.freeze(table.clone(fonts))
 
 	table.freeze(self)
 	return self
 end
 
-function Typography.fromFont(font: Enum.Font): Typography
+function TypographySolver.fromFont(font: Enum.Font): TypographySolver
 	if FontCache[font] then
 		return FontCache[font]
 	end
 
-	local self = Typography.new({
+	local self = TypographySolver.new({
 		[Enums.FontType.DisplayLarge] = table.freeze({
 			Font = newFontFamily(font, WEIGHT[400], Enum.FontStyle.Normal),
 			Size = 57,
@@ -205,4 +205,4 @@ function Typography.fromFont(font: Enum.Font): Typography
 	return self
 end
 
-return Typography
+return TypographySolver

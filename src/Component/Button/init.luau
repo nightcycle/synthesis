@@ -185,24 +185,24 @@ Library.Primary = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Primary)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnPrimary)
+		newProps.FillColor3 = style.Theme.Primary
+		newProps.TextColor3 = style.Theme.OnPrimary
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.Primary)
+		newProps.FillColor3 = style.Theme.PrimaryContainer
+		newProps.TextColor3 = style.Theme.Primary
 	else
 		error(`bad type: {newProps.Type}`)
 	end
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end
@@ -213,24 +213,24 @@ Library.PrimaryContainer = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnPrimaryContainer)
+		newProps.FillColor3 = style.Theme.PrimaryContainer
+		newProps.TextColor3 = style.Theme.OnPrimaryContainer
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.PrimaryContainer)
+		newProps.FillColor3 = style.Theme.PrimaryContainer
+		newProps.TextColor3 = style.Theme.PrimaryContainer
 	else
 		error(`bad type: {newProps.Type}`)
 	end
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end
@@ -241,24 +241,24 @@ Library.Secondary = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnSecondary)
+		newProps.FillColor3 = style.Theme.Secondary
+		newProps.TextColor3 = style.Theme.OnSecondary
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.Secondary)
+		newProps.FillColor3 = style.Theme.SecondaryContainer
+		newProps.TextColor3 = style.Theme.Secondary
 	else
 		error(`bad type: {newProps.Type}`)
 	end
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end
@@ -269,24 +269,24 @@ Library.SecondaryContainer = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnSecondaryContainer)
+		newProps.FillColor3 = style.Theme.SecondaryContainer
+		newProps.TextColor3 = style.Theme.OnSecondaryContainer
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.SecondaryContainer)
+		newProps.FillColor3 = style.Theme.SecondaryContainer
+		newProps.TextColor3 = style.Theme.SecondaryContainer
 	else
 		error(`bad type: {newProps.Type}`)
 	end
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end
@@ -297,25 +297,25 @@ Library.Tertiary = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnTertiary)
+		newProps.FillColor3 = style.Theme.Tertiary
+		newProps.TextColor3 = style.Theme.OnTertiary
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.Tertiary)
+		newProps.FillColor3 = style.Theme.TertiaryContainer
+		newProps.TextColor3 = style.Theme.Tertiary
 	else
 		error(`bad type: {newProps.Type}`)
 	end
 
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end
@@ -326,24 +326,24 @@ Library.TertiaryContainer = function(props: StyleButtonProperties)
 	local newProps = table.clone(props) :: ButtonProperties;
 	(newProps :: any).Style = nil
 	newProps.Scale = style.Scale
-	newProps.SchemeType = style.SchemeType
+	newProps.SchemeType = style.Theme.SchemeType
 	if newProps.Type == Enums.ButtonRenderType.Filled then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.OnTertiaryContainer)
+		newProps.FillColor3 = style.Theme.TertiaryContainer
+		newProps.TextColor3 = style.Theme.OnTertiaryContainer
 	elseif
 		newProps.Type == Enums.ButtonRenderType.Outlined
 		or newProps.Type == Enums.ButtonRenderType.TextIcon
 	then
-		newProps.FillColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
-		newProps.TextColor3 = style:GetColor(Enums.ColorRoleType.TertiaryContainer)
+		newProps.FillColor3 = style.Theme.TertiaryContainer
+		newProps.TextColor3 = style.Theme.TertiaryContainer
 	else
 		error(`bad type: {newProps.Type}`)
 	end
-	newProps.TextDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
-	newProps.FillDisabledColor3 = style:GetColor(Enums.ColorRoleType.OnSurface)
+	newProps.TextDisabledColor3 = style.Theme.OnSurface
+	newProps.FillDisabledColor3 = style.Theme.OnSurface
 	newProps.IsAnimated = style.IsAnimated
 	newProps.SoundVolume = style.Volume
-	newProps.FontData = if props.FontType then style:GetFontData(props.FontType) else nil
+	newProps.FontData = if props.FontType then style.Typography[props.FontType] else nil
 
 	return e(Library.Full, newProps)
 end

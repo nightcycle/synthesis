@@ -12,8 +12,8 @@ local Enums = require("@proj/Enums")
 return function(frame: Frame)
 	local maid = Maid.new()
 	task.spawn(function()
-		local Theme = require(script.Parent)
-		local theme = Theme.new(Color3.new(0.1, 0, 0.9), {})
+		local ThemeSolver = require("@proj/Theme/Solver")
+		local theme = ThemeSolver.new(Color3.new(0.1, 0, 0.9), {})
 
 		local function displayScheme(palette: Enums.PaletteType): Frame
 			local halfFrame = maid:GiveTask(Instance.new("Frame"))
