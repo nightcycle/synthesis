@@ -27,7 +27,6 @@ local TextField = require("@comp/TextField")
 
 -- Types
 export type ImageData = Types.ImageData
-export type OptionData = Types.OptionData
 export type ButtonData = Types.ButtonData
 export type FontData = Types.FontData
 export type Style = Style.Style
