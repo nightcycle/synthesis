@@ -40,4 +40,24 @@ Util.new = function(
 	return table.freeze(style)
 end
 
+Util.setVolume = function(style: Style, volume: number): Style
+	return Util.new(style.Scale, volume, style.IsAnimated, style.Theme, style.Typography)
+end
+
+Util.setScale = function(style: Style, scale: number): Style
+	return Util.new(scale, style.Volume, style.IsAnimated, style.Theme, style.Typography)
+end
+
+Util.setIsAnimated = function(style: Style, isAnimated: boolean): Style
+	return Util.new(style.Scale, style.Volume, isAnimated, style.Theme, style.Typography)
+end
+
+Util.setTheme = function(style: Style, theme: Theme): Style
+	return Util.new(style.Scale, style.Volume, style.IsAnimated, theme, style.Typography)
+end
+
+Util.setTypography = function(style: Style, typography: Typography): Style
+	return Util.new(style.Scale, style.Volume, style.IsAnimated, style.Theme, typography)
+end
+
 return Util

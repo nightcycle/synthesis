@@ -45,14 +45,6 @@ export type ButtonData = {
 	OnClick: () -> (),
 }
 
-export type OptionData = {
-	Text: string,
-	Icon: ImageData?,
-	IsEnabled: boolean,
-	Value: boolean,
-	OnSelect: (isSelected: boolean) -> (),
-}
-
 export type FontData = {
 	Font: Font,
 	Size: number,
@@ -100,23 +92,6 @@ function Types.ButtonData.new(
 		Text = text,
 		OnClick = onClick,
 		IsEnabled = if enabled == nil then true else enabled,
-	})
-end
-
-Types.OptionData = {}
-function Types.OptionData.new(
-	onSelect: (isSelected: boolean) -> (),
-	value: boolean,
-	text: string?,
-	icon: ImageData?,
-	isEnabled: boolean?
-): OptionData
-	return table.freeze({
-		Text = text or "",
-		Icon = icon,
-		IsEnabled = if isEnabled ~= nil then isEnabled else true,
-		Value = value,
-		OnSelect = onSelect,
 	})
 end
 

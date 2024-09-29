@@ -208,7 +208,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 				} :: RobloxTypes.UIGradientProperties
 			)
 			else nil,
-		Content = props.Content({
+		Content = e(props.Content, {
 			Color3 = textColor3,
 			Transparency = textTransparency,
 		}),
@@ -244,9 +244,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 				} :: RobloxTypes.UIPaddingProperties
 			),
 	}
-	if targetPadPx == 0 then
-		buttonContents["UIListLayout"] = nil :: any
-	end
+
 	local propCopy: RobloxTypes.GuiButtonProperties =
 		table.clone(props) :: RobloxTypes.GuiButtonProperties
 	do
@@ -254,6 +252,9 @@ return function(props: ButtonContainerProperties): React.ReactNode
 			buttonContents[k] = v
 		end
 		propCopy.children = nil
+	end
+	if targetPadPx == 0 then
+		buttonContents["UIListLayout"] = nil :: any
 	end
 	return e(
 		"ImageButton",

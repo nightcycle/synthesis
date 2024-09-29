@@ -8,6 +8,7 @@ local ThemeSolver = require("./Solver")
 -- Types
 export type Theme = {
 	_CacheKey: string,
+	Seed: Color3,
 	SchemeType: Enums.SchemeType,
 	Elevation: number,
 	Primary: Color3,
@@ -72,6 +73,7 @@ Util.new = function<CustomColorRoleType>(seed: Color3, schemeType: Enums.SchemeT
 
 	local theme: Theme = {
 		_CacheKey = key,
+		Seed = seed,
 		SchemeType = schemeType,
 		Elevation = 0,
 	} :: any
@@ -85,6 +87,18 @@ Util.new = function<CustomColorRoleType>(seed: Color3, schemeType: Enums.SchemeT
 	table.freeze(theme)
 	ThemeCache[key] = theme
 	return theme
+end
+
+Util.setElevation = function<CustomColorRoleType>(theme: Theme, elevation: number): Theme
+	return Util.new(theme.Seed, theme.SchemeType, elevation)
+end
+
+Util.setSeed = function<CustomColorRoleType>(theme: Theme, seed: Color3): Theme
+	return Util.new(seed, theme.SchemeType, theme.Elevation)
+end
+
+Util.setSchemeType = function<CustomColorRoleType>(theme: Theme, schemeType: Enums.SchemeType): Theme
+	return Util.new(theme.Seed, schemeType, theme.Elevation)
 end
 
 return Util
