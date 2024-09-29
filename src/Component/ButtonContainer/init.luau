@@ -198,6 +198,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 
 	local targetPadPx = math.ceil(targetPaddingDp * scale)
 	local borderThicknessPx = math.ceil(scale * BORDER_THICKNESS_DP)
+	local isInnerButton = targetPaddingDp ~= 0
 	local buttonContents = {
 		UIGradient = if isRippleEnabled and backgroundData
 			then e(
@@ -253,9 +254,7 @@ return function(props: ButtonContainerProperties): React.ReactNode
 		end
 		propCopy.children = nil
 	end
-	if targetPadPx == 0 then
-		buttonContents["UIListLayout"] = nil :: any
-	end
+
 	return e(
 		"ImageButton",
 		PropUtil.mergeGuiButton(
@@ -340,24 +339,27 @@ return function(props: ButtonContainerProperties): React.ReactNode
 							} :: RobloxTypes.UIPaddingProperties
 						)
 						else nil,
-					UIListLayout = e(
-						"UIListLayout",
-						{
-							SortOrder = Enum.SortOrder.LayoutOrder,
-							FillDirection = Enum.FillDirection.Vertical,
-							VerticalAlignment = Enum.VerticalAlignment.Center,
-							HorizontalAlignment = Enum.HorizontalAlignment.Center,
-							Padding = UDim.new(0, 0),
-							HorizontalFlex = Enum.UIFlexAlignment.Fill,
-							ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
-							VerticalFlex = Enum.UIFlexAlignment.Fill,
-							Wraps = false,
-						} :: RobloxTypes.UIListLayoutProperties
-					),
-					ButtonContents = if targetPaddingDp == 0
+					UIListLayout = if not buttonContents["UIListLayout"]
+							or isInnerButton
+						then e(
+							"UIListLayout",
+							{
+								SortOrder = Enum.SortOrder.LayoutOrder,
+								FillDirection = Enum.FillDirection.Vertical,
+								VerticalAlignment = Enum.VerticalAlignment.Center,
+								HorizontalAlignment = Enum.HorizontalAlignment.Center,
+								Padding = UDim.new(0, 0),
+								HorizontalFlex = Enum.UIFlexAlignment.Fill,
+								ItemLineAlignment = Enum.ItemLineAlignment.Stretch,
+								VerticalFlex = Enum.UIFlexAlignment.Fill,
+								Wraps = false,
+							} :: RobloxTypes.UIListLayoutProperties
+						)
+						else nil,
+					ButtonContents = if not isInnerButton
 						then e(React.Fragment, {}, buttonContents)
 						else nil,
-					InnerButton = if targetPaddingDp ~= 0
+					InnerButton = if isInnerButton
 						then e(
 							"Frame",
 							{
