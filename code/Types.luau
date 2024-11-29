@@ -130,7 +130,7 @@ end
 
 Types.ImageData = {}
 function Types.ImageData.new(
-	image: string,
+	image: string | Content,
 	rectOffset: Vector2?,
 	rectSize: Vector2?
 ): ImageData
