@@ -122,14 +122,15 @@ def set_class_properties(class_data):
 						value_type = "number"
 					elif value_type == "Content":
 						value_type = "string"
-
+					elif value_type == "ContentId":
+						value_type = "string"
 					if member["ValueType"]["Category"] == "Enum":
 						value_type = "Enum." + value_type
 					if not value_type == "Hole":
 						properties[member["Name"]] = value_type
 
 		class_properties[class_name] = properties
-	
+
 
 dependency_registry: dict[str, list[str]] = {}
 
@@ -141,6 +142,8 @@ for class_data in class_list:
 	dependency_registry[super_class].append(class_name)
 	set_class_properties(class_data)
 
+print(json.dumps(dependency_registry, indent=4))
+
 content: list[str] = []
 built_classes: list[str] = []
 
@@ -149,57 +152,63 @@ def format_type_name(class_name: str) -> str:
 
 def build_tree(class_name: str):
 	if not class_name in class_properties:
-		return 
+		return
 	if class_name in built_classes:
 		return
 	built_classes.append(class_name)
 
 	current_parent: None | str = None
 	for parent_class in dependency_registry:
-		if parent_class == "<<<ROOT>>>":
-			continue
+		# if parent_class == "<<<ROOT>>>":
+		# 	continue
 		child_classes = dependency_registry[parent_class]
 		if class_name in child_classes:
 			build_tree(parent_class)
 			current_parent = parent_class
 		if type(current_parent) == str:
 			break
-	
+
 	props = class_properties[class_name]
-	if len(props) == 0:
-		if type(current_parent) == str:
-			content.append("export type "+format_type_name(class_name)+" = "+format_type_name(current_parent))
-	else:
-		content.append("export type "+format_type_name(class_name)+" = ")
-		if type(current_parent) == str:
-			content.append(format_type_name(current_parent)+" & {")
-		else:
-			content.append("{")
-		
+	if class_name == "Object":
+		content.append("export type "+format_type_name(class_name)+" = {")
 		for prop in class_properties[class_name]:
 			content.append(prop.replace(" ", "") +": "+class_properties[class_name][prop]+"?,")
-		
-		if class_name == "Instance":
-			content.append("children: {[string]: any}?,")
-
 		content.append("}")
+	else:
+		if len(props) == 0:
+			if type(current_parent) == str:
+				content.append("export type "+format_type_name(class_name)+" = "+format_type_name(current_parent))
+		else:
+			content.append("export type "+format_type_name(class_name)+" = ")
+			if type(current_parent) == str:
+				content.append(format_type_name(current_parent)+" & {")
+			else:
+				content.append("{")
+
+			for prop in class_properties[class_name]:
+				content.append(prop.replace(" ", "") +": "+class_properties[class_name][prop]+"?,")
+
+			if class_name == "Instance":
+				content.append("children: {[string]: any}?,")
+
+			content.append("}")
 # with open("type-test.json", "w") as file:
 # 	file.write(json.dumps(final_list, indent=4))
 
 # for class_data in final_list:
-# 	build_tree(class_data["Name"])	
+# 	build_tree(class_data["Name"])
 
 def plant_tree(root_class_name: str):
 	build_tree(root_class_name)
-	if not root_class_name in dependency_registry:	
+	if not root_class_name in dependency_registry:
 		return
-	
+
 	for child_class in dependency_registry[root_class_name]:
 		plant_tree(child_class)
 
 plant_tree("UIBase")
-plant_tree("GuiBase")
-	
+plant_tree(root_class_name="GuiBase")
+
 content.append("return {}")
 
 with open(BUILD_PATH, "w") as out_file:

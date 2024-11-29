@@ -1,3 +1,4 @@
+export type ObjectProperties = {}
 export type InstanceProperties = ObjectProperties & {
 	Archivable: boolean?,
 	Name: string?,
@@ -24,10 +25,10 @@ export type UICornerProperties = UIComponentProperties & {
 	CornerRadius: UDim?,
 }
 export type UIDragDetectorProperties = UIComponentProperties & {
-	ActivatedCursorIcon: ContentId?,
+	ActivatedCursorIcon: string?,
 	BoundingBehavior: Enum.UIDragDetectorBoundingBehavior?,
 	BoundingUI: GuiBase2d?,
-	CursorIcon: ContentId?,
+	CursorIcon: string?,
 	DragAxis: Vector2?,
 	DragRelativity: Enum.UIDragDetectorDragRelativity?,
 	DragRotation: number?,
@@ -163,14 +164,14 @@ export type GuiButtonProperties = GuiObjectProperties & {
 	Style: Enum.ButtonStyle?,
 }
 export type ImageButtonProperties = GuiButtonProperties & {
-	HoverImage: ContentId?,
-	Image: ContentId?,
+	HoverImage: string?,
+	Image: string?,
 	ImageColor3: Color3?,
 	ImageContent: string?,
 	ImageRectOffset: Vector2?,
 	ImageRectSize: Vector2?,
 	ImageTransparency: number?,
-	PressedImage: ContentId?,
+	PressedImage: string?,
 	ResampleMode: Enum.ResamplerMode?,
 	ScaleType: Enum.ScaleType?,
 	SliceCenter: Rect?,
@@ -199,7 +200,7 @@ export type TextButtonProperties = GuiButtonProperties & {
 }
 export type GuiLabelProperties = GuiObjectProperties
 export type ImageLabelProperties = GuiLabelProperties & {
-	Image: ContentId?,
+	Image: string?,
 	ImageColor3: Color3?,
 	ImageContent: string?,
 	ImageRectOffset: Vector2?,
@@ -233,18 +234,18 @@ export type TextLabelProperties = GuiLabelProperties & {
 }
 export type ScrollingFrameProperties = GuiObjectProperties & {
 	AutomaticCanvasSize: Enum.AutomaticSize?,
-	BottomImage: ContentId?,
+	BottomImage: string?,
 	CanvasPosition: Vector2?,
 	CanvasSize: UDim2?,
 	ElasticBehavior: Enum.ElasticBehavior?,
 	HorizontalScrollBarInset: Enum.ScrollBarInset?,
-	MidImage: ContentId?,
+	MidImage: string?,
 	ScrollBarImageColor3: Color3?,
 	ScrollBarImageTransparency: number?,
 	ScrollBarThickness: number?,
 	ScrollingDirection: Enum.ScrollingDirection?,
 	ScrollingEnabled: boolean?,
-	TopImage: ContentId?,
+	TopImage: string?,
 	VerticalScrollBarInset: Enum.ScrollBarInset?,
 	VerticalScrollBarPosition: Enum.VerticalScrollBarPosition?,
 }
@@ -280,7 +281,7 @@ export type VideoFrameProperties = GuiObjectProperties & {
 	Looped: boolean?,
 	Playing: boolean?,
 	TimePosition: number?,
-	Video: ContentId?,
+	Video: string?,
 	Volume: number?,
 }
 export type ViewportFrameProperties = GuiObjectProperties & {
@@ -336,7 +337,7 @@ export type SurfaceGuiBaseProperties = LayerCollectorProperties & {
 export type AdGuiProperties = SurfaceGuiBaseProperties & {
 	AdShape: Enum.AdShape?,
 	EnableVideoAds: boolean?,
-	FallbackImage: ContentId?,
+	FallbackImage: string?,
 }
 export type SurfaceGuiProperties = SurfaceGuiBaseProperties & {
 	AlwaysOnTop: boolean?,
@@ -359,7 +360,7 @@ export type FloorWireProperties = GuiBase3dProperties & {
 	CycleOffset: number?,
 	From: BasePart?,
 	StudsBetweenTextures: number?,
-	Texture: ContentId?,
+	Texture: string?,
 	TextureSize: Vector2?,
 	To: BasePart?,
 	Velocity: number?,
@@ -397,7 +398,7 @@ export type CylinderHandleAdornmentProperties = HandleAdornmentProperties & {
 	Radius: number?,
 }
 export type ImageHandleAdornmentProperties = HandleAdornmentProperties & {
-	Image: ContentId?,
+	Image: string?,
 	Size: Vector2?,
 }
 export type LineHandleAdornmentProperties = HandleAdornmentProperties & {
