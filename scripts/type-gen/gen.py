@@ -121,7 +121,7 @@ def set_class_properties(class_data):
 					):
 						value_type = "number"
 					elif value_type == "Content":
-						value_type = "string"
+						value_type = "Content"
 					elif value_type == "ContentId":
 						value_type = "string"
 					if member["ValueType"]["Category"] == "Enum":

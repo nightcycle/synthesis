@@ -118,6 +118,7 @@ function Util.mergeImageLabel(
 ): RobloxTypes.ImageLabelProperties
 	local out = Util.mergeGuiObject(element, props) :: RobloxTypes.ImageLabelProperties
 	out.Image = element.Image or props.Image
+	out.ImageContent = element.ImageContent or props.ImageContent
 	out.ImageColor3 = element.ImageColor3 or props.ImageColor3
 	out.ImageRectOffset = element.ImageRectOffset or props.ImageRectOffset
 	out.ImageRectSize = element.ImageRectSize or props.ImageRectSize
@@ -150,6 +151,7 @@ function Util.mergeImageButton(
 ): RobloxTypes.ImageButtonProperties
 	local out = Util.mergeGuiButton(element, props) :: RobloxTypes.ImageButtonProperties
 	out.Image = element.Image or props.Image
+	out.ImageContent = element.ImageContent or props.ImageContent
 	out.ImageColor3 = element.ImageColor3 or props.ImageColor3
 	out.ImageRectOffset = element.ImageRectOffset or props.ImageRectOffset
 	out.ImageRectSize = element.ImageRectSize or props.ImageRectSize

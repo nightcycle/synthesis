@@ -167,7 +167,7 @@ export type ImageButtonProperties = GuiButtonProperties & {
 	HoverImage: string?,
 	Image: string?,
 	ImageColor3: Color3?,
-	ImageContent: string?,
+	ImageContent: Content?,
 	ImageRectOffset: Vector2?,
 	ImageRectSize: Vector2?,
 	ImageTransparency: number?,
@@ -202,7 +202,7 @@ export type GuiLabelProperties = GuiObjectProperties
 export type ImageLabelProperties = GuiLabelProperties & {
 	Image: string?,
 	ImageColor3: Color3?,
-	ImageContent: string?,
+	ImageContent: Content?,
 	ImageRectOffset: Vector2?,
 	ImageRectSize: Vector2?,
 	ImageTransparency: number?,

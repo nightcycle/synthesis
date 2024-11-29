@@ -50,7 +50,7 @@ function newTextIcon(
 			LayoutOrder = layoutOrder,
 			BackgroundTransparency = 1,
 			Image = if typeof(icon.Image) == "string" then icon.Image else "",
-			ImageContent = if typeof(icon.Image) == "Content" then icon.Image else "",
+			ImageContent = if typeof(icon.Image) == "Content" then icon.Image else nil,
 			ImageColor3 = color3,
 			ImageRectOffset = icon.ImageRectOffset,
 			ImageRectSize = icon.ImageRectSize,
