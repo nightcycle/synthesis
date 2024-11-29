@@ -36,6 +36,9 @@
 		"synthetic.rbxl": true,
 		"requirements.txt": true,
 		"Packages": true,
+		"target": true,
+		"Cargo.lock": true,
+		".env": true,
 	},
 	"runOnSave.commands": [
 		{

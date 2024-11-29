@@ -5,8 +5,8 @@
 		"Wally": {
 			"$path": "Packages",
 			"Main": {
-				"$path": "src"
+				"$path": "code"
 			}
 		}
 	}
- }
+}

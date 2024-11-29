@@ -26,7 +26,7 @@ mkdir -p "$BUILD_DIR/scripts"
 echo "copying contents to $BUILD_DIR"
 cp -r "$MODEL_CONFIG" "$BUILD_DIR/$MODEL_CONFIG"
 cp -r "$ROJO_CONFIG" "$BUILD_DIR/$ROJO_CONFIG"
-cp -r src "$BUILD_DIR/src"
+cp -r code "$BUILD_DIR/code"
 cp -rL Packages "$BUILD_DIR/Packages"
 cp -r types "$BUILD_DIR/types"
 cp -r lints "$BUILD_DIR/lints"
@@ -41,22 +41,22 @@ rojo sourcemap "$BUILD_DIR/$ROJO_CONFIG" -o "$BUILD_DIR/sourcemap.json"
 echo "building main sourcemap at sourcemap.json"
 rojo sourcemap "$ROJO_CONFIG" -o "sourcemap.json"
 
-echo "processing $BUILD_DIR/src with darklua"
-darklua process src "$BUILD_DIR/src" --config "$DARKLUA_CONFIG"
+echo "processing $BUILD_DIR/code with darklua"
+darklua process code "$BUILD_DIR/code" --config "$DARKLUA_CONFIG"
 
 echo "running stylua"
-stylua "$BUILD_DIR/src"
+stylua "$BUILD_DIR/code"
 rojo sourcemap "$BUILD_DIR/$ROJO_CONFIG" -o "$BUILD_DIR/sourcemap.json"
 
-echo "processing $BUILD_DIR/src with darklua"
-darklua process "src" "$BUILD_DIR/src" --config "$DARKLUA_CONFIG"
+echo "processing $BUILD_DIR/code with darklua"
+darklua process "code" "$BUILD_DIR/code" --config "$DARKLUA_CONFIG"
 cd "$BUILD_DIR"
 rojo build --output "$BUILD_FILE" "$ROJO_CONFIG"
 cd ..
 cp -r "$BUILD_DIR/$BUILD_FILE" "$BUILD_FILE"
 if [ "$is_serve" = true ]; then
 	rojo sourcemap --watch "$ROJO_CONFIG" -o "sourcemap.json" &
-	darklua process "src" "$BUILD_DIR/src/Client" --config "$DARKLUA_CONFIG" -w &
+	darklua process "code" "$BUILD_DIR/code/Client" --config "$DARKLUA_CONFIG" -w &
 	rojo serve "$BUILD_DIR/$ROJO_CONFIG"
 fi
 

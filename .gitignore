@@ -5,6 +5,8 @@ wally.lock
 package-lock.json
 sourcemap.json
 darklua-sourcemap.json
+Cargo.lock
+
 
 .env
 out
@@ -14,3 +16,4 @@ types
 lints
 node_modules
 build
+target

@@ -22,7 +22,7 @@ luau-lsp analyze \
 	--ignore="*.lune.luau" \
 	--settings=".luau-analyze.json" \
 	--definitions="types/globalTypes.d.lua" \
-	"src" 2> "$lsp_results"
+	"code" 2> "$lsp_results"
 set -e
 
 # iterate through the results
@@ -60,7 +60,7 @@ while IFS= read -r line; do
 done < "$lsp_results"
 
 echo ""
-selene src
+selene code
 
 if [ "$is_error" = true ]; then
 	exit 1
