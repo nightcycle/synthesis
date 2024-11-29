@@ -1,6 +1,7 @@
 --!strict
 -- Services
 local RunService = game:GetService("RunService")
+local AssetService = game:GetService("AssetService")
 -- Packages
 local Maid = require("@wally/Maid")
 local CurveUtil = require("@wally/CurveUtil")
@@ -64,8 +65,9 @@ return function(frame: Frame)
 			label.BackgroundColor3 = style.Theme.Surface
 			label.LayoutOrder = 2
 
-			local image = Instance.new("EditableImage")
-			image.Parent = label
+			local image = maid:GiveTask(AssetService:CreateEditableImage({
+				Size = Vector2.new(512, 512),
+			}) :: EditableImage)
 
 			local subFrame = Instance.new("Frame")
 			subFrame.BackgroundColor3 = style.Theme.Surface

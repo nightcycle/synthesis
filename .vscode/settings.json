@@ -1,4 +1,9 @@
 {
+	"[github-actions-workflow]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false
+	},
 	"editor.formatOnSave": true,
 	"files.autoSave": "onFocusChange",
 	"luau-lsp.sourcemap.rojoProjectFile": "build.project.json",
@@ -24,7 +29,7 @@
 		"**types": true,
 		"sourcemap.json": true,
 		"serve": true,
-		"build": true,,
+		"build": true,
 		"package-lock.json": true,
 		"darklua-sourcemap.json": true,
 		"node_modules": true,
@@ -32,34 +37,15 @@
 		"requirements.txt": true,
 		"Packages": true,
 	},
-	"emeraldwalk.runonsave": {
-		"shell": "C:\\Program Files\\Git\\bin\\bash.exe",
-		"commands": [
-			{
-				"match": ".lua",
-				"isAsync": false,
-				"cmd": "rojo sourcemap build.project.json --output sourcemap.json"
-			},
-			{
-				"match": ".luau",
-				"isAsync": false,
-				"cmd": "rojo sourcemap build.project.json --output sourcemap.json"
-			},
-			{
-				"match": "pseudo-enum.toml",
-				"isAsync": false,
-				"cmd": "pseudo-enum build"
-			},
-			{
-				"match": "wally.toml",
-				"isAsync": false,
-				"cmd": "sh scripts/wally-install.sh"
-			},
-			{
-				"match": "project.json",
-				"isAsync": false,
-				"cmd": "sh scripts/npm-install.sh"
-			},
-		]
-	}
+	"runOnSave.commands": [
+		{
+			"globMatch": "pseudo-enum.toml",
+			"command": "pseudo-enum build",
+			"async": false,
+			"forcePathSeparator": "/",
+			"runIn": "terminal",
+			"runningStatusMessage": "start pseudo-enum build",
+			"finishStatusMessage": "finish pseudo-enum build"
+		},
+	],
 }

@@ -388,7 +388,12 @@ Library.Full = function(props: CheckboxProperties): React.ReactNode
 					ImageColor3 = if renderData.Text
 						then renderData.Text.Color3
 						else Color3.new(1, 1, 1),
-					Image = if icon then icon.Image else "",
+					Image = if icon
+						then if type(icon.Image) == "string" then icon.Image else ""
+						else "",
+					ImageContent = if icon
+						then if typeof(icon.Image) == "Content" then icon.Image else ""
+						else "",
 					ImageRectOffset = if icon then icon.ImageRectOffset else Vector2.zero,
 					ImageRectSize = if icon then icon.ImageRectSize else Vector2.zero,
 				} :: RobloxTypes.ImageLabelProperties,

@@ -15,7 +15,6 @@ local Theme = require("@proj/Theme")
 local PropUtil = require("@proj/PropUtil")
 -- Hooks
 -- Types
-type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
 type BaseProgressIndicatorCircularProperties = RobloxTypes.GuiObjectProperties & {
 	Progress: number?,

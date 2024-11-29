@@ -2,18 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "rojo-serve",
+			"label": "init serve",
 			"type": "shell",
-			"command": "sh scripts/serve.sh",
-			"problemMatcher": [],
-			"runOptions": {
-				"runOn": "folderOpen"
-			}
-		},
-		{
-			"label": "download types",
-			"type": "shell",
-			"command": "sh scripts/download-types.sh",
+			"command": "sh scripts/init.sh --serve",
 			"problemMatcher": [],
 			"runOptions": {
 				"runOn": "folderOpen"

@@ -1,4 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/sh
+set -e
+ROJO_CONFIG=$1
 wally install
-rojo sourcemap build.project.json --output sourcemap.json
+echo "building sourcemap at sourcemap.json with config $ROJO_CONFIG"
+rojo sourcemap "$ROJO_CONFIG" --output sourcemap.json
 wally-package-types --sourcemap sourcemap.json Packages

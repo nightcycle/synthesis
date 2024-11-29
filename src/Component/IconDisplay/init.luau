@@ -26,7 +26,8 @@ return function(props: IconDisplayProperties): React.ReactNode
 	return e(
 		"ImageLabel",
 		PropUtil.mergeImageLabel({
-			Image = if i then i.Image else nil,
+			Image = if i and typeof(i.Image) == "string" then i.Image else nil,
+			ImageContent = if i and typeof(i.Image) == "Content" then i.Image else nil,
 			ImageRectOffset = if i then i.ImageRectOffset else nil,
 			ImageRectSize = if i then i.ImageRectSize else nil,
 			BackgroundTransparency = 1,

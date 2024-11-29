@@ -26,9 +26,8 @@ export type RenderData = {
 	Text: AppearanceData?,
 	Shadow: ShadowData?,
 }
-
 export type ImageData = {
-	Image: string,
+	Image: string | Content,
 	ImageRectOffset: Vector2,
 	ImageRectSize: Vector2,
 }

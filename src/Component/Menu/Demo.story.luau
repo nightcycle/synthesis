@@ -71,19 +71,15 @@ return function(target: Frame)
 							SelectionSurfaceColor3 = style.Theme.SecondaryContainer,
 							SelectionOnSurfaceColor3 = style.Theme.OnSecondaryContainer,
 							Rows = {
-								[1] = Types.OptionData.new(function(onSelect: boolean)
-									print("Option 1", onSelect)
-								end, false, "Option 1", MaterialIcons.view_module),
+								[1] = Types.ButtonData.new(function()
+									print("Button 1")
+								end, MaterialIcons.tv, "Button 1"),
 								[2] = Types.ButtonData.new(function()
 									print("Button 2")
-								end, nil, "Button 2") :: any,
-								[3] = Types.OptionData.new(function(onSelect: boolean)
-									print("Option 3", onSelect)
-								end, true, "Option 3"),
-								[4] = nil :: any,
-								[5] = Types.OptionData.new(function(onSelect: boolean)
-									print("Option 5", onSelect)
-								end, false, "Option 5", MaterialIcons.tv),
+								end, nil, "Button 2"),
+								[4] = Types.ButtonData.new(function()
+									print("Button 3")
+								end, nil, "Button 3"),
 							},
 						} :: Menu.MenuProperties,
 						{}

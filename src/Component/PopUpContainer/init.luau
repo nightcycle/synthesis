@@ -14,7 +14,6 @@ local Container = require("@comp/Container")
 local PopUp = require("@comp/PopUp")
 local ScrollingContainer = require("@comp/ScrollingContainer")
 -- Types
-type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
 type PopUpContainerBaseProperties = {
 	TargetAbsolutePosition: Vector2,

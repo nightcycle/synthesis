@@ -41,7 +41,6 @@ export type SelectionState = Enums.SelectionState
 export type ColorRoleType = Enums.ColorRoleType
 export type PaletteType = Enums.PaletteType
 export type TransitionType = Enums.TransitionType
-
 export type ButtonProperties = Button.ButtonProperties
 export type StyleButtonProperties = Button.StyleButtonProperties
 export type ButtonContainerContentProperties =

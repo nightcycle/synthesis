@@ -16,14 +16,13 @@ local IconDisplay = require("@comp/IconDisplay")
 local Container = require("@comp/Container")
 local PopUpContainer = require("@comp/PopUpContainer")
 -- Types
-type OptionData = Types.OptionData
 type ButtonData = Types.ButtonData
 type MenuBaseProperties = {
 	TargetAbsolutePosition: Vector2,
 	TargetAbsoluteWidth: number?,
 	OnCursorExit: (() -> ())?,
 	Elevation: number?,
-	Rows: { [number]: (OptionData | ButtonData)? },
+	Rows: { [number]: ButtonData? },
 }
 export type MenuProperties = MenuBaseProperties & {
 	SchemeType: Enums.SchemeType?,
@@ -63,7 +62,7 @@ return function(props: MenuProperties): React.ReactNode
 	local targetAbsolutePosition: Vector2 = props.TargetAbsolutePosition
 	local targetAbsoluteWidth: number? = props.TargetAbsoluteWidth
 	local onCursorExit: (() -> ())? = props.OnCursorExit
-	local rows: { [number]: (OptionData | ButtonData)? } = props.Rows
+	local rows: { [number]: ButtonData? } = props.Rows
 	local isAnimated = if props.IsAnimated ~= nil
 		then props.IsAnimated
 		else Defaults.IsAnimated
@@ -103,10 +102,7 @@ return function(props: MenuProperties): React.ReactNode
 		Theme.getElevatedColor(rawDisabledOnSurfaceColor3, elevation, schemeType)
 
 	-- components
-	local function newButton(
-		layoutOrder: number,
-		optionData: OptionData | ButtonData
-	): React.ReactNode
+	local function newButton(layoutOrder: number, optionData: ButtonData): React.ReactNode
 		local value: boolean? = (optionData :: any)["Value"]
 		local textColor3 = if value then selectionOnSurfaceColor3 else onSurfaceColor3
 		return e(

@@ -733,7 +733,14 @@ Library.Full = function(props: SwitchProperties): React.ReactNode
 								ImageTransparency = renderData.Text.Transparency,
 								Visible = icon ~= nil,
 								ImageColor3 = renderData.Text.Color3,
-								Image = if icon then icon.Image else "",
+								ImageContent = if icon
+										and typeof(icon.Image) == "Content"
+									then icon.Image
+									else "",
+								Image = if icon
+										and typeof(icon.Image) == "string"
+									then icon.Image
+									else "",
 								ImageRectOffset = if icon
 									then icon.ImageRectOffset
 									else Vector2.zero,
