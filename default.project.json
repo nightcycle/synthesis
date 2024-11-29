@@ -1,6 +1,6 @@
 {
 	"name": "synthetic",
 	"tree": {
-		"$path": "src"
+		"$path": "code"
 	}
 }

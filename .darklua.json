@@ -1,21 +1,21 @@
 {
 	"rules": [
-	    {
-		   "rule": "convert_require",
-		   "current": {
-			  "name": "path",
-			  "sources": {
-				"@proj": "./src",
-				"@wally": "./Packages",
-				"@comp": "./src/Component",
-				"@hook": "./src/Hook"
+		{
+			"rule": "convert_require",
+			"current": {
+				"name": "path",
+				"sources": {
+					"@proj": "./code",
+					"@wally": "./Packages",
+					"@comp": "./code/Component",
+					"@hook": "./code/Hook"
+				}
+			},
+			"target": {
+				"name": "roblox",
+				"rojo_sourcemap": "sourcemap.json",
+				"indexing_style": "wait_for_child"
 			}
-		   },
-		   "target": {
-			  "name": "roblox",
-			  "rojo_sourcemap": "darklua-sourcemap.json",
-			  "indexing_style": "wait_for_child"
-		   }
-	    }
+		}
 	]
- }
+}

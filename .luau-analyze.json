@@ -1,10 +1,10 @@
 {
 	"luau-lsp.require.mode": "relativeToFile",
 	"luau-lsp.require.directoryAliases": {
-		"@proj": "src",
+		"@proj": "code",
 		"@wally": "Packages",
-		"@comp": "src/Component",
-		"@hook": "src/Hook"
+		"@comp": "code/Component",
+		"@hook": "code/Hook"
 	},
 	"luau-lsp.diagnostics.strictDatamodelTypes": true,
 	"luau-lsp.types.robloxSecurityLevel": "LocalUserSecurity",
@@ -16,4 +16,4 @@
 		"LuauTypeInferTypePackLoopLimit": "0",
 		"LuauVisitRecursionLimit": "0"
 	}
- }
+}

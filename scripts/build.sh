@@ -24,9 +24,10 @@ mkdir -p "$BUILD_DIR"
 mkdir -p "$BUILD_DIR/scripts"
 
 echo "copying contents to $BUILD_DIR"
+cp -r "wally.toml" "$BUILD_DIR/wally.toml"
 cp -r "$MODEL_CONFIG" "$BUILD_DIR/$MODEL_CONFIG"
 cp -r "$ROJO_CONFIG" "$BUILD_DIR/$ROJO_CONFIG"
-cp -r code "$BUILD_DIR/code"
+cp -r "code" "$BUILD_DIR/code"
 cp -rL Packages "$BUILD_DIR/Packages"
 cp -r types "$BUILD_DIR/types"
 cp -r lints "$BUILD_DIR/lints"
@@ -56,7 +57,7 @@ cd ..
 cp -r "$BUILD_DIR/$BUILD_FILE" "$BUILD_FILE"
 if [ "$is_serve" = true ]; then
 	rojo sourcemap --watch "$ROJO_CONFIG" -o "sourcemap.json" &
-	darklua process "code" "$BUILD_DIR/code/Client" --config "$DARKLUA_CONFIG" -w &
+	darklua process "code" "$BUILD_DIR/code" --config "$DARKLUA_CONFIG" -w &
 	rojo serve "$BUILD_DIR/$ROJO_CONFIG"
 fi
 

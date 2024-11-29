@@ -1,4 +1,4 @@
-build_path = "src/Enums.luau"
+build_path = "code/Enums.luau"
 use_union_types_for_tree = false
 use_union_types_for_export = true
 
@@ -65,16 +65,8 @@ FontType = [
 ]
 ButtonStateType = ["Enabled", "Disabled", "Hovered", "Focused", "Pressed"]
 SchemeType = ["Light", "Dark"]
-CustomColorType = [
-	"Custom",
-	"OnCustom",
-	"CustomContainer",
-	"OnCustomContainer"
-]
-SelectionState = [
-	"Selected",
-	"Unselected"
-]
+CustomColorType = ["Custom", "OnCustom", "CustomContainer", "OnCustomContainer"]
+SelectionState = ["Selected", "Unselected"]
 ColorRoleType = [
 	"Primary",
 	"OnPrimary",
@@ -147,10 +139,6 @@ TransitionDuration = [
 	"ExtraLong2",
 	"ExtraLong3",
 	"ExtraLong4",
-	
+
 ]
-ButtonRenderType = [
-	"Filled",
-	"Outlined",
-	"TextIcon"
-]
+ButtonRenderType = ["Filled", "Outlined", "TextIcon"]
